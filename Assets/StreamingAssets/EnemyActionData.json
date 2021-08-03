@@ -1,0 +1,89 @@
+{
+    "Description": {
+    	"Id" : "정보를 구분짓기 위한 값",
+        "Name": "애니메이터상의 스테이트 이름",
+        "CharacterName" : "해당 State를 가진 캐릭터 이름(이게 중요!!!)",
+        "ComboAvailableTime" : "콤보 공격이 가능한 시간(NormalizedTime)",
+        "HitUnitList": "액션에 생성될 히트유닛 리스트. 인덱스 순서대로 AnimationEvent에서 생성한다"
+    },
+    "EnemyActionInfo": [
+        {
+        	"Id" : 0,
+            "Name": "Attack01",
+            "CharacterName" : "TurtleShell",
+            "ComboAvailableTime" : 0.68,
+            "HitUnitList": [
+                {
+                	"ColliderRadius" : 0.6,
+                	"FrontPos" : 1.2,
+                	"SidePos" : -0.6,
+                	"Life" : 0.3
+                },
+                {
+                	"ColliderRadius" : 0.6,
+                	"FrontPos" : 1.2,
+                	"SidePos" : 0,
+                	"Life" : 0.3
+                },
+                {
+                	"ColliderRadius" : 0.6,
+                	"FrontPos" : 1.2,
+                	"SidePos" : 0.6,
+                	"Life" : 0.3
+                }
+            ]
+        },
+        {
+        	"Id" : 1,
+            "Name": "Attack02",
+            "CharacterName" : "TurtleShell",
+            "ComboAvailableTime" : 0.63,
+            "HitUnitList": [
+                {
+                	"ColliderRadius" : 0.6,
+                	"FrontPos" : 1.2,
+                	"SidePos" : 0.6,
+                	"Life" : 0.3
+                },
+                {
+                	"ColliderRadius" : 0.6,
+                	"FrontPos" : 1.2,
+                	"SidePos" : 0,
+                	"Life" : 0.3
+                },
+                {
+                	"ColliderRadius" : 0.6,
+                	"FrontPos" : 1.2,
+                	"SidePos" : -0.6,
+                	"Life" : 0.3
+                }
+            ]
+        },
+        {
+        	"Id" : 2,
+            "Name": "Attack03",
+            "CharacterName" : "TurtleShell",
+            "ComboAvailableTime" : 0.68,
+            "HitUnitList": [
+                {
+                	"ColliderRadius" : 0.6,
+                	"FrontPos" : 1.2,
+                	"SidePos" : -0.6,
+                	"Life" : 0.3
+                },
+                {
+                	"ColliderRadius" : 0.6,
+                	"FrontPos" : 1.2,
+                	"SidePos" : 0,
+                	"Life" : 0.3
+                },
+                {
+                	"ColliderRadius" : 0.6,
+                	"FrontPos" : 1.2,
+                	"SidePos" : 0.6,
+                	"Life" : 0.3
+                }
+            ]
+        }
+    ]
+}
