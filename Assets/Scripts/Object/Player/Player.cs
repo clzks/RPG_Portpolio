@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-public class Player : MonoBehaviour
+#if UNITY_EDITOR
+using UnityEngine.SceneManagement;
+#endif
+public class Player : MonoBehaviour, IActor
 {
     [SerializeField]private InGameCamera _camera;
     [SerializeField]private Animator _animController;
@@ -13,6 +16,7 @@ public class Player : MonoBehaviour
     public IActionState currActionState;
     private Dictionary<string, ActionInfo> _actionInfoList;
     public GameObject hitUnitPrefab;
+    private List<IActor> _actorList;
     public Vector3 Position { get { return transform.position; } }
     
     public enum ActionType
@@ -47,6 +51,7 @@ public class Player : MonoBehaviour
         currActionState = new PlayerIdleState(this);
         _actionInfoList = DataManager.Get().GetActionInfoList();
         _collider = GetComponent<SphereCollider>();
+        _actorList = new List<IActor>();
     }
 
     private void LateUpdate()
@@ -81,6 +86,12 @@ public class Player : MonoBehaviour
 
     public void SummonHitUnit(int index)
     {
+#if UNITY_EDITOR
+        if (SceneManager.GetActiveScene().name == "AnimationEditorScene")
+        {
+            return;
+        }
+#endif
         var state = currActionState as PlayerActionState;
         var actionInfo = state.GetActionInfo();
 
@@ -90,7 +101,16 @@ public class Player : MonoBehaviour
         }
         HitUnit hitUnit = Instantiate(hitUnitPrefab).GetComponent<HitUnit>();
         HitUnitInfo info = actionInfo.HitUnitList[index];
-        hitUnit.SetHitUnit(info, transform);
+        hitUnit.SetHitUnit(this, info, transform);
+    }
+
+    public void TakeActor(IActor actor, HitUnitStatus hitUnit)
+    {
+        if (false == _actorList.Contains(actor))
+        {
+            actor.TakeDamage(hitUnit);
+            _actorList.Add(actor);
+        }
     }
 
     public Animator GetAnimator()
@@ -114,4 +134,44 @@ public class Player : MonoBehaviour
     {
         return _collider.radius;
     }
+
+    public int GetId()
+    {
+        return -1;
+    }
+
+    public GameObject GetObject()
+    {
+        return gameObject;
+    }
+
+    public ObjectType GetObjectType()
+    {
+        return ObjectType.Player;
+    }
+
+    public void Init()
+    {
+      
+    }
+
+    public void ReturnObject()
+    {
+      
+    }
+
+    public void TakeDamage(HitUnitStatus hitUnit)
+    {
+        Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼입힘");
+    }
+    public float GetDamage()
+    {
+        return 3f;
+    }
+
+    public void ResetActorList()
+    {
+        _actorList.Clear();
+    }
+
 }

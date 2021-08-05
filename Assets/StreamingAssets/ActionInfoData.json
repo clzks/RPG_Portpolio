@@ -17,19 +17,28 @@
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : -0.6,
-                	"Life" : 0.3
+                	"Life" : 0.3,
+                	"DamageFactor" : 1.0,
+                	"StrengthFactor" : 0.5,
+                	"Layer" : 8
                 },
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : 0,
-                	"Life" : 0.3
+                	"Life" : 0.3,
+                	"DamageFactor" : 1.0,
+                	"StrengthFactor" : 0.5,
+                	"Layer" : 8
                 },
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : 0.6,
-                	"Life" : 0.3
+                	"Life" : 0.3,
+                	"DamageFactor" : 1.0,
+                	"StrengthFactor" : 0.5,
+                	"Layer" : 8
                 }
             ]
         },
@@ -43,19 +52,28 @@
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : 0.6,
-                	"Life" : 0.3
+                	"Life" : 0.3,
+                	"DamageFactor" : 1.0,
+                	"StrengthFactor" : 0.5,
+                	"Layer" : 8
                 },
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : 0,
-                	"Life" : 0.3
+                	"Life" : 0.3,
+                	"DamageFactor" : 1.0,
+                	"StrengthFactor" : 0.5,
+                	"Layer" : 8
                 },
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : -0.6,
-                	"Life" : 0.3
+                	"Life" : 0.3,
+                	"DamageFactor" : 1.0,
+                	"StrengthFactor" : 0.5,
+                	"Layer" : 8
                 }
             ]
         },
@@ -69,19 +87,28 @@
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : -0.6,
-                	"Life" : 0.3
+                	"Life" : 0.3,
+                	"DamageFactor" : 1.0,
+                	"StrengthFactor" : 0.5,
+                	"Layer" : 8
                 },
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : 0,
-                	"Life" : 0.3
+                	"Life" : 0.3,
+                	"DamageFactor" : 1.0,
+                	"StrengthFactor" : 0.5,
+                	"Layer" : 8
                 },
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : 0.6,
-                	"Life" : 0.3
+                	"Life" : 0.3,
+                	"DamageFactor" : 1.0,
+                	"StrengthFactor" : 0.5,
+                	"Layer" : 8
                 }
             ]
         }

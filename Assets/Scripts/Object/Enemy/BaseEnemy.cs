@@ -2,16 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-public class BaseEnemy : MonoBehaviour
+#if UNITY_EDITOR
+using UnityEngine.SceneManagement;
+#endif
+public class BaseEnemy : MonoBehaviour, IActor
 {
     public Vector3 Position { get { return transform.position; } }
     public NavMeshAgent agent;
     public Animator animator;
+    private string _name;
     public EnemyStatus status;
     private IActionState currActionState;
     public Transform baseCamp;
     public Player player;
-
+    public GameObject hitUnitPrefab;
+    private List<IActor> _actorList;
     public void MakeSampleStatus()
     {
         status = new EnemyStatus();
@@ -24,6 +29,7 @@ public class BaseEnemy : MonoBehaviour
         status.detectionDistance = 6;
         status.chaseDistance = 8;
         status.patrolCycle = 3;
+        _actorList = new List<IActor>();
     }
 
     public void SetFoward(Vector2 dir)
@@ -41,6 +47,7 @@ public class BaseEnemy : MonoBehaviour
     private void Awake()
     {
         MakeSampleStatus();
+        _name = "TurtleShell";
         currActionState = new EnemyIdleState(this);
     }
     private void Update()
@@ -51,6 +58,79 @@ public class BaseEnemy : MonoBehaviour
     public void PlayAnimation(string anim)
     {
         animator.CrossFade(anim, 0.2f, 0, 0f, 0.2f);
+    }
+
+    public void SummonHitUnit(int index)
+    {
+#if UNITY_EDITOR
+        if (SceneManager.GetActiveScene().name == "AnimationEditorScene")
+        {
+            return;
+        }
+#endif
+        var state = currActionState as EnemyActionState;
+        var actionInfo = state.GetActionInfo();
+
+        if (actionInfo.HitUnitList.Count <= index)
+        {
+            return;
+        }
+        HitUnit hitUnit = Instantiate(hitUnitPrefab).GetComponent<HitUnit>();
+        HitUnitInfo info = actionInfo.HitUnitList[index];
+        hitUnit.SetHitUnit(this, info, transform);
+    }
+    public void TakeActor(IActor actor, HitUnitStatus hitUnit)
+    {
+        if (false == _actorList.Contains(actor))
+        {
+            actor.TakeDamage(hitUnit);
+            _actorList.Add(actor);
+        }
+    }
+
+    public GameObject GetObject()
+    {
+        return gameObject;
+    }
+
+    public ObjectType GetObjectType()
+    {
+        return ObjectType.Enemy;
+    }
+
+    public void Init()
+    {
+     
+    }
+
+    public void ReturnObject()
+    {
+        
+    }
+
+    public void TakeDamage(HitUnitStatus hitUnit)
+    {
+        Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼 입음");
+    }
+
+    public void ResetActorList()
+    {
+        _actorList.Clear();
+    }
+
+    public int GetId()
+    {
+        return 0;
+    }
+
+    public string GetName()
+    {
+        return _name;
+    }
+
+    public float GetDamage()
+    {
+        return status.damage;
     }
 }
 

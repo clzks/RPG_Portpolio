@@ -687,7 +687,7 @@ GameObject:
   - component: {fileID: 1645444629989098334}
   - component: {fileID: 1645444629989098335}
   - component: {fileID: 1645444629989098332}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TurtleShell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -796,6 +796,7 @@ MonoBehaviour:
   animator: {fileID: 1695228941462301711}
   baseCamp: {fileID: 0}
   player: {fileID: 0}
+  hitUnitPrefab: {fileID: 5124647740959777850, guid: fc96fa300e7f68b41b12c78968b8347c, type: 3}
 --- !u!1 &1644812755078204071
 GameObject:
   m_ObjectHideFlags: 0

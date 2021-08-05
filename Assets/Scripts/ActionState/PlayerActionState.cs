@@ -187,7 +187,7 @@ public class PlayerAttackOneState : PlayerActionState
 
     public override void Exit()
     {
-
+        _player.ResetActorList();
     }
 
     public override ActionInfo GetActionInfo()
@@ -244,7 +244,7 @@ public class PlayerAttackTwoState : PlayerActionState
 
     public override void Exit()
     {
-
+        _player.ResetActorList();
     }
 
     public override ActionInfo GetActionInfo()
@@ -298,7 +298,7 @@ public class PlayerAttackThreeState : PlayerActionState
 
     public override void Exit()
     {
-
+        _player.ResetActorList();
     }
 
     public override ActionInfo GetActionInfo()

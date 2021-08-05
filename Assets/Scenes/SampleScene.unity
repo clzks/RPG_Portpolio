@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TurtleShell (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 1837317425425208, guid: 3aec22b5d3f3c2947bb81040b56e5f96, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 4882590064214274, guid: 3aec22b5d3f3c2947bb81040b56e5f96, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -206,6 +210,7 @@ MonoBehaviour:
   animator: {fileID: 386799604}
   baseCamp: {fileID: 718821178}
   player: {fileID: 2066896391795805436}
+  hitUnitPrefab: {fileID: 5124647740959777850, guid: fc96fa300e7f68b41b12c78968b8347c, type: 3}
 --- !u!135 &386799606
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -214,7 +219,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 386799603}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.4
@@ -230,8 +235,8 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
@@ -374,7 +379,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &466606334
 MeshFilter:
@@ -658,7 +663,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &805369013
 GameObject:
@@ -755,7 +760,7 @@ Transform:
   m_LocalScale: {x: 5, y: 1, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
@@ -1021,6 +1026,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TurtleShell (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1837317425425208, guid: 3aec22b5d3f3c2947bb81040b56e5f96, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 4882590064214274, guid: 3aec22b5d3f3c2947bb81040b56e5f96, type: 3}
       propertyPath: m_RootOrder
       value: 8
@@ -1093,6 +1102,7 @@ MonoBehaviour:
   animator: {fileID: 1318868893}
   baseCamp: {fileID: 718821178}
   player: {fileID: 2066896391795805436}
+  hitUnitPrefab: {fileID: 5124647740959777850, guid: fc96fa300e7f68b41b12c78968b8347c, type: 3}
 --- !u!135 &1318868895
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1101,7 +1111,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1318868892}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.4
@@ -1117,8 +1127,8 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
@@ -1154,6 +1164,10 @@ PrefabInstance:
     - target: {fileID: 1837317425425208, guid: 3aec22b5d3f3c2947bb81040b56e5f96, type: 3}
       propertyPath: m_Name
       value: TurtleShell (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1837317425425208, guid: 3aec22b5d3f3c2947bb81040b56e5f96, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4882590064214274, guid: 3aec22b5d3f3c2947bb81040b56e5f96, type: 3}
       propertyPath: m_RootOrder
@@ -1227,6 +1241,7 @@ MonoBehaviour:
   animator: {fileID: 1490021364}
   baseCamp: {fileID: 718821178}
   player: {fileID: 2066896391795805436}
+  hitUnitPrefab: {fileID: 5124647740959777850, guid: fc96fa300e7f68b41b12c78968b8347c, type: 3}
 --- !u!135 &1490021366
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1235,7 +1250,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1490021363}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.4
@@ -1251,8 +1266,8 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
@@ -1554,6 +1569,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TurtleShell (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 1837317425425208, guid: 3aec22b5d3f3c2947bb81040b56e5f96, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 4882590064214274, guid: 3aec22b5d3f3c2947bb81040b56e5f96, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -1626,6 +1645,7 @@ MonoBehaviour:
   animator: {fileID: 2047338723}
   baseCamp: {fileID: 718821178}
   player: {fileID: 2066896391795805436}
+  hitUnitPrefab: {fileID: 5124647740959777850, guid: fc96fa300e7f68b41b12c78968b8347c, type: 3}
 --- !u!135 &2047338725
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1634,7 +1654,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2047338722}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.4
@@ -1650,8 +1670,8 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
@@ -1740,6 +1760,18 @@ PrefabInstance:
       propertyPath: baseCamp
       value: 
       objectReference: {fileID: 718821178}
+    - target: {fileID: 1645444629989098334, guid: d983dc5c6e73bd645bc0b54da0f75a5d, type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1645444629989098334, guid: d983dc5c6e73bd645bc0b54da0f75a5d, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1645444629989098335, guid: d983dc5c6e73bd645bc0b54da0f75a5d, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d983dc5c6e73bd645bc0b54da0f75a5d, type: 3}
 --- !u!95 &2066896391788560199
@@ -2098,7 +2130,7 @@ Transform:
   - {fileID: 2066896391795446057}
   - {fileID: 2066896391795445959}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &2066896391795445917
 Transform:
@@ -3636,7 +3668,8 @@ GameObject:
   - component: {fileID: 2066896391795805436}
   - component: {fileID: 2066896391795805438}
   - component: {fileID: 2066896391795805440}
-  m_Layer: 0
+  - component: {fileID: 2066896391795805442}
+  m_Layer: 6
   m_Name: DogPolyart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3685,7 +3718,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2066896391795805435}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.4
@@ -3718,11 +3751,11 @@ NavMeshAgent:
   m_Radius: 0.5
   m_Speed: 3.5
   m_Acceleration: 8
-  avoidancePriority: 1
+  avoidancePriority: 90
   m_AngularSpeed: 120
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 0
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 0
   m_Height: 2
   m_BaseOffset: 0
@@ -3744,6 +3777,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!54 &2066896391795805442
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066896391795805435}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &2066896391795805443
 GameObject:
   m_ObjectHideFlags: 0

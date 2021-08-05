@@ -6,13 +6,14 @@ using System.Threading;
 
 public class HitUnit : MonoBehaviour, IPoolObject
 {
+    // UniTask 사용하므로 토큰 만들어줘야함
+    private IActor _actor;
     private ObjectPoolManager _objectPool;
     private CancellationTokenSource _disableCancellation = new CancellationTokenSource();
     private ObjectType _type = ObjectType.HitUnit;
     public SphereCollider sphereCollider;
-    public float colRadius;
     public float lifeTime = 0.5f;
-
+    public HitUnitStatus status;
     private void OnEnable()
     {
         if (_disableCancellation != null)
@@ -32,21 +33,37 @@ public class HitUnit : MonoBehaviour, IPoolObject
         Execute().Forget();
     }
 
-    public void SetHitUnit(HitUnitInfo info, Transform actorTransform)
+    private void OnTriggerEnter(Collider other)
     {
-        lifeTime = info.Life;
-        colRadius = info.ColliderRadius;
+        var actor = other.GetComponent<IActor>();
 
+        _actor.TakeActor(actor, status);
+    }
+
+    public void SetHitUnit(IActor actor, HitUnitInfo info, Transform actorTransform)
+    {
+        _actor = actor;
+        gameObject.layer = info.Layer;
+        lifeTime = info.Life;
+        sphereCollider.radius = info.ColliderRadius;
+        status.Damage = info.DamageFactor * _actor.GetDamage();
+        status.Strength = info.StrengthFactor;
         actorTransform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
         transform.position = actorTransform.position + new Vector3(info.SidePos, 0f, info.FrontPos);
         transform.RotateAround(actorTransform.position, axis, angle);
     }
-
-    private void OnDrawGizmos()
+#if UNITY_EDITOR
+    public void SetSampleHitUnit(HitUnitInfo info, Transform actorTransform)
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawSphere(transform.position + new Vector3(0, 0.0f, 0f), colRadius);
+        lifeTime = info.Life;
+        sphereCollider.radius = info.ColliderRadius;
+        //status.Damage = info.DamageFactor * _actor.GetDamage();
+        //status.Strength = info.StrengthFactor;
+        actorTransform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
+        transform.position = actorTransform.position + new Vector3(info.SidePos, 0f, info.FrontPos);
+        transform.RotateAround(actorTransform.position, axis, angle);
     }
+#endif
 
     private async UniTaskVoid Execute()
     {
@@ -80,4 +97,16 @@ public class HitUnit : MonoBehaviour, IPoolObject
     {
         _objectPool.ReturnObject(this);
     }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(transform.position + new Vector3(0, 0.0f, 0f), sphereCollider.radius);
+    }
+}
+
+public struct HitUnitStatus
+{
+    public Vector3 Position;
+    public float Damage;
+    public float Strength;
 }

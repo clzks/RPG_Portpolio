@@ -4,6 +4,7 @@ using UnityEngine.AI;
 public enum ObjectType
 { 
     HitUnit,
+    Player,
     Enemy,
     Effect,
     Count

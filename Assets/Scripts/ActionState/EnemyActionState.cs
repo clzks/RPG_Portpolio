@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public abstract class EnemyActionState : IActionState
 {
+    protected DataManager _dataManager;
     protected BaseEnemy _enemy;
     protected Player _player;
     protected NavMeshAgent _agent;
@@ -14,6 +15,7 @@ public abstract class EnemyActionState : IActionState
     protected EnemyStatus _status;
     public EnemyActionState(BaseEnemy enemy)
     {
+        _dataManager = DataManager.Get();
         _enemy = enemy;
         _agent = enemy.agent;
         _player = enemy.player;
@@ -64,6 +66,11 @@ public abstract class EnemyActionState : IActionState
         }
 
         return currAnimTime;
+    }
+
+    public virtual EnemyAction GetActionInfo()
+    {
+        return null;
     }
 
     #region sealed methods
@@ -236,10 +243,16 @@ public class EnemyChaseState : EnemyActionState
 public class EnemyAttackState : EnemyActionState
 {
     string actionName = "Attack01";
+    EnemyAction info;
 
     public EnemyAttackState(BaseEnemy enemy) : base(enemy)
     {
+        info = _dataManager.GetEnemyActionInfo(_enemy.GetName(), actionName);
 
+        if (null == info)
+        {
+
+        }
     }
 
     public override void Enter()
@@ -266,7 +279,12 @@ public class EnemyAttackState : EnemyActionState
 
     public override void Exit()
     {
+        _enemy.ResetActorList();
+    }
 
+    public override EnemyAction GetActionInfo()
+    {
+        return info;
     }
 }
 

@@ -10,4 +10,7 @@ public class HitUnitInfo
     [Tooltip("본체 측면상의 거리")]
     public float SidePos;
     public float Life;
+    public float DamageFactor;
+    public float StrengthFactor;
+    public int Layer;
 }

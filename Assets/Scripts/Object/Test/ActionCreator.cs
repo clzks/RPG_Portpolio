@@ -177,7 +177,7 @@ public class ActionCreator : MonoBehaviour
         }
         HitUnit hitUnit = Instantiate(hitUnitPrefab).GetComponent<HitUnit>();
         HitUnitInfo info = hitUnitList[index];
-        hitUnit.SetHitUnit(info, transform);
+        hitUnit.SetSampleHitUnit(info, transform);
     }
 
     public void MakeSampleHitUnit(int index)
@@ -188,6 +188,6 @@ public class ActionCreator : MonoBehaviour
         }
         HitUnit hitUnit = Instantiate(hitUnitPrefab).GetComponent<HitUnit>();
         HitUnitInfo info = hitUnitList[index];
-        hitUnit.SetHitUnit(info, transform);
+        hitUnit.SetSampleHitUnit(info, transform);
     }
 }

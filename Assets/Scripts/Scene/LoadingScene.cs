@@ -6,13 +6,20 @@ using UnityEngine.SceneManagement;
 
 public class LoadingScene : MonoBehaviour
 {
+    private DataManager _dataManager;
     private async UniTask Awake()
     {
-        var loadComplete = await DataManager.Get().LoadPlayerActionList();
+        _dataManager = DataManager.Get();
+        var loadComplete = await _dataManager.LoadPlayerActionList();
+        loadComplete &= await _dataManager.LoadEnemyActionList();
 
         if (true == loadComplete)
         {
             SceneManager.LoadScene("SampleScene");
+        }
+        else
+        {
+            Debug.Log("읽어들이지 못한 파일이 있습니다");
         }
     }
 }
