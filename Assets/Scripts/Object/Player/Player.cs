@@ -17,6 +17,8 @@ public class Player : MonoBehaviour, IActor
     private Dictionary<string, ActionInfo> _actionInfoList;
     public GameObject hitUnitPrefab;
     private List<IActor> _actorList;
+    private Status _status;
+    private DamageInfo _damageInfo;
     public Vector3 Position { get { return transform.position; } }
     
     public enum ActionType
@@ -52,6 +54,8 @@ public class Player : MonoBehaviour, IActor
         _actionInfoList = DataManager.Get().GetActionInfoList();
         _collider = GetComponent<SphereCollider>();
         _actorList = new List<IActor>();
+        _status = Status.MakeSampleStatus();
+        _damageInfo = null;
     }
 
     private void LateUpdate()
@@ -94,6 +98,11 @@ public class Player : MonoBehaviour, IActor
 #endif
         var state = currActionState as PlayerActionState;
         var actionInfo = state.GetActionInfo();
+
+        if (null == actionInfo)
+        {
+            return;
+        }
 
         if (actionInfo.HitUnitList.Count <= index)
         {
@@ -152,7 +161,7 @@ public class Player : MonoBehaviour, IActor
 
     public void Init()
     {
-      
+        
     }
 
     public void ReturnObject()
@@ -163,7 +172,24 @@ public class Player : MonoBehaviour, IActor
     public void TakeDamage(HitUnitStatus hitUnit)
     {
         Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼입힘");
+        _status.Hp -= hitUnit.Damage;
+        
+        if(null == _damageInfo && false == _status.IsInvincible)
+        {
+            _damageInfo = new DamageInfo(hitUnit.Position, hitUnit.Strength * 10);
+        }
     }
+
+    public void ResetDamageInfo()
+    {
+        _damageInfo = null;
+    }
+
+    public DamageInfo GetDamageInfo()
+    {
+        return _damageInfo;
+    }
+
     public float GetDamage()
     {
         return 3f;

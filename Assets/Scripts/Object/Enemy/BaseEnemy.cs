@@ -11,12 +11,15 @@ public class BaseEnemy : MonoBehaviour, IActor
     public NavMeshAgent agent;
     public Animator animator;
     private string _name;
-    public EnemyStatus status;
     private IActionState currActionState;
     public Transform baseCamp;
     public Player player;
     public GameObject hitUnitPrefab;
     private List<IActor> _actorList;
+    public EnemyStatus status;
+    private DamageInfo _damageInfo;
+    private float _currStareTimer;
+
     public void MakeSampleStatus()
     {
         status = new EnemyStatus();
@@ -29,6 +32,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         status.detectionDistance = 6;
         status.chaseDistance = 8;
         status.patrolCycle = 3;
+        _currStareTimer = status.attackTerm;
         _actorList = new List<IActor>();
     }
 
@@ -111,6 +115,38 @@ public class BaseEnemy : MonoBehaviour, IActor
     public void TakeDamage(HitUnitStatus hitUnit)
     {
         Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼 입음");
+        status.hp -= hitUnit.Damage;
+
+        // 무적상태는 추후에 또 고려해봐야함
+        if (null == _damageInfo && false == status.isInvincible)
+        {
+            _damageInfo = new DamageInfo(hitUnit.Position, hitUnit.Strength * 10);
+        }
+    }
+
+    public void AddStareTime(float stareTime)
+    {
+        _currStareTimer += stareTime;
+    }
+    
+    public void ResetStareTime()
+    {
+        _currStareTimer = 0f;
+    }
+
+    public float GetStareTime()
+    {
+        return _currStareTimer;
+    }
+
+    public DamageInfo GetDamageInfo()
+    {
+        return _damageInfo;
+    }
+
+    public void ResetDamageInfo()
+    {
+        _damageInfo = null;
     }
 
     public void ResetActorList()
@@ -146,4 +182,5 @@ public struct EnemyStatus
     public float detectionDistance;
     public float chaseDistance;
     public float patrolCycle;
+    public bool isInvincible;
 }

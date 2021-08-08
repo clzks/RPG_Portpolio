@@ -38,6 +38,11 @@ public abstract class PlayerActionState : IActionState
         return null;
     }
 
+    public DamageInfo GetDamageInfo()
+    {
+        return _player.GetDamageInfo();
+    }
+
     public float GetAnimNormalTime(string anim)
     {
         var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
@@ -67,7 +72,51 @@ public abstract class PlayerActionState : IActionState
     #endregion
 }
 
-    
+public abstract class PlayerNormalAttackState : PlayerActionState
+{
+    protected ActionInfo info;
+    protected float currAnimTime;
+    public PlayerNormalAttackState(Player player) : base(player)
+    {
+
+    }
+
+    public override void Enter()
+    {
+       
+    }
+
+    public override void Exit()
+    {
+        _player.ResetActorList();
+    }
+
+    public override ActionInfo GetActionInfo()
+    {
+        return info;
+    }
+
+    public override IActionState Update()
+    {
+        return this;
+    }
+
+    public bool IsNextAttackState()
+    {
+        if (currAnimTime >= info.ComboAvailableTime)
+        {
+            if (true == _player.attackButton.GetButtonDown())
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+
+
 public class PlayerIdleState : PlayerActionState
 {
     public PlayerIdleState(Player player) : base(player)
@@ -81,6 +130,11 @@ public class PlayerIdleState : PlayerActionState
     }
     public override IActionState Update()
     {
+        if(null != GetDamageInfo())
+        {
+            return ChangeState(new PlayerDamageState(_player));
+        }
+
         if(true == _player.attackButton.GetButtonDown())
         {
             return ChangeState(new PlayerAttackOneState(_player));
@@ -113,6 +167,11 @@ public class PlayerRunState : PlayerActionState
     }
     public override IActionState Update()
     {
+        if (null != GetDamageInfo())
+        {
+            return ChangeState(new PlayerDamageState(_player));
+        }
+
         if (true == _player.attackButton.GetButtonDown())
         {
             return ChangeState(new PlayerAttackOneState(_player));
@@ -138,11 +197,10 @@ public class PlayerRunState : PlayerActionState
     }
 }
 
-public class PlayerAttackOneState : PlayerActionState
+public class PlayerAttackOneState : PlayerNormalAttackState
 {
-    ActionInfo info;
     string actionName = "Attack01";
-    
+
     public PlayerAttackOneState(Player player) : base(player)
     {
         info = player.GetActionInfo(actionName);
@@ -155,19 +213,29 @@ public class PlayerAttackOneState : PlayerActionState
 
     public override void Enter()
     {
+        if (true == _movePad.IsDrag())
+        {
+            var dir = _movePad.GetStickDirection();
+            _player.SetFoward(dir);
+            _player.MovePlayer();
+        }
+
         PlayAnimation(actionName);
+        currAnimTime = 0f;
     }
 
     public override IActionState Update()
     {
-        var currAnimTime = GetAnimNormalTime(actionName);
+        currAnimTime = GetAnimNormalTime(actionName);
 
-        if (currAnimTime >= info.ComboAvailableTime)
+        if (null != GetDamageInfo())
         {
-            if (true == _player.attackButton.GetButtonDown())
-            {
-                return ChangeState(new PlayerAttackTwoState(_player));
-            }
+            return ChangeState(new PlayerDamageState(_player));
+        }
+
+        if(true == IsNextAttackState())
+        {
+            return ChangeState(new PlayerAttackTwoState(_player));
         }
         
         if(currAnimTime >= 0.99f)
@@ -187,18 +255,12 @@ public class PlayerAttackOneState : PlayerActionState
 
     public override void Exit()
     {
-        _player.ResetActorList();
-    }
-
-    public override ActionInfo GetActionInfo()
-    {
-        return info;
+        base.Exit();
     }
 }
 
-public class PlayerAttackTwoState : PlayerActionState
+public class PlayerAttackTwoState : PlayerNormalAttackState
 {
-    ActionInfo info;
     string actionName = "Attack02";
     public PlayerAttackTwoState(Player player) : base(player)
     {
@@ -212,19 +274,29 @@ public class PlayerAttackTwoState : PlayerActionState
 
     public override void Enter()
     {
+        if (true == _movePad.IsDrag())
+        {
+            var dir = _movePad.GetStickDirection();
+            _player.SetFoward(dir);
+            _player.MovePlayer();
+        }
+
         PlayAnimation(actionName);
+        currAnimTime = 0f;
     }
 
     public override IActionState Update()
     {
-        var currAnimTime = GetAnimNormalTime(actionName);
+        currAnimTime = GetAnimNormalTime(actionName);
 
-        if (currAnimTime >= info.ComboAvailableTime)
+        if (null != GetDamageInfo())
         {
-            if (true == _player.attackButton.GetButtonDown())
-            {
-                return ChangeState(new PlayerAttackThreeState(_player));
-            }
+            return ChangeState(new PlayerDamageState(_player));
+        }
+
+        if (true == IsNextAttackState())
+        {
+            return ChangeState(new PlayerAttackThreeState(_player));
         }
 
         if (currAnimTime >= 0.99f)
@@ -244,18 +316,12 @@ public class PlayerAttackTwoState : PlayerActionState
 
     public override void Exit()
     {
-        _player.ResetActorList();
-    }
-
-    public override ActionInfo GetActionInfo()
-    {
-        return info;
+        base.Exit();
     }
 }
 
-public class PlayerAttackThreeState : PlayerActionState
+public class PlayerAttackThreeState : PlayerNormalAttackState
 {
-    ActionInfo info;
     string actionName = "Attack03";
     public PlayerAttackThreeState(Player player) : base(player)
     {
@@ -269,12 +335,26 @@ public class PlayerAttackThreeState : PlayerActionState
 
     public override void Enter()
     {
+        if (true == _movePad.IsDrag())
+        {
+            var dir = _movePad.GetStickDirection();
+            _player.SetFoward(dir);
+            _player.MovePlayer();
+        }
+
         PlayAnimation(actionName);
+        currAnimTime = 0f;
     }
 
     public override IActionState Update()
     {
-        var currAnimTime = GetAnimNormalTime(actionName);
+        currAnimTime = GetAnimNormalTime(actionName);
+
+        if (null != GetDamageInfo())
+        {
+            return ChangeState(new PlayerDamageState(_player));
+        }
+
 
         if (currAnimTime >= info.ComboAvailableTime)
         {
@@ -298,17 +378,16 @@ public class PlayerAttackThreeState : PlayerActionState
 
     public override void Exit()
     {
-        _player.ResetActorList();
-    }
-
-    public override ActionInfo GetActionInfo()
-    {
-        return info;
+        base.Exit();
     }
 }
 
 public class PlayerDamageState : PlayerActionState
 {
+    float knockBackTime;
+    float timer;
+    float distance;
+
     public PlayerDamageState(Player player) : base(player)
     {
 
@@ -316,16 +395,27 @@ public class PlayerDamageState : PlayerActionState
 
     public override void Enter()
     {
+        DamageInfo info = GetDamageInfo();
+        knockBackTime = info.knockBackTime;
+        distance = info.distance;    
+        timer = 0f;
         PlayAnimation("Damage");
     }
     public override IActionState Update()
     {
+        timer += Time.deltaTime;
+
+        if(timer >= knockBackTime)
+        {
+            return ChangeState(new PlayerIdleState(_player));
+        }
+
         return this;
     }
 
     public override void Exit()
     {
-
+        _player.ResetDamageInfo();
     }
 }
 

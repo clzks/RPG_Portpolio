@@ -55,6 +55,11 @@ public abstract class EnemyActionState : IActionState
     {
         _enemy.PlayAnimation(anim);
     }
+    public DamageInfo GetDamageInfo()
+    {
+        return _enemy.GetDamageInfo();
+    }
+
 
     public float GetAnimNormalTime(string anim)
     {
@@ -67,7 +72,6 @@ public abstract class EnemyActionState : IActionState
 
         return currAnimTime;
     }
-
     public virtual EnemyAction GetActionInfo()
     {
         return null;
@@ -109,8 +113,14 @@ public class EnemyIdleState : EnemyActionState
     public override IActionState Update()
     {
         idleTimer += Time.deltaTime;
+        _enemy.AddStareTime(Time.deltaTime);
 
-        if(true == CheckDetectPlayer())
+        if (null != GetDamageInfo())
+        {
+            return ChangeState(new EnemyDamageState(_enemy));
+        }
+
+        if (true == CheckDetectPlayer())
         {
             return ChangeState(new EnemyChaseState(_enemy));
         }
@@ -154,8 +164,14 @@ public class EnemyPatrolState : EnemyActionState
     public override IActionState Update()
     {
         patrolTimer += Time.deltaTime;
+        _enemy.AddStareTime(Time.deltaTime);
+
+        if (null != GetDamageInfo())
+        {
+            return ChangeState(new EnemyDamageState(_enemy));
+        }
         // 목적지에 도달했거나 패트롤 시간이 지나면 Idle로 바뀐다.
-        if(patrolTimer >= 3f || true == IsArriveToDest())
+        if (patrolTimer >= 3f || true == IsArriveToDest())
         {
             return ChangeState(new EnemyIdleState(_enemy));
         }
@@ -205,13 +221,27 @@ public class EnemyChaseState : EnemyActionState
 
     public override IActionState Update()
     {
+        _enemy.AddStareTime(Time.deltaTime);
+
+        if (null != GetDamageInfo())
+        {
+            return ChangeState(new EnemyDamageState(_enemy));
+        }
+
         if (GetPlayerDistance() >= _status.chaseDistance)
         {
             return ChangeState(new EnemyPatrolState(_enemy));
         }
         else if(GetPlayerDistance() <= _status.attackRange)
         {
-            return ChangeState(new EnemyAttackState(_enemy));
+            if (_enemy.GetStareTime() >= _status.attackTerm)
+            {
+                return ChangeState(new EnemyAttackState(_enemy));
+            }
+            else
+            {
+                return ChangeState(new EnemyStareState(_enemy));
+            }
         }
 
         ChaseTarget(_player.Position);
@@ -267,8 +297,13 @@ public class EnemyAttackState : EnemyActionState
     {
         var currAnimTime = GetAnimNormalTime(actionName);
 
+        if (null != GetDamageInfo())
+        {
+            return ChangeState(new EnemyDamageState(_enemy));
+        }
+
         // 공격 애니메이션이 끝난 상황에서
-        if(currAnimTime >= 0.99f)
+        if (currAnimTime >= 0.99f)
         {
             // 공격 대기모드로 변환
             return ChangeState(new EnemyStareState(_enemy));
@@ -279,6 +314,7 @@ public class EnemyAttackState : EnemyActionState
 
     public override void Exit()
     {
+        _enemy.ResetStareTime();
         _enemy.ResetActorList();
     }
 
@@ -290,7 +326,7 @@ public class EnemyAttackState : EnemyActionState
 
 public class EnemyStareState : EnemyActionState
 {
-    float stareTimer;
+    
     public EnemyStareState(BaseEnemy enemy) : base(enemy)
     {
 
@@ -298,14 +334,21 @@ public class EnemyStareState : EnemyActionState
 
     public override void Enter()
     {
+        _agent.ResetPath();
         // 타깃을 바라보게 함
-        stareTimer = 0f;
         _enemy.LookPlayer();
         PlayAnimation("Stare");
     }
     public override IActionState Update()
     {
-        if(stareTimer >= _status.attackTerm)
+        _enemy.AddStareTime(Time.deltaTime);
+
+        if (null != GetDamageInfo())
+        {
+            return ChangeState(new EnemyDamageState(_enemy));
+        }
+
+        if (_enemy.GetStareTime() >= _status.attackTerm)
         {
             // 플레이어가 거리에서 멀어졌다면 Chase로 변환
             if (GetPlayerDistance() > _status.attackRange)
@@ -320,7 +363,6 @@ public class EnemyStareState : EnemyActionState
         }
         // 대기 시간동안 가만히 있거나 다른 행동을 한다. 공격과 공격 사이의 간격을 표현하는 상태
         _enemy.LookPlayer();
-        stareTimer += Time.deltaTime;
         return this;
     }
 
@@ -332,7 +374,9 @@ public class EnemyStareState : EnemyActionState
 
 public class EnemyDamageState : EnemyActionState
 {
-    float damageTimer;
+    float knockBackTime;
+    float timer;
+    float distance;
 
     public EnemyDamageState(BaseEnemy enemy) : base(enemy)
     {
@@ -341,19 +385,36 @@ public class EnemyDamageState : EnemyActionState
 
     public override void Enter()
     {
+        DamageInfo info = GetDamageInfo();
+        knockBackTime = info.knockBackTime;
+        distance = info.distance;
+        _enemy.ResetDamageInfo();
+        timer = 0f;
         // 경로를 리셋시켜준다
         _agent.ResetPath();
         PlayAnimation("Damage");
     }
     public override IActionState Update()
     {
+        timer += Time.deltaTime;
+        _enemy.AddStareTime(Time.deltaTime);
+
+        if (null != GetDamageInfo())
+        {
+            return ChangeState(new EnemyDamageState(_enemy));
+        }
+
+        if (timer >= knockBackTime)
+        {
+            return ChangeState(new EnemyChaseState(_enemy));
+        }
         // 단지 피격 모션만 재생 후에 chase로 귀환
         return this;
     }
 
     public override void Exit()
     {
-
+        
     }
 }
 
@@ -372,6 +433,7 @@ public class EnemyStunState : EnemyActionState
     }
     public override IActionState Update()
     {
+        _enemy.AddStareTime(Time.deltaTime);
         // 스턴 후에는 chase로 귀환
         return this;
     }
