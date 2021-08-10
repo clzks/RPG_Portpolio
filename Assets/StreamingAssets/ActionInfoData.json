@@ -4,7 +4,10 @@
         "Name": "애니메이터상의 스테이트 이름",
         "CharacterName" : "해당 State를 가진 캐릭터 이름",
         "ComboAvailableTime" : "콤보 공격이 가능한 시간(NormalizedTime)",
-        "HitUnitList": "액션에 생성될 히트유닛 리스트. 인덱스 순서대로 AnimationEvent에서 생성한다"
+        "HitUnitList": "액션에 생성될 히트유닛 리스트. 인덱스 순서대로 AnimationEvent에서 생성한다",
+        "MoveStartTime" : "이동하는 동작이 있을 시 딜레이",
+        "MoveTime" : "이동시간",
+        "MoveDistance" : "이동거리(일단 방향은 코드에서 설정해준다)"
     },
     "ActionInfo": [
         {
@@ -12,32 +15,35 @@
             "Name": "Attack01",
             "CharacterName" : "SwordPlayer",
             "ComboAvailableTime" : 0.68,
+            "MoveStartTime" : 0.1,
+        	"MoveTime" : 0.15,
+        	"MoveDistance" : 1,
             "HitUnitList": [
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : -0.6,
-                	"Life" : 0.3,
+                	"Life" : 0.2,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : 0.5,
+                	"StrengthFactor" : 0.8,
                 	"Layer" : 8
                 },
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : 0,
-                	"Life" : 0.3,
+                	"Life" : 0.2,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : 0.5,
+                	"StrengthFactor" : 0.8,
                 	"Layer" : 8
                 },
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : 0.6,
-                	"Life" : 0.3,
+                	"Life" : 0.2,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : 0.5,
+                	"StrengthFactor" : 0.8,
                 	"Layer" : 8
                 }
             ]
@@ -47,32 +53,35 @@
             "Name": "Attack02",
             "CharacterName" : "SwordPlayer",
             "ComboAvailableTime" : 0.63,
+            "MoveStartTime" : 0.2,
+        	"MoveTime" : 0.15,
+        	"MoveDistance" : 1,
             "HitUnitList": [
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : 0.6,
-                	"Life" : 0.3,
+                	"Life" : 0.2,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : 0.5,
+                	"StrengthFactor" : 0.8,
                 	"Layer" : 8
                 },
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : 0,
-                	"Life" : 0.3,
+                	"Life" : 0.2,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : 0.5,
+                	"StrengthFactor" : 0.8,
                 	"Layer" : 8
                 },
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : -0.6,
-                	"Life" : 0.3,
+                	"Life" : 0.2,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : 0.5,
+                	"StrengthFactor" : 0.8,
                 	"Layer" : 8
                 }
             ]
@@ -82,32 +91,35 @@
             "Name": "Attack03",
             "CharacterName" : "SwordPlayer",
             "ComboAvailableTime" : 0.68,
+            "MoveStartTime" : 0.18,
+        	"MoveTime" : 0.15,
+        	"MoveDistance" : 1.5,
             "HitUnitList": [
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : -0.6,
-                	"Life" : 0.3,
+                	"Life" : 0.2,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : 0.5,
+                	"StrengthFactor" : 1,
                 	"Layer" : 8
                 },
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : 0,
-                	"Life" : 0.3,
+                	"Life" : 0.2,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : 0.5,
+                	"StrengthFactor" : 1,
                 	"Layer" : 8
                 },
                 {
                 	"ColliderRadius" : 0.6,
                 	"FrontPos" : 1.2,
                 	"SidePos" : 0.6,
-                	"Life" : 0.3,
+                	"Life" : 0.2,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : 0.5,
+                	"StrengthFactor" : 1,
                 	"Layer" : 8
                 }
             ]

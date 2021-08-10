@@ -72,6 +72,19 @@ public abstract class EnemyActionState : IActionState
 
         return currAnimTime;
     }
+
+    public float GetAnimTotalTime(string anim)
+    {
+        var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+        float currAnimTime = 0f;
+        if (stateInfo.IsName(anim))
+        {
+            currAnimTime = stateInfo.length / stateInfo.speed;
+        }
+
+        return currAnimTime;
+    }
+
     public virtual EnemyAction GetActionInfo()
     {
         return null;
@@ -377,6 +390,7 @@ public class EnemyDamageState : EnemyActionState
     float knockBackTime;
     float timer;
     float distance;
+    Vector3 knockBackDir;
 
     public EnemyDamageState(BaseEnemy enemy) : base(enemy)
     {
@@ -386,13 +400,15 @@ public class EnemyDamageState : EnemyActionState
     public override void Enter()
     {
         DamageInfo info = GetDamageInfo();
-        knockBackTime = info.knockBackTime;
+        knockBackTime = info.stiffNessTime;
         distance = info.distance;
+        knockBackDir = (_enemy.Position - info.actorPos).normalized;
         _enemy.ResetDamageInfo();
         timer = 0f;
         // 경로를 리셋시켜준다
         _agent.ResetPath();
         PlayAnimation("Damage");
+        _enemy.MoveCharacter(knockBackTime, distance, knockBackDir);
     }
     public override IActionState Update()
     {
@@ -406,7 +422,7 @@ public class EnemyDamageState : EnemyActionState
 
         if (timer >= knockBackTime)
         {
-            return ChangeState(new EnemyChaseState(_enemy));
+            return ChangeState(new EnemyStareState(_enemy));
         }
         // 단지 피격 모션만 재생 후에 chase로 귀환
         return this;

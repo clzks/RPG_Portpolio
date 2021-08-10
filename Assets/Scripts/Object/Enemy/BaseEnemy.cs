@@ -19,7 +19,7 @@ public class BaseEnemy : MonoBehaviour, IActor
     public EnemyStatus status;
     private DamageInfo _damageInfo;
     private float _currStareTimer;
-
+    private IEnumerator _moveCoroutine = null;
     public void MakeSampleStatus()
     {
         status = new EnemyStatus();
@@ -75,6 +75,11 @@ public class BaseEnemy : MonoBehaviour, IActor
         var state = currActionState as EnemyActionState;
         var actionInfo = state.GetActionInfo();
 
+        if (null == actionInfo)
+        {
+            return;
+        }
+
         if (actionInfo.HitUnitList.Count <= index)
         {
             return;
@@ -117,10 +122,18 @@ public class BaseEnemy : MonoBehaviour, IActor
         Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼 입음");
         status.hp -= hitUnit.Damage;
 
+        // TODO 데미지 이펙트 추가할 곳
+
+        // 넉백 및 경직이 없다는 뜻
+        if (0f >= hitUnit.Strength)
+        {
+            return;
+        }
+
         // 무적상태는 추후에 또 고려해봐야함
         if (null == _damageInfo && false == status.isInvincible)
         {
-            _damageInfo = new DamageInfo(hitUnit.Position, hitUnit.Strength * 10);
+            _damageInfo = new DamageInfo(hitUnit.Position, hitUnit.Strength, hitUnit.Strength * 0.3f);
         }
     }
 
@@ -167,6 +180,28 @@ public class BaseEnemy : MonoBehaviour, IActor
     public float GetDamage()
     {
         return status.damage;
+    }
+    public void MoveCharacter(float time, float distance, Vector3 dir)
+    {
+        if (null != _moveCoroutine)
+        {
+            StopCoroutine(_moveCoroutine);
+        }
+        _moveCoroutine = MoveCoroutine(time, distance, dir);
+        StartCoroutine(_moveCoroutine);
+    }
+
+    private IEnumerator MoveCoroutine(float time, float distance, Vector3 dir)
+    {
+        float timer = 0f;
+        while (timer <= time)
+        {
+            timer += Time.deltaTime;
+            transform.position += (Time.deltaTime * distance / time) * dir;
+            yield return new WaitForEndOfFrame();
+        }
+
+        _moveCoroutine = null;
     }
 }
 

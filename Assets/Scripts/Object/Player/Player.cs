@@ -19,6 +19,8 @@ public class Player : MonoBehaviour, IActor
     private List<IActor> _actorList;
     private Status _status;
     private DamageInfo _damageInfo;
+    private IEnumerator _moveCoroutine = null;
+
     public Vector3 Position { get { return transform.position; } }
     
     public enum ActionType
@@ -73,12 +75,17 @@ public class Player : MonoBehaviour, IActor
         _animController.CrossFade(anim, 0.2f, 0, 0f, 0.2f);
     }
 
-    public void SetFoward(Vector2 dir)
+    public void SetForward(Vector2 dir)
     {
         transform.forward = new Vector3(dir.x, 0, dir.y);
     }
 
-    public void MovePlayer()
+    public Vector3 GetForward()
+    {
+        return transform.forward;
+    }
+
+    public void MovePlayerByPad()
     {
         transform.position += transform.forward * speed * Time.deltaTime;
     }
@@ -174,9 +181,17 @@ public class Player : MonoBehaviour, IActor
         Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼입힘");
         _status.Hp -= hitUnit.Damage;
         
+        // TODO 데미지 이펙트 추가할 곳
+
+        // 넉백 및 경직이 없다는 뜻
+        if(0f >= hitUnit.Strength)
+        {
+            return;
+        }
+
         if(null == _damageInfo && false == _status.IsInvincible)
         {
-            _damageInfo = new DamageInfo(hitUnit.Position, hitUnit.Strength * 10);
+            _damageInfo = new DamageInfo(hitUnit.Position, hitUnit.Strength, hitUnit.Strength * 0.2f);
         }
     }
 
@@ -200,4 +215,50 @@ public class Player : MonoBehaviour, IActor
         _actorList.Clear();
     }
 
+    public void MoveCharacter(float time, float distance, Vector3 dir)
+    {
+        if (null != _moveCoroutine)
+        {
+            StopCoroutine(_moveCoroutine);
+        }
+        _moveCoroutine = MoveCoroutine(time, distance, dir);
+        StartCoroutine(_moveCoroutine);
+    }
+
+    public void MoveCharacter(float delayTime, float time, float distance, Vector3 dir)
+    {
+        if (null != _moveCoroutine)
+        {
+            StopCoroutine(_moveCoroutine);
+        }
+        _moveCoroutine = MoveCoroutine(delayTime, time, distance, dir);
+        StartCoroutine(_moveCoroutine);
+    }
+
+    private IEnumerator MoveCoroutine(float time, float distance, Vector3 dir)
+    {
+        float timer = 0f;
+        while (timer <= time)
+        { 
+            timer += Time.deltaTime;
+            transform.position += (Time.deltaTime * distance / time)  * dir;
+            yield return new WaitForEndOfFrame();
+        }
+
+        _moveCoroutine = null;
+    }
+
+    private IEnumerator MoveCoroutine(float delayTime, float time, float distance, Vector3 dir)
+    {
+        yield return new WaitForSeconds(delayTime);
+        float timer = 0f;
+        while (timer <= time)
+        {
+            timer += Time.deltaTime;
+            transform.position += (Time.deltaTime * distance / time) * dir;
+            yield return new WaitForEndOfFrame();
+        }
+
+        _moveCoroutine = null;
+    }
 }

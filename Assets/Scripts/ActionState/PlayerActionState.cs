@@ -54,6 +54,26 @@ public abstract class PlayerActionState : IActionState
 
         return currAnimTime;
     }
+
+    public float GetAnimTotalTime(string anim)
+    {
+        var a = _animator.runtimeAnimatorController.animationClips;
+        AnimationClip c;
+        foreach (var item in a)
+        {
+            
+        }
+
+        var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+        float currAnimTime = 0f;
+        if (stateInfo.IsName(anim))
+        {
+            currAnimTime = stateInfo.length / stateInfo.speed;
+        }
+
+        return currAnimTime;
+    }
+
     #region sealed methods
     public sealed override bool Equals(object obj)
     {
@@ -127,6 +147,7 @@ public class PlayerIdleState : PlayerActionState
     public override void Enter()
     {
         PlayAnimation("Idle");
+        Debug.Log(GetAnimTotalTime("Idle"));
     }
     public override IActionState Update()
     {
@@ -180,8 +201,8 @@ public class PlayerRunState : PlayerActionState
         if (true == _movePad.IsDrag())
         {
             var dir = _movePad.GetStickDirection();
-            _player.SetFoward(dir);
-            _player.MovePlayer();
+            _player.SetForward(dir);
+            _player.MovePlayerByPad();
         }
         else
         {
@@ -200,15 +221,13 @@ public class PlayerRunState : PlayerActionState
 public class PlayerAttackOneState : PlayerNormalAttackState
 {
     string actionName = "Attack01";
+    float moveDistance;
+    float moveDelay;
+    float moveTime;
 
     public PlayerAttackOneState(Player player) : base(player)
     {
-        info = player.GetActionInfo(actionName);
         
-        if(null == info)
-        {
-            
-        }
     }
 
     public override void Enter()
@@ -216,12 +235,24 @@ public class PlayerAttackOneState : PlayerNormalAttackState
         if (true == _movePad.IsDrag())
         {
             var dir = _movePad.GetStickDirection();
-            _player.SetFoward(dir);
-            _player.MovePlayer();
+            _player.SetForward(dir);
+            _player.MovePlayerByPad();
+        }
+
+        info = _player.GetActionInfo(actionName);
+        moveDistance = info.MoveDistance;
+        moveDelay = info.MoveStartTime;
+        moveTime = info.MoveTime;
+
+        if (null == info)
+        {
+
         }
 
         PlayAnimation(actionName);
+        Debug.Log(GetAnimTotalTime(actionName));
         currAnimTime = 0f;
+        _player.MoveCharacter(moveDelay, moveTime, moveDistance, _player.GetForward());
     }
 
     public override IActionState Update()
@@ -262,14 +293,12 @@ public class PlayerAttackOneState : PlayerNormalAttackState
 public class PlayerAttackTwoState : PlayerNormalAttackState
 {
     string actionName = "Attack02";
+    float moveDistance;
+    float moveDelay;
+    float moveTime;
     public PlayerAttackTwoState(Player player) : base(player)
     {
-        info = player.GetActionInfo(actionName);
 
-        if (null == info)
-        {
-
-        }
     }
 
     public override void Enter()
@@ -277,12 +306,23 @@ public class PlayerAttackTwoState : PlayerNormalAttackState
         if (true == _movePad.IsDrag())
         {
             var dir = _movePad.GetStickDirection();
-            _player.SetFoward(dir);
-            _player.MovePlayer();
+            _player.SetForward(dir);
+            _player.MovePlayerByPad();
+        }
+
+        info = _player.GetActionInfo(actionName);
+        moveDistance = info.MoveDistance;
+        moveDelay = info.MoveStartTime;
+        moveTime = info.MoveTime;
+
+        if (null == info)
+        {
+
         }
 
         PlayAnimation(actionName);
         currAnimTime = 0f;
+        _player.MoveCharacter(moveDelay, moveTime, moveDistance, _player.GetForward());
     }
 
     public override IActionState Update()
@@ -323,14 +363,13 @@ public class PlayerAttackTwoState : PlayerNormalAttackState
 public class PlayerAttackThreeState : PlayerNormalAttackState
 {
     string actionName = "Attack03";
+    float moveDistance;
+    float moveDelay;
+    float moveTime;
+
     public PlayerAttackThreeState(Player player) : base(player)
     {
-        info = player.GetActionInfo(actionName);
 
-        if (null == info)
-        {
-
-        }
     }
 
     public override void Enter()
@@ -338,12 +377,23 @@ public class PlayerAttackThreeState : PlayerNormalAttackState
         if (true == _movePad.IsDrag())
         {
             var dir = _movePad.GetStickDirection();
-            _player.SetFoward(dir);
-            _player.MovePlayer();
+            _player.SetForward(dir);
+            _player.MovePlayerByPad();
+        }
+
+        info = _player.GetActionInfo(actionName);
+        moveDistance = info.MoveDistance;
+        moveDelay = info.MoveStartTime;
+        moveTime = info.MoveTime;
+
+        if (null == info)
+        {
+
         }
 
         PlayAnimation(actionName);
         currAnimTime = 0f;
+        _player.MoveCharacter(moveDelay, moveTime, moveDistance, _player.GetForward());
     }
 
     public override IActionState Update()
@@ -387,6 +437,7 @@ public class PlayerDamageState : PlayerActionState
     float knockBackTime;
     float timer;
     float distance;
+    Vector3 knockBackDir;
 
     public PlayerDamageState(Player player) : base(player)
     {
@@ -396,10 +447,12 @@ public class PlayerDamageState : PlayerActionState
     public override void Enter()
     {
         DamageInfo info = GetDamageInfo();
-        knockBackTime = info.knockBackTime;
-        distance = info.distance;    
+        knockBackTime = info.stiffNessTime;
+        distance = info.distance;
+        knockBackDir = (_player.Position - info.actorPos).normalized;
         timer = 0f;
         PlayAnimation("Damage");
+        //_player.MoveCharacter(GetAnimTotalTime("Damage"), distance, knockBackDir);
     }
     public override IActionState Update()
     {

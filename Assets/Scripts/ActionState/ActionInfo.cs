@@ -8,6 +8,9 @@ public class ActionInfo : IData
     public string Name { get; set; }
     public string CharacterName { get; set; }
     public float ComboAvailableTime { get; set; }
+    public float MoveStartTime { get; set; }
+    public float MoveTime { get; set; }
+    public float MoveDistance { get; set; }
     public List<HitUnitInfo> HitUnitList { get; set; }
 
     public int GetId()
