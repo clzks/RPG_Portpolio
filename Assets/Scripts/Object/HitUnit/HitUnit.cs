@@ -26,11 +26,13 @@ public class HitUnit : MonoBehaviour, IPoolObject
         {
             _objectPool = ObjectPoolManager.Get();
         }
+
+        Execute().Forget();
     }
 
     private void Start()
     {
-        Execute().Forget();
+       
     }
 
     private void OnTriggerEnter(Collider other)
@@ -75,7 +77,7 @@ public class HitUnit : MonoBehaviour, IPoolObject
             await UniTask.Yield(_disableCancellation.Token);
         }
 
-        Destroy(gameObject);
+        ReturnObject();
     }
 
     public GameObject GetObject()
@@ -101,6 +103,11 @@ public class HitUnit : MonoBehaviour, IPoolObject
     {
         Gizmos.color = Color.green;
         Gizmos.DrawSphere(transform.position + new Vector3(0, 0.0f, 0f), sphereCollider.radius);
+    }
+
+    public string GetName()
+    {
+        return "NormalHitUnit";
     }
 }
 

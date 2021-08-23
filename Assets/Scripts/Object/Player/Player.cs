@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 #endif
 public class Player : MonoBehaviour, IActor
 {
+    private ObjectPoolManager _poolManager;
     [SerializeField]private InGameCamera _camera;
     [SerializeField]private Animator _animController;
     private SphereCollider _collider;
@@ -15,7 +16,7 @@ public class Player : MonoBehaviour, IActor
     public float speed = 3f;
     public IActionState currActionState;
     private Dictionary<string, ActionInfo> _actionInfoList;
-    public GameObject hitUnitPrefab;
+    //public GameObject hitUnitPrefab;
     private List<IActor> _actorList;
     private Status _status;
     private DamageInfo _damageInfo;
@@ -51,6 +52,7 @@ public class Player : MonoBehaviour, IActor
 
     private void Awake()
     {
+        _poolManager = ObjectPoolManager.Get();
         _camera.SetCameraDistance(transform.position);
         currActionState = new PlayerIdleState(this);
         _actionInfoList = DataManager.Get().GetActionInfoList();
@@ -115,7 +117,7 @@ public class Player : MonoBehaviour, IActor
         {
             return;
         }
-        HitUnit hitUnit = Instantiate(hitUnitPrefab).GetComponent<HitUnit>();
+        HitUnit hitUnit = _poolManager.MakeObject("NormalHitUnit").GetComponent<HitUnit>();
         HitUnitInfo info = actionInfo.HitUnitList[index];
         hitUnit.SetHitUnit(this, info, transform);
     }
@@ -164,6 +166,10 @@ public class Player : MonoBehaviour, IActor
     public ObjectType GetObjectType()
     {
         return ObjectType.Player;
+    }
+    public string GetName()
+    {
+        return "Player";
     }
 
     public void Init()

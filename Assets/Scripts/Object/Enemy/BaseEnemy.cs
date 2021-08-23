@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 #endif
 public class BaseEnemy : MonoBehaviour, IActor
 {
+    private ObjectPoolManager _poolManager;
     public Vector3 Position { get { return transform.position; } }
     public NavMeshAgent agent;
     public Animator animator;
@@ -14,7 +15,7 @@ public class BaseEnemy : MonoBehaviour, IActor
     private IActionState currActionState;
     public Transform baseCamp;
     public Player player;
-    public GameObject hitUnitPrefab;
+    //public GameObject hitUnitPrefab;
     private List<IActor> _actorList;
     public EnemyStatus status;
     private DamageInfo _damageInfo;
@@ -22,6 +23,7 @@ public class BaseEnemy : MonoBehaviour, IActor
     private IEnumerator _moveCoroutine = null;
     public void MakeSampleStatus()
     {
+        _name = "TurtleShell";
         status = new EnemyStatus();
         status.hp = 100;
         status.chaseSpeed = 4;
@@ -48,10 +50,10 @@ public class BaseEnemy : MonoBehaviour, IActor
         var dir = (PlayerPos - Pos).normalized;
         transform.forward = dir;
     }
-    private void Awake()
+    private void OnEnable()
     {
-        MakeSampleStatus();
-        _name = "TurtleShell";
+        //MakeSampleStatus();
+        _poolManager = ObjectPoolManager.Get();
         currActionState = new EnemyIdleState(this);
     }
     private void Update()
@@ -62,6 +64,11 @@ public class BaseEnemy : MonoBehaviour, IActor
     public void PlayAnimation(string anim)
     {
         animator.CrossFade(anim, 0.2f, 0, 0f, 0.2f);
+    }
+
+    public void SetEnemy(EnemyInfo info)
+    {
+        _name = info.Name;
     }
 
     public void SummonHitUnit(int index)
@@ -84,7 +91,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         {
             return;
         }
-        HitUnit hitUnit = Instantiate(hitUnitPrefab).GetComponent<HitUnit>();
+        HitUnit hitUnit = _poolManager.MakeObject("NormalHitUnit").GetComponent<HitUnit>();
         HitUnitInfo info = actionInfo.HitUnitList[index];
         hitUnit.SetHitUnit(this, info, transform);
     }

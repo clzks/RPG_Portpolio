@@ -7,15 +7,23 @@ using UnityEngine.SceneManagement;
 public class LoadingScene : MonoBehaviour
 {
     private DataManager _dataManager;
+    private ObjectPoolManager _poolManager;
+
     private async UniTask Awake()
     {
         _dataManager = DataManager.Get();
+        _poolManager = ObjectPoolManager.Get();
+
         var loadComplete = await _dataManager.LoadPlayerActionList();
         loadComplete &= await _dataManager.LoadEnemyActionList();
+        loadComplete &= await _dataManager.LoadEnemyInfoList();
+        loadComplete &= await _dataManager.LoadMapInfoList();
 
         if (true == loadComplete)
         {
-            SceneManager.LoadScene("SampleScene");
+            _poolManager.InitPool();
+            _poolManager.LoadPrefabs();
+            SceneManager.LoadScene("MainScene");
         }
         else
         {

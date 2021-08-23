@@ -1,0 +1,16 @@
+{
+    "Description": {
+    	"Id" : "정보를 구분짓기 위한 값",
+        "Name": "애니메이터상의 스테이트 이름",
+    },
+    "MapInfo": [
+        {
+        	"Id" : 10010,
+            "Name": "FirstWorld",
+        },
+        {
+        	"Id" : 10020,
+            "Name": "SecondWorld",
+        }
+    ]
+}

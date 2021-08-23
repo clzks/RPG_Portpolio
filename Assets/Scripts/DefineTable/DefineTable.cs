@@ -7,6 +7,7 @@ public enum ObjectType
     Player,
     Enemy,
     Effect,
+    Map,
     Count
 }
 
@@ -20,6 +21,14 @@ public enum SceneType
     Count
 }
 
+public enum MapEventType
+{
+    StartPosition,
+    Transition,
+    UniqueMonster,
+    NormalMonster,
+    Count
+}
 
 public static class Formula
 {

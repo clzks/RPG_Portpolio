@@ -57,13 +57,6 @@ public abstract class PlayerActionState : IActionState
 
     public float GetAnimTotalTime(string anim)
     {
-        var a = _animator.runtimeAnimatorController.animationClips;
-        AnimationClip c;
-        foreach (var item in a)
-        {
-            
-        }
-
         var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
         float currAnimTime = 0f;
         if (stateInfo.IsName(anim))
@@ -147,7 +140,6 @@ public class PlayerIdleState : PlayerActionState
     public override void Enter()
     {
         PlayAnimation("Idle");
-        Debug.Log(GetAnimTotalTime("Idle"));
     }
     public override IActionState Update()
     {
@@ -250,7 +242,6 @@ public class PlayerAttackOneState : PlayerNormalAttackState
         }
 
         PlayAnimation(actionName);
-        Debug.Log(GetAnimTotalTime(actionName));
         currAnimTime = 0f;
         _player.MoveCharacter(moveDelay, moveTime, moveDistance, _player.GetForward());
     }
