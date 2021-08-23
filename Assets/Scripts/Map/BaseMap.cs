@@ -1,21 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BaseMap : MonoBehaviour, IPoolObject
 {
+    private Player _player;
     private string _name;
-    private Vector3 startPosition;
-    private ObjectPoolManager _poolManager;
-
-    private void OnEable()
+    private Vector3 _startPosition;
+    private ObjectPoolManager _objectPool;
+    private bool _isFirst = true;
+    public NavMeshSurface surface;
+    private void Awake()
     {
-        if(null == _poolManager)
-        {
-            _poolManager = ObjectPoolManager.Get();
-        }
-
-        Init();
+        _objectPool = ObjectPoolManager.Get();
     }
 
     public string GetName()
@@ -35,8 +33,14 @@ public class BaseMap : MonoBehaviour, IPoolObject
 
     public void Init()
     {
+        if (true == _isFirst)
+        {
+            _isFirst = false;
+            surface.RemoveData();
+            surface.BuildNavMesh();
+        }
         var pointList = GetComponentsInChildren<MapPoint>();
-        startPosition = pointList[0].transform.position;
+        _startPosition = pointList[0].transform.position;
 
         foreach (MapPoint point in pointList)
         {
@@ -46,16 +50,15 @@ public class BaseMap : MonoBehaviour, IPoolObject
                 {
                     for (int i = 0; i < info.count; ++i) 
                     {
-                        Vector3 randomPoint = transform.position + Random.insideUnitSphere * point.SummonMaxRange;
-                        var enemy = _poolManager.MakeObject(info.id, ObjectType.Enemy).GetComponent<BaseEnemy>();
-                        enemy.MakeSampleStatus();
-                        enemy.transform.position = randomPoint;
+                        Vector3 randomPoint = Random.insideUnitSphere * point.SummonMaxRange;
+                        randomPoint = point.transform.position + new Vector3(randomPoint.x, 0f, randomPoint.z);
+                        SummonNormalEnemy(info.id, randomPoint, point.transform);
                     }
                 }
             }
             else
             {
-                return;
+                continue;
             }
         }
 
@@ -63,8 +66,28 @@ public class BaseMap : MonoBehaviour, IPoolObject
 
     }
 
+    public void SetPlayer(Player player)
+    {
+        _player = player;
+    }
+
+    public Vector3 GetStartPosition()
+    {
+        return _startPosition;
+    }
+
     public void ReturnObject()
     {
-    
+        _objectPool.ReturnObject(this);
+    }
+
+    public void SummonNormalEnemy(int id, Vector3 summonPos, Transform baseCamp)
+    {
+        var enemy = _objectPool.MakeObject(id, ObjectType.Enemy).GetComponent<BaseEnemy>();
+        enemy.Init();
+        enemy.SetPlayer(_player);
+        enemy.SetBaseCamp(baseCamp);
+        enemy.transform.position = summonPos;
+        enemy.SetActiveNavMeshAgent(true);
     }
 }

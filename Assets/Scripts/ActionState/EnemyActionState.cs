@@ -7,20 +7,15 @@ public abstract class EnemyActionState : IActionState
 {
     protected DataManager _dataManager;
     protected BaseEnemy _enemy;
-    protected Player _player;
-    protected NavMeshAgent _agent;
+    protected NavMeshAgent Agent { get { return _enemy.GetNavMeshAgent(); } }
     protected Animator _animator;
     protected Vector3 _targetPos;
-    protected Transform _baseCamp;
     protected EnemyStatus _status;
     public EnemyActionState(BaseEnemy enemy)
     {
         _dataManager = DataManager.Get();
         _enemy = enemy;
-        _agent = enemy.agent;
-        _player = enemy.player;
         _animator = enemy.animator;
-        _baseCamp = enemy.baseCamp;
         _status = enemy.status;
         Enter();
     }
@@ -36,7 +31,7 @@ public abstract class EnemyActionState : IActionState
 
     public virtual bool CheckDetectPlayer()
     {
-        if ((_enemy.Position - _player.Position).magnitude <= _status.detectionDistance)
+        if ((_enemy.Position - _enemy.GetPlayer().Position).magnitude <= _status.detectionDistance)
         {
             return true;
         }
@@ -48,7 +43,7 @@ public abstract class EnemyActionState : IActionState
 
     public float GetPlayerDistance()
     {
-        return (_enemy.Position - _player.Position).magnitude;
+        return (_enemy.Position - _enemy.GetPlayer().Position).magnitude;
     }
 
     public void PlayAnimation(string anim)
@@ -168,9 +163,9 @@ public class EnemyPatrolState : EnemyActionState
     {
         patrolTimer = 0f;
         //베이스 캠프에서 패트롤 거리 이내의 아무 위치로 이동
-        _targetPos = Formula.GetRandomPatrolPosition(_baseCamp.position, 5f);
-        _agent.SetDestination(_targetPos);
-        _agent.speed = _status.patrolSpeed;
+        _targetPos = Formula.GetRandomPatrolPosition(_enemy.GetBaseCamp().position, 5f);
+        Agent.SetDestination(_targetPos);
+        Agent.speed = _status.patrolSpeed;
         PlayAnimation("Run");
     }
 
@@ -204,9 +199,9 @@ public class EnemyPatrolState : EnemyActionState
 
     private bool IsArriveToDest()
     {
-        if (_agent.pathPending == false)
+        if (Agent.pathPending == false)
         {
-            if (_agent.hasPath == false || _agent.remainingDistance < 0.1f)
+            if (Agent.hasPath == false || Agent.remainingDistance < 0.1f)
             {
                 return true;
             }
@@ -228,7 +223,7 @@ public class EnemyChaseState : EnemyActionState
     public override void Enter()
     {
         chaseCount = 0;
-        _agent.speed = _status.chaseSpeed;
+        Agent.speed = _status.chaseSpeed;
         PlayAnimation("Run");
     }
 
@@ -257,7 +252,7 @@ public class EnemyChaseState : EnemyActionState
             }
         }
 
-        ChaseTarget(_player.Position);
+        ChaseTarget(_enemy.GetPlayer().Position);
 
         return this;
     }
@@ -272,7 +267,7 @@ public class EnemyChaseState : EnemyActionState
         if (chaseCount == 0)
         {
             _targetPos = pos;
-            _agent.SetDestination(_targetPos);
+            Agent.SetDestination(_targetPos);
         }
 
         chaseCount++;
@@ -301,7 +296,7 @@ public class EnemyAttackState : EnemyActionState
     public override void Enter()
     {
         // 경로를 리셋시켜준다
-        _agent.ResetPath();
+        Agent.ResetPath();
         // 공격 시작 시 플레이어의 위치를 바라보며 공격 모션 재생
         _enemy.LookPlayer();
         PlayAnimation("Attack01");
@@ -347,7 +342,7 @@ public class EnemyStareState : EnemyActionState
 
     public override void Enter()
     {
-        _agent.ResetPath();
+        Agent.ResetPath();
         // 타깃을 바라보게 함
         _enemy.LookPlayer();
         PlayAnimation("Stare");
@@ -406,7 +401,7 @@ public class EnemyDamageState : EnemyActionState
         _enemy.ResetDamageInfo();
         timer = 0f;
         // 경로를 리셋시켜준다
-        _agent.ResetPath();
+        Agent.ResetPath();
         PlayAnimation("Damage");
         _enemy.MoveCharacter(knockBackTime, distance, knockBackDir);
     }
@@ -444,7 +439,7 @@ public class EnemyStunState : EnemyActionState
     public override void Enter()
     {
         // 경로를 리셋시켜준다
-        _agent.ResetPath();
+        Agent.ResetPath();
         PlayAnimation("Dizzy");
     }
     public override IActionState Update()
@@ -471,7 +466,7 @@ public class EnemyDieState : EnemyActionState
     public override void Enter()
     {
         // 경로를 리셋시켜준다
-        _agent.ResetPath();
+        Agent.ResetPath();
         PlayAnimation("Die");
     }
 

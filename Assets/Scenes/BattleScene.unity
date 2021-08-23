@@ -3098,6 +3098,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00ab2481ddfd70b42a0c549bd09a8caa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _agent: {fileID: 2066896391795805440}
   _camera: {fileID: 963194229}
   _animController: {fileID: 2066896391788560199}
   movePad: {fileID: 408858506}
@@ -3155,7 +3156,7 @@ NavMeshAgent:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2066896391795805435}
-  m_Enabled: 1
+  m_Enabled: 0
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5

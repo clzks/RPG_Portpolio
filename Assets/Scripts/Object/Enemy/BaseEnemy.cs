@@ -9,12 +9,12 @@ public class BaseEnemy : MonoBehaviour, IActor
 {
     private ObjectPoolManager _poolManager;
     public Vector3 Position { get { return transform.position; } }
-    public NavMeshAgent agent;
+    [SerializeField]private NavMeshAgent _agent;
     public Animator animator;
     private string _name;
     private IActionState currActionState;
-    public Transform baseCamp;
-    public Player player;
+    private Transform _baseCamp;
+    private Player _player;
     //public GameObject hitUnitPrefab;
     private List<IActor> _actorList;
     public EnemyStatus status;
@@ -46,7 +46,7 @@ public class BaseEnemy : MonoBehaviour, IActor
     public void LookPlayer()
     {
         var Pos = new Vector3(Position.x, 0, Position.z);
-        var PlayerPos = new Vector3(player.Position.x, 0, player.Position.z);
+        var PlayerPos = new Vector3(_player.Position.x, 0, _player.Position.z);
         var dir = (PlayerPos - Pos).normalized;
         transform.forward = dir;
     }
@@ -116,12 +116,18 @@ public class BaseEnemy : MonoBehaviour, IActor
 
     public void Init()
     {
-     
+        MakeSampleStatus();
     }
 
     public void ReturnObject()
     {
-        
+        _agent.enabled = false;
+        _poolManager.ReturnObject(this);
+    }
+
+    public void SetActiveNavMeshAgent(bool enabled)
+    {
+        _agent.enabled = enabled;
     }
 
     public void TakeDamage(HitUnitStatus hitUnit)
@@ -188,6 +194,32 @@ public class BaseEnemy : MonoBehaviour, IActor
     {
         return status.damage;
     }
+
+    public void SetPlayer(Player player)
+    {
+        _player = player;
+    }
+
+    public void SetBaseCamp(Transform baseCamp)
+    {
+        _baseCamp = baseCamp;
+    }
+
+    public Transform GetBaseCamp()
+    {
+        return _baseCamp;
+    }
+
+    public Player GetPlayer()
+    {
+        return _player;
+    }
+
+    public NavMeshAgent GetNavMeshAgent()
+    {
+        return _agent;
+    }
+
     public void MoveCharacter(float time, float distance, Vector3 dir)
     {
         if (null != _moveCoroutine)

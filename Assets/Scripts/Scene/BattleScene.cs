@@ -4,23 +4,31 @@ using UnityEngine;
 
 public class BattleScene : MonoBehaviour
 {
-    private ObjectPoolManager _poolManager;
+    private ObjectPoolManager _objectPool;
     private BaseMap _currMap = null;
+    private Player _player;
 
     private void Awake()
     {
-        EnterNewWorld("FirstWorld");
+        _objectPool = ObjectPoolManager.Get();
+        _player = GameObject.Find("Player").GetComponent<Player>();
+        EnterNewWorld(10010);
     }
     
-    public void EnterNewWorld(string worldName)
+    public void EnterNewWorld(int worldId)
     {
-        if(null != _currMap)
+        _player.SetActiveNavMeshAgent(false);
+
+        if (null != _currMap)
         {
             _currMap.ReturnObject();
         }
 
-        _currMap = _poolManager.MakeObject(worldName).GetComponent<BaseMap>();
+        _currMap = _objectPool.MakeObject(worldId, ObjectType.Map).GetComponent<BaseMap>();
+        _currMap.SetPlayer(_player);
         _currMap.Init();
+        _player.transform.position = _currMap.GetStartPosition();
+        _player.SetActiveNavMeshAgent(true);
     }
 
 }

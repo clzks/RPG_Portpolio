@@ -53,7 +53,6 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             _activePoolList.Add(objName, activePool);
         }
 
-        obj.Init();
         activePool.Add(obj.GetObject());
 
         return obj.GetObject();
@@ -119,7 +118,6 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             _activePoolList.Add(objName, activePool);
         }
 
-        obj.Init();
         activePool.Add(obj.GetObject());
 
         return obj.GetObject();

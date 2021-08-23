@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.AI;
 #if UNITY_EDITOR
 using UnityEngine.SceneManagement;
 #endif
 public class Player : MonoBehaviour, IActor
 {
     private ObjectPoolManager _poolManager;
+    [SerializeField]private NavMeshAgent _agent;
     [SerializeField]private InGameCamera _camera;
     [SerializeField]private Animator _animController;
     private SphereCollider _collider;
@@ -219,6 +221,11 @@ public class Player : MonoBehaviour, IActor
     public void ResetActorList()
     {
         _actorList.Clear();
+    }
+
+    public void SetActiveNavMeshAgent(bool enabled)
+    {
+        _agent.enabled = enabled;
     }
 
     public void MoveCharacter(float time, float distance, Vector3 dir)
