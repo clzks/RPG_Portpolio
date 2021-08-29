@@ -4,7 +4,8 @@ public abstract class PlayerActionState : IActionState
 {
     protected Player _player;
     protected GameManager _gameManager;
-    protected VirtualGamePad _movePad;
+    protected VirtualGamePad _movePad { get { return _player.GetVirtualGamePad(); } }
+    protected ActionButton _attackButton { get { return _player.GetActionButton(); } }
     protected Animator _animator;
     //protected bool isPossibleCombo;
     //protected bool isActionEnd;
@@ -12,7 +13,6 @@ public abstract class PlayerActionState : IActionState
     public PlayerActionState(Player player)
     {
         _player = player;
-        _movePad = player.movePad;
         _animator = player.GetAnimator();
         _gameManager = GameManager.Get();
         Enter();
@@ -118,7 +118,7 @@ public abstract class PlayerNormalAttackState : PlayerActionState
     {
         if (currAnimTime >= info.ComboAvailableTime)
         {
-            if (true == _player.attackButton.GetButtonDown())
+            if (true == _attackButton.GetButtonDown())
             {
                 return true;
             }
@@ -148,7 +148,7 @@ public class PlayerIdleState : PlayerActionState
             return ChangeState(new PlayerDamageState(_player));
         }
 
-        if(true == _player.attackButton.GetButtonDown())
+        if(true == _attackButton.GetButtonDown())
         {
             return ChangeState(new PlayerAttackOneState(_player));
         }
@@ -185,7 +185,7 @@ public class PlayerRunState : PlayerActionState
             return ChangeState(new PlayerDamageState(_player));
         }
 
-        if (true == _player.attackButton.GetButtonDown())
+        if (true == _attackButton.GetButtonDown())
         {
             return ChangeState(new PlayerAttackOneState(_player));
         }

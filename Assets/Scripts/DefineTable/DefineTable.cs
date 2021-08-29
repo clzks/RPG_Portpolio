@@ -23,7 +23,7 @@ public enum SceneType
 
 public enum MapEventType
 {
-    StartPosition,
+    SummonPoint,
     Transition,
     UniqueMonster,
     NormalMonster,

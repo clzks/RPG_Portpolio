@@ -9,10 +9,20 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     public Dictionary<string, GameObject> prefabList;
     public Dictionary<string, List<GameObject>> _objectPoolList;
     public Dictionary<string, List<GameObject>> _activePoolList;
+    public Dictionary<string, Material> _materialList;
     private void Awake()
     {
         prefabList = new Dictionary<string, GameObject>();
+        _materialList = new Dictionary<string, Material>();
         _dataManager = DataManager.Get();
+    }
+
+    public void LoadPrefabs()
+    {
+        LoadEnemyPrefab();
+        LoadHitUnit();
+        LoadMapPrefab();
+        LoadMaterials();
     }
 
     public GameObject MakeObject(string objName)
@@ -139,12 +149,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         }
     }
 
-    public void LoadPrefabs()
-    {
-        LoadEnemyPrefab();
-        LoadHitUnit();
-        LoadMapPrefab();
-    }
+  
     #region LoadPrefab
     public void LoadEnemyPrefab()
     {
@@ -174,6 +179,14 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             var obj = Resources.Load<GameObject>("Prefabs/Map/" + info.Name);
             prefabList.Add(info.Name, obj);
         }
+    }
+
+    private void LoadMaterials()
+    {
+        var normal = Resources.Load<Material>("Materials/DesertRock_Normal");
+        _materialList.Add("DesertRock_Normal", normal);
+        var trans = Resources.Load<Material>("Materials/DesertRock_TransParent");
+        _materialList.Add("DesertRock_TransParent", trans);
     }
     #endregion
     public void InitPool()
@@ -215,5 +228,10 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
 
             item.Value.Clear();
         }
+    }
+
+    public Material GetMaterial(string name)
+    {
+        return _materialList[name];
     }
 }

@@ -295,6 +295,7 @@ public class EnemyAttackState : EnemyActionState
 
     public override void Enter()
     {
+        Agent.avoidancePriority = 30;
         // 경로를 리셋시켜준다
         Agent.ResetPath();
         // 공격 시작 시 플레이어의 위치를 바라보며 공격 모션 재생
@@ -322,6 +323,7 @@ public class EnemyAttackState : EnemyActionState
 
     public override void Exit()
     {
+        Agent.avoidancePriority = 50;
         _enemy.ResetStareTime();
         _enemy.ResetActorList();
     }
@@ -342,6 +344,7 @@ public class EnemyStareState : EnemyActionState
 
     public override void Enter()
     {
+        Agent.avoidancePriority = 30;
         Agent.ResetPath();
         // 타깃을 바라보게 함
         _enemy.LookPlayer();
@@ -376,7 +379,7 @@ public class EnemyStareState : EnemyActionState
 
     public override void Exit()
     {
-
+        Agent.avoidancePriority = 50;
     }
 }
 

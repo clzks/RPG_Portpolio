@@ -2,18 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Linq;
 
 public class BaseMap : MonoBehaviour, IPoolObject
 {
     private Player _player;
     private string _name;
-    private Vector3 _startPosition;
+    private int _id;
     private ObjectPoolManager _objectPool;
+    private DataManager _dataManager;
     private bool _isFirst = true;
     public NavMeshSurface surface;
+    private List<MapPoint> _pointList;
     private void Awake()
     {
         _objectPool = ObjectPoolManager.Get();
+        _dataManager = DataManager.Get();
     }
 
     public string GetName()
@@ -39,11 +43,11 @@ public class BaseMap : MonoBehaviour, IPoolObject
             surface.RemoveData();
             surface.BuildNavMesh();
         }
-        var pointList = GetComponentsInChildren<MapPoint>();
-        _startPosition = pointList[0].transform.position;
+        _pointList = GetComponentsInChildren<MapPoint>().ToList();
 
-        foreach (MapPoint point in pointList)
+        foreach (MapPoint point in _pointList)
         {
+            // Summon Monster Point
             if (point.EventType == MapEventType.NormalMonster)
             {
                 foreach (var info in point.SummonList)
@@ -66,14 +70,20 @@ public class BaseMap : MonoBehaviour, IPoolObject
 
     }
 
+    public void SetMap(MapInfo info)
+    {
+        _id = info.Id;
+        _name = info.Name;
+    }
+
     public void SetPlayer(Player player)
     {
         _player = player;
     }
 
-    public Vector3 GetStartPosition()
+    public Vector3 GetPointPosition(int pointIndex)
     {
-        return _startPosition;
+        return _pointList[pointIndex].transform.position;
     }
 
     public void ReturnObject()
@@ -84,7 +94,7 @@ public class BaseMap : MonoBehaviour, IPoolObject
     public void SummonNormalEnemy(int id, Vector3 summonPos, Transform baseCamp)
     {
         var enemy = _objectPool.MakeObject(id, ObjectType.Enemy).GetComponent<BaseEnemy>();
-        enemy.Init();
+        enemy.SetEnemy(_dataManager.GetEnemyInfo(id));
         enemy.SetPlayer(_player);
         enemy.SetBaseCamp(baseCamp);
         enemy.transform.position = summonPos;

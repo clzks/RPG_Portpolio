@@ -108,8 +108,18 @@ public class DataManager : Singleton<DataManager>
         return _enemyInfoList;
     }
 
+    public EnemyInfo GetEnemyInfo(int id)
+    {
+        return _enemyInfoList[id];
+    }
+
     public Dictionary<int, MapInfo> GetMapInfoList()
     {
         return _mapInfoList;
+    }
+
+    public MapInfo GetMapInfo(int id)
+    {
+        return _mapInfoList[id];
     }
 }

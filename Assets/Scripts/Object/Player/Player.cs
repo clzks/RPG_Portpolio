@@ -13,9 +13,12 @@ public class Player : MonoBehaviour, IActor
     [SerializeField]private InGameCamera _camera;
     [SerializeField]private Animator _animController;
     private SphereCollider _collider;
-    public VirtualGamePad movePad;
-    public ActionButton attackButton;
-    public float speed = 3f;
+    [Header("UI")]
+    [SerializeField]private VirtualGamePad _movePad;
+    [SerializeField]private ActionButton _attackButton;
+    [SerializeField]private TargetInfoPanel _targetPanel;
+    [Header("Status")]
+    public float speed = 30f;
     public IActionState currActionState;
     private Dictionary<string, ActionInfo> _actionInfoList;
     //public GameObject hitUnitPrefab;
@@ -23,39 +26,13 @@ public class Player : MonoBehaviour, IActor
     private Status _status;
     private DamageInfo _damageInfo;
     private IEnumerator _moveCoroutine = null;
-
+    private bool followCamera = true;
     public Vector3 Position { get { return transform.position; } }
     
-    public enum ActionType
-    { 
-        Idle,
-        Run,
-        Attack,
-        Damage,
-        Skill,
-        Die,
-        Count
-    }
-
-    public enum AnimationType
-    { 
-        Attack01,
-        Attack02,
-        Attack03,
-        Slash01,
-        Slash02,
-        Slash03,
-        Idle,
-        Damage,
-        Run,
-        Casting,
-        Die
-    }
-
     private void Awake()
     {
         _poolManager = ObjectPoolManager.Get();
-        _camera.SetCameraDistance(transform.position);
+        //_camera.SetCameraDistance(transform.position);
         currActionState = new PlayerIdleState(this);
         _actionInfoList = DataManager.Get().GetActionInfoList();
         _collider = GetComponent<SphereCollider>();
@@ -66,12 +43,20 @@ public class Player : MonoBehaviour, IActor
 
     private void LateUpdate()
     {
-        _camera.FollowPlayer(transform.position);
+        if (true == followCamera)
+        {
+            _camera.FollowPlayer(transform.position);
+        }
     }
 
     private void Update()
     {
         currActionState = currActionState.Update();
+
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            followCamera = !followCamera;
+        }
     }
 
     public void PlayAnimation(string anim)
@@ -126,16 +111,29 @@ public class Player : MonoBehaviour, IActor
 
     public void TakeActor(IActor actor, HitUnitStatus hitUnit)
     {
+        bool isKill = false;
         if (false == _actorList.Contains(actor))
         {
-            actor.TakeDamage(hitUnit);
+            actor.TakeDamage(hitUnit, ref isKill);
             _actorList.Add(actor);
         }
-    }
 
+        _targetPanel.SetTargetInfo(actor, isKill);
+    }
+    #region GET SET
     public Animator GetAnimator()
     {
         return _animController;
+    }
+
+    public VirtualGamePad GetVirtualGamePad()
+    {
+        return _movePad;
+    }
+
+    public ActionButton GetActionButton()
+    {
+        return _attackButton;
     }
 
     public ActionInfo GetActionInfo(string key)
@@ -174,6 +172,21 @@ public class Player : MonoBehaviour, IActor
         return "Player";
     }
 
+    public DamageInfo GetDamageInfo()
+    {
+        return _damageInfo;
+    }
+
+    public float GetDamage()
+    {
+        return 3f;
+    }
+
+    public float GetHpPercent()
+    {
+        return _status.CurrHp / _status.MaxHp;
+    }
+    #endregion
     public void Init()
     {
         
@@ -184,10 +197,10 @@ public class Player : MonoBehaviour, IActor
       
     }
 
-    public void TakeDamage(HitUnitStatus hitUnit)
+    public void TakeDamage(HitUnitStatus hitUnit, ref bool isDead)
     {
         Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼입힘");
-        _status.Hp -= hitUnit.Damage;
+        _status.CurrHp -= hitUnit.Damage;
         
         // TODO 데미지 이펙트 추가할 곳
 
@@ -201,21 +214,20 @@ public class Player : MonoBehaviour, IActor
         {
             _damageInfo = new DamageInfo(hitUnit.Position, hitUnit.Strength, hitUnit.Strength * 0.2f);
         }
+
+        if(_status.CurrHp <= 0)
+        {
+            isDead = true;
+        }
+        else
+        {
+            isDead = false;
+        }
     }
 
     public void ResetDamageInfo()
     {
         _damageInfo = null;
-    }
-
-    public DamageInfo GetDamageInfo()
-    {
-        return _damageInfo;
-    }
-
-    public float GetDamage()
-    {
-        return 3f;
     }
 
     public void ResetActorList()

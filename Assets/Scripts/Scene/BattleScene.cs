@@ -4,18 +4,20 @@ using UnityEngine;
 
 public class BattleScene : MonoBehaviour
 {
+    private DataManager _dataManager;
     private ObjectPoolManager _objectPool;
     private BaseMap _currMap = null;
     private Player _player;
 
     private void Awake()
     {
+        _dataManager = DataManager.Get();
         _objectPool = ObjectPoolManager.Get();
         _player = GameObject.Find("Player").GetComponent<Player>();
-        EnterNewWorld(10010);
+        EnterNewWorld(10010, 0);
     }
     
-    public void EnterNewWorld(int worldId)
+    public void EnterNewWorld(int worldId, int SummonIndex)
     {
         _player.SetActiveNavMeshAgent(false);
 
@@ -25,10 +27,10 @@ public class BattleScene : MonoBehaviour
         }
 
         _currMap = _objectPool.MakeObject(worldId, ObjectType.Map).GetComponent<BaseMap>();
+        _currMap.SetMap(_dataManager.GetMapInfo(worldId));
         _currMap.SetPlayer(_player);
         _currMap.Init();
-        _player.transform.position = _currMap.GetStartPosition();
+        _player.transform.position = _currMap.GetPointPosition(SummonIndex);
         _player.SetActiveNavMeshAgent(true);
     }
-
 }

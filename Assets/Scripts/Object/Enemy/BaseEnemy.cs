@@ -25,7 +25,8 @@ public class BaseEnemy : MonoBehaviour, IActor
     {
         _name = "TurtleShell";
         status = new EnemyStatus();
-        status.hp = 100;
+        status.maxHp = 100;
+        status.currHp = status.maxHp;
         status.chaseSpeed = 4;
         status.patrolSpeed = 2.5f;
         status.damage = 5;
@@ -34,6 +35,24 @@ public class BaseEnemy : MonoBehaviour, IActor
         status.detectionDistance = 6;
         status.chaseDistance = 8;
         status.patrolCycle = 3;
+        _currStareTimer = status.attackTerm;
+        _actorList = new List<IActor>();
+    }
+
+    public void SetEnemy(EnemyInfo info)
+    {
+        _name = info.Name;
+        status = new EnemyStatus();
+        status.maxHp = info.Hp;
+        status.currHp = status.maxHp;
+        status.chaseSpeed = info.ChaseSpeed;
+        status.patrolSpeed = info.PatrolSpeed;
+        status.damage = info.Damage;
+        status.attackRange = info.AttackRange;
+        status.attackTerm = info.AttackTerm;
+        status.detectionDistance = info.DetectionDistance;
+        status.chaseDistance = info.ChaseDistance;
+        status.patrolCycle = info.PatrolCycle;
         _currStareTimer = status.attackTerm;
         _actorList = new List<IActor>();
     }
@@ -66,11 +85,6 @@ public class BaseEnemy : MonoBehaviour, IActor
         animator.CrossFade(anim, 0.2f, 0, 0f, 0.2f);
     }
 
-    public void SetEnemy(EnemyInfo info)
-    {
-        _name = info.Name;
-    }
-
     public void SummonHitUnit(int index)
     {
 #if UNITY_EDITOR
@@ -97,9 +111,11 @@ public class BaseEnemy : MonoBehaviour, IActor
     }
     public void TakeActor(IActor actor, HitUnitStatus hitUnit)
     {
+        bool isKill = false;
+
         if (false == _actorList.Contains(actor))
         {
-            actor.TakeDamage(hitUnit);
+            actor.TakeDamage(hitUnit, ref isKill);
             _actorList.Add(actor);
         }
     }
@@ -116,7 +132,7 @@ public class BaseEnemy : MonoBehaviour, IActor
 
     public void Init()
     {
-        MakeSampleStatus();
+        //MakeSampleStatus();
     }
 
     public void ReturnObject()
@@ -130,10 +146,10 @@ public class BaseEnemy : MonoBehaviour, IActor
         _agent.enabled = enabled;
     }
 
-    public void TakeDamage(HitUnitStatus hitUnit)
+    public void TakeDamage(HitUnitStatus hitUnit, ref bool isDead)
     {
         Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼 입음");
-        status.hp -= hitUnit.Damage;
+        status.currHp -= hitUnit.Damage;
 
         // TODO 데미지 이펙트 추가할 곳
 
@@ -147,6 +163,15 @@ public class BaseEnemy : MonoBehaviour, IActor
         if (null == _damageInfo && false == status.isInvincible)
         {
             _damageInfo = new DamageInfo(hitUnit.Position, hitUnit.Strength, hitUnit.Strength * 0.3f);
+        }
+
+        if(status.currHp <= 0)
+        {
+            isDead = true;
+        }
+        else
+        {
+            isDead = false;
         }
     }
 
@@ -220,6 +245,12 @@ public class BaseEnemy : MonoBehaviour, IActor
         return _agent;
     }
 
+
+    public float GetHpPercent()
+    {
+        return status.currHp / status.maxHp;
+    }
+
     public void MoveCharacter(float time, float distance, Vector3 dir)
     {
         if (null != _moveCoroutine)
@@ -242,11 +273,13 @@ public class BaseEnemy : MonoBehaviour, IActor
 
         _moveCoroutine = null;
     }
+
 }
 
 public struct EnemyStatus
 {
-    public float hp;
+    public float maxHp;
+    public float currHp;
     public float chaseSpeed;
     public float patrolSpeed;
     public float damage;

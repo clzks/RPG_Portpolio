@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Status
 {
-    public float Hp;
+    public float CurrHp;
+    public float MaxHp;
     public float Speed;
     public float AtkSpeed;
     public float Stamina;
@@ -14,7 +15,8 @@ public class Status
     public static Status MakeSampleStatus()
     {
         Status st = new Status();
-        st.Hp = 100f;
+        st.MaxHp = 100f;
+        st.CurrHp = st.MaxHp;
         st.Speed = 5f;
         st.AtkSpeed = 1f;
         st.Stamina = 100f;
