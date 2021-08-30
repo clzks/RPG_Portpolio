@@ -20,7 +20,7 @@
                 	"SidePos" : 0,
                 	"Life" : 0.2,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : -1,
+                	"StrengthFactor" : 1,
                 	"Layer" : 9
                 }
             ]
@@ -37,7 +37,7 @@
                 	"SidePos" : 0.6,
                 	"Life" : 0.3,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : -1,
+                	"StrengthFactor" : 1,
                 	"Layer" : 9
                 },
                 {
@@ -46,7 +46,7 @@
                 	"SidePos" : 0,
                 	"Life" : 0.3,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : -1,
+                	"StrengthFactor" : 1,
                 	"Layer" : 9
                 },
                 {
@@ -55,7 +55,7 @@
                 	"SidePos" : -0.6,
                 	"Life" : 0.3,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : -1,
+                	"StrengthFactor" : 1,
                 	"Layer" : 9
                 }
             ]
@@ -72,7 +72,7 @@
                 	"SidePos" : -0.6,
                 	"Life" : 0.3,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : -1,
+                	"StrengthFactor" : 1,
                 	"Layer" : 9
                 },
                 {
@@ -81,7 +81,7 @@
                 	"SidePos" : 0,
                 	"Life" : 0.3,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : -1,
+                	"StrengthFactor" : 1,
                 	"Layer" : 9
                 },
                 {
@@ -90,7 +90,7 @@
                 	"SidePos" : 0.6,
                 	"Life" : 0.3,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : -1,
+                	"StrengthFactor" : 1,
                 	"Layer" : 9
                 }
             ]

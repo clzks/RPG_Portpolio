@@ -48,6 +48,7 @@ public class HitUnit : MonoBehaviour, IPoolObject
         gameObject.layer = info.Layer;
         lifeTime = info.Life;
         sphereCollider.radius = info.ColliderRadius;
+        status.ActorPosition = actorTransform.position;
         status.Damage = info.DamageFactor * _actor.GetDamage();
         status.Strength = info.StrengthFactor;
         actorTransform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
@@ -90,11 +91,6 @@ public class HitUnit : MonoBehaviour, IPoolObject
         return _type;
     }
 
-    public void Init()
-    {
-        
-    }
-
     public void ReturnObject()
     {
         _objectPool.ReturnObject(this);
@@ -113,7 +109,7 @@ public class HitUnit : MonoBehaviour, IPoolObject
 
 public struct HitUnitStatus
 {
-    public Vector3 Position;
+    public Vector3 ActorPosition;
     public float Damage;
     public float Strength;
 }

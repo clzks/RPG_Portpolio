@@ -2,15 +2,42 @@
     "Description": {
     	"Id" : "정보를 구분짓기 위한 값",
         "Name": "애니메이터상의 스테이트 이름",
+        "Hp" : "몬스터 체력",
+        "ChaseSpeed" : "추격 시 속도",
+        "PatrolSpeed" : "몬스터 비 전투시 이동속도",
+        "Damage" : "몬스터 데미지",
+        "AttackRange" : "공격 가능한 최대거리",
+        "AttackTerm" : "공격 텀",
+        "DetectionDistance" : "타깃을 감지하는 거리",
+        "ChaseDistance" : "타깃을 유지하는 최대거리",
+        "PatrolCycle" : "몬스터 비 전투시 방랑 텀"
     },
     "EnemyInfo": [
         {
         	"Id" : 10010,
             "Name": "TurtleShell",
+            "Hp" : 30,
+            "ChaseSpeed" : 4,
+            "PatrolSpeed" : 2.5,
+            "Damage" : 5,
+            "AttackRange" : 1.4,
+            "AttackTerm" : 1,
+            "DetectionDistance" : 6,
+            "ChaseDistance" : 8,
+            "PatrolCycle" : 3,
         },
         {
         	"Id" : 10020,
             "Name": "Slime",
+            "Hp" : 0,
+            "ChaseSpeed" : 0,
+            "PatrolSpeed" : 0,
+            "Damage" : 0,
+            "AttackRange" : 0,
+            "AttackTerm" : 0,
+            "DetectionDistance" : 0,
+            "ChaseDistance" : 0,
+            "PatrolCycle" : 0,
         }
     ]
 }

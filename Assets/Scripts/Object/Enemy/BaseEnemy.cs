@@ -162,7 +162,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         // 무적상태는 추후에 또 고려해봐야함
         if (null == _damageInfo && false == status.isInvincible)
         {
-            _damageInfo = new DamageInfo(hitUnit.Position, hitUnit.Strength, hitUnit.Strength * 0.3f);
+            _damageInfo = new DamageInfo(hitUnit.ActorPosition, hitUnit.Strength, hitUnit.Strength * 0.3f);
         }
 
         if(status.currHp <= 0)

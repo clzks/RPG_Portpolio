@@ -1,9 +1,10 @@
 using UnityEngine;
-
+using UnityEngine.AI;
 public abstract class PlayerActionState : IActionState
 {
     protected Player _player;
     protected GameManager _gameManager;
+    protected NavMeshAgent Agent { get { return _player.GetNavMeshAgent(); } }
     protected VirtualGamePad _movePad { get { return _player.GetVirtualGamePad(); } }
     protected ActionButton _attackButton { get { return _player.GetActionButton(); } }
     protected Animator _animator;
@@ -96,7 +97,7 @@ public abstract class PlayerNormalAttackState : PlayerActionState
 
     public override void Enter()
     {
-       
+        Agent.avoidancePriority = 40;
     }
 
     public override void Exit()
@@ -139,6 +140,7 @@ public class PlayerIdleState : PlayerActionState
 
     public override void Enter()
     {
+        Agent.avoidancePriority = 60;
         PlayAnimation("Idle");
     }
     public override IActionState Update()
@@ -176,6 +178,7 @@ public class PlayerRunState : PlayerActionState
 
     public override void Enter()
     {
+        Agent.avoidancePriority = 60;
         PlayAnimation("Run");
     }
     public override IActionState Update()
@@ -224,6 +227,8 @@ public class PlayerAttackOneState : PlayerNormalAttackState
 
     public override void Enter()
     {
+        base.Enter();
+        
         if (true == _movePad.IsDrag())
         {
             var dir = _movePad.GetStickDirection();
@@ -294,6 +299,8 @@ public class PlayerAttackTwoState : PlayerNormalAttackState
 
     public override void Enter()
     {
+        base.Enter();
+
         if (true == _movePad.IsDrag())
         {
             var dir = _movePad.GetStickDirection();
@@ -365,6 +372,8 @@ public class PlayerAttackThreeState : PlayerNormalAttackState
 
     public override void Enter()
     {
+        base.Enter();
+
         if (true == _movePad.IsDrag())
         {
             var dir = _movePad.GetStickDirection();
@@ -437,13 +446,15 @@ public class PlayerDamageState : PlayerActionState
 
     public override void Enter()
     {
+        Agent.avoidancePriority = 60;
         DamageInfo info = GetDamageInfo();
         knockBackTime = info.stiffNessTime;
         distance = info.distance;
         knockBackDir = (_player.Position - info.actorPos).normalized;
+        _player.ResetDamageInfo();
         timer = 0f;
         PlayAnimation("Damage");
-        //_player.MoveCharacter(GetAnimTotalTime("Damage"), distance, knockBackDir);
+        _player.MoveCharacter(0.2f, distance, knockBackDir);
     }
     public override IActionState Update()
     {
@@ -459,7 +470,7 @@ public class PlayerDamageState : PlayerActionState
 
     public override void Exit()
     {
-        _player.ResetDamageInfo();
+       
     }
 }
 

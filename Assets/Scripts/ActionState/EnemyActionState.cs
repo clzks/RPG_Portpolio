@@ -411,7 +411,7 @@ public class EnemyDamageState : EnemyActionState
     public override IActionState Update()
     {
         timer += Time.deltaTime;
-        _enemy.AddStareTime(Time.deltaTime);
+        //_enemy.AddStareTime(Time.deltaTime);
 
         if (null != GetDamageInfo())
         {
@@ -428,7 +428,7 @@ public class EnemyDamageState : EnemyActionState
 
     public override void Exit()
     {
-        
+        _enemy.ResetStareTime();
     }
 }
 

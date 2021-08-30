@@ -186,6 +186,11 @@ public class Player : MonoBehaviour, IActor
     {
         return _status.CurrHp / _status.MaxHp;
     }
+
+    public NavMeshAgent GetNavMeshAgent()
+    {
+        return _agent;
+    }
     #endregion
     public void Init()
     {
@@ -212,7 +217,7 @@ public class Player : MonoBehaviour, IActor
 
         if(null == _damageInfo && false == _status.IsInvincible)
         {
-            _damageInfo = new DamageInfo(hitUnit.Position, hitUnit.Strength, hitUnit.Strength * 0.2f);
+            _damageInfo = new DamageInfo(hitUnit.ActorPosition, hitUnit.Strength, hitUnit.Strength * 0.2f);
         }
 
         if(_status.CurrHp <= 0)

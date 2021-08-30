@@ -15,7 +15,6 @@ public class EnemyInfo : IData
     public float DetectionDistance { get; set; }
     public float ChaseDistance { get; set; }
     public float PatrolCycle { get; set; }
-    public bool IsInvincible { get; set; }
 
     public int GetId()
     {
