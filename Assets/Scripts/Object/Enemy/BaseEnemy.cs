@@ -105,7 +105,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         {
             return;
         }
-        HitUnit hitUnit = _poolManager.MakeObject("NormalHitUnit").GetComponent<HitUnit>();
+        HitUnit hitUnit = _poolManager.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
         HitUnitInfo info = actionInfo.HitUnitList[index];
         hitUnit.SetHitUnit(this, info, transform);
     }

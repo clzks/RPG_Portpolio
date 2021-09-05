@@ -7,8 +7,8 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
 {
     private DataManager _dataManager;
     public Dictionary<string, GameObject> prefabList;
-    public Dictionary<string, List<GameObject>> _objectPoolList;
-    public Dictionary<string, List<GameObject>> _activePoolList;
+    public Dictionary<ObjectType, List<IPoolObject>> _objectPoolList;
+    public Dictionary<ObjectType, List<IPoolObject>> _activePoolList;
     public Dictionary<string, Material> _materialList;
     private void Awake()
     {
@@ -25,50 +25,58 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         LoadMaterials();
     }
 
-    public GameObject MakeObject(string objName)
+    public GameObject MakeObject(ObjectType type, string objName)
     {
         IPoolObject obj;
 
-        List<GameObject> pool;
-        List<GameObject> activePool;
+        List<IPoolObject> pool;
+        List<IPoolObject> activePool;
 
-        if (_objectPoolList.ContainsKey(objName) == true)
+        if (_objectPoolList.ContainsKey(type) == true)
         {
-            pool = _objectPoolList[objName];
+            pool = _objectPoolList[type];
         }
         else
         {
-            pool = new List<GameObject>();
-            _objectPoolList.Add(objName, pool);
+            pool = new List<IPoolObject>();
+            _objectPoolList.Add(type, pool);
         }
 
         if (pool.Count != 0)
         {
-            obj = pool[0].GetComponent<IPoolObject>();
-            obj.GetObject().SetActive(true);
-            pool.Remove(obj.GetObject());
+            obj = pool.FirstOrDefault(x => x.GetName() == objName);
+
+            if (null != obj)
+            {
+                obj.GetObject().SetActive(true);
+                pool.Remove(obj);
+            }
+            else
+            {
+                obj = Instantiate(prefabList[objName]).GetComponent<IPoolObject>();
+            }
         }
         else
         {
             obj = Instantiate(prefabList[objName]).GetComponent<IPoolObject>();
         }
 
-        if (_activePoolList.ContainsKey(objName) == true)
+        if (_activePoolList.ContainsKey(type) == true)
         {
-            activePool = _activePoolList[objName];
+            activePool = _activePoolList[type];
         }
         else
         {
-            activePool = new List<GameObject>();
-            _activePoolList.Add(objName, activePool);
+            activePool = new List<IPoolObject>();
+            _activePoolList.Add(type, activePool);
         }
 
-        activePool.Add(obj.GetObject());
+        activePool.Add(obj);
 
         return obj.GetObject();
     }
 
-    public GameObject MakeObject(int id, ObjectType type)
+    public GameObject MakeObject(ObjectType type, int id)
     {
         string objName = string.Empty;
 
@@ -94,58 +102,67 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
 
         IPoolObject obj;
 
-        List<GameObject> pool;
-        List<GameObject> activePool;
+        List<IPoolObject> pool;
+        List<IPoolObject> activePool;
 
-        if (_objectPoolList.ContainsKey(objName) == true)
+        if (_objectPoolList.ContainsKey(type) == true)
         {
-            pool = _objectPoolList[objName];
+            pool = _objectPoolList[type];
         }
         else
         {
-            pool = new List<GameObject>();
-            _objectPoolList.Add(objName, pool);
+            pool = new List<IPoolObject>();
+            _objectPoolList.Add(type, pool);
         }
 
         if (pool.Count != 0)
         {
-            obj = pool[0].GetComponent<IPoolObject>();
-            obj.GetObject().SetActive(true);
-            pool.Remove(obj.GetObject());
+            obj = pool.FirstOrDefault(x => x.GetName() == objName);
+
+            if (null != obj)
+            {
+                obj.GetObject().SetActive(true);
+                pool.Remove(obj);
+            }
+            else
+            {
+                obj = Instantiate(prefabList[objName]).GetComponent<IPoolObject>();
+            }
         }
         else
         {
             obj = Instantiate(prefabList[objName]).GetComponent<IPoolObject>();
         }
 
-        if (_activePoolList.ContainsKey(objName) == true)
+        if (_activePoolList.ContainsKey(type) == true)
         {
-            activePool = _activePoolList[objName];
+            activePool = _activePoolList[type];
         }
         else
         {
-            activePool = new List<GameObject>();
-            _activePoolList.Add(objName, activePool);
+            activePool = new List<IPoolObject>();
+            _activePoolList.Add(type, activePool);
         }
 
-        activePool.Add(obj.GetObject());
+        activePool.Add(obj);
 
         return obj.GetObject();
     }
 
     public void ReturnObject(IPoolObject poolObject)
     {
-        string name = poolObject.GetName();
-        var list = _activePoolList[name];
-        var pool = _objectPoolList[name];
-        GameObject obj = poolObject.GetObject();
+        ObjectType type = poolObject.GetObjectType();
+        var list = _activePoolList[type];
+        var pool = _objectPoolList[type];
+        //GameObject obj = poolObject.GetObject();
 
-        if (true == list.Contains(obj))
+        if (true == list.Contains(poolObject))
         {
+            GameObject obj = poolObject.GetObject();
             obj.transform.rotation = new Quaternion();
             obj.SetActive(false);
-            list.Remove(obj);
-            pool.Add(obj);
+            list.Remove(poolObject);
+            pool.Add(poolObject);
         }
     }
 
@@ -191,8 +208,8 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     #endregion
     public void InitPool()
     {
-        _objectPoolList = new Dictionary<string, List<GameObject>>();
-        _activePoolList = new Dictionary<string, List<GameObject>>();
+        _objectPoolList = new Dictionary<ObjectType, List<IPoolObject>>();
+        _activePoolList = new Dictionary<ObjectType, List<IPoolObject>>();
     }
 
     public void ReturnAllObject()
@@ -201,7 +218,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         {
             for (int i = item.Value.Count - 1; i > -1; --i)
             {
-                IPoolObject iObj = item.Value[i].GetComponent<IPoolObject>();
+                IPoolObject iObj = item.Value[i];
                 ReturnObject(iObj);
             }
         }
@@ -213,7 +230,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         {
             foreach (var obj in item.Value)
             {
-                Destroy(obj);
+                Destroy(obj.GetObject());
             }
 
             item.Value.Clear();
@@ -223,7 +240,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         {
             foreach (var obj in item.Value)
             {
-                Destroy(obj);
+                Destroy(obj.GetObject());
             }
 
             item.Value.Clear();

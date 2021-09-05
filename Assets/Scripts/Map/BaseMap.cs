@@ -103,7 +103,7 @@ public class BaseMap : MonoBehaviour, IPoolObject
 
     public void SummonNormalEnemy(int id, Vector3 summonPos, Transform baseCamp)
     {
-        var enemy = _objectPool.MakeObject(id, ObjectType.Enemy).GetComponent<BaseEnemy>();
+        var enemy = _objectPool.MakeObject(ObjectType.Enemy, id).GetComponent<BaseEnemy>();
         enemy.SetEnemy(_dataManager.GetEnemyInfo(id));
         enemy.SetPlayer(_player);
         enemy.SetBaseCamp(baseCamp);

@@ -27,7 +27,7 @@ public class BattleScene : MonoBehaviour
             _currMap.ReturnObject();
         }
 
-        _currMap = _objectPool.MakeObject(worldId, ObjectType.Map).GetComponent<BaseMap>();
+        _currMap = _objectPool.MakeObject(ObjectType.Map, worldId).GetComponent<BaseMap>();
         _currMap.SetMap(_dataManager.GetMapInfo(worldId));
         _currMap.SetPlayer(_player);
         _currMap.Init();
