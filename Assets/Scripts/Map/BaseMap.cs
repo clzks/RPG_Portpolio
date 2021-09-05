@@ -11,7 +11,7 @@ public class BaseMap : MonoBehaviour, IPoolObject
     private int _id;
     private ObjectPoolManager _objectPool;
     private DataManager _dataManager;
-    private bool _isFirst = true;
+    //private bool _isFirst = true;
     public NavMeshSurface surface;
     private List<MapPoint> _pointList;
     private void Awake()
@@ -35,14 +35,24 @@ public class BaseMap : MonoBehaviour, IPoolObject
         return ObjectType.Map;
     }
 
+    public void GetHeightMap()
+    {
+        TerrainData td = GetComponentInChildren<Terrain>().terrainData;
+
+        var heights = td.GetHeights(0, 0, 100, 100);
+
+        Texture2D t = new Texture2D(0,0);
+    }
+
     public void Init()
     {
-        if (true == _isFirst)
-        {
-            _isFirst = false;
-            surface.RemoveData();
-            surface.BuildNavMesh();
-        }
+        GetHeightMap();
+        //if (true == _isFirst)
+        //{
+        //    _isFirst = false;
+        //    surface.RemoveData();
+        //    surface.BuildNavMesh();
+        //}
         _pointList = GetComponentsInChildren<MapPoint>().ToList();
 
         foreach (MapPoint point in _pointList)

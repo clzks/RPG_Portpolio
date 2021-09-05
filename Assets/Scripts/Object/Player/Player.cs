@@ -9,14 +9,16 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour, IActor
 {
     private ObjectPoolManager _poolManager;
-    [SerializeField]private NavMeshAgent _agent;
-    [SerializeField]private InGameCamera _camera;
-    [SerializeField]private Animator _animController;
+    [SerializeField] private NavMeshAgent _agent;
+    [SerializeField] private InGameCamera _camera;
+    [SerializeField] private Animator _animController;
     private SphereCollider _collider;
     [Header("UI")]
-    [SerializeField]private VirtualGamePad _movePad;
-    [SerializeField]private ActionButton _attackButton;
-    [SerializeField]private TargetInfoPanel _targetPanel;
+    [SerializeField] private VirtualGamePad _movePad;
+    [SerializeField] private ActionButton _attackButton;
+    [SerializeField] private TargetInfoPanel _targetPanel;
+    [SerializeField] private PlayerFieldStatusUI _fieldStatusUI;
+    [SerializeField] private Image _miniMap;
     [Header("Status")]
     public float speed = 30f;
     public IActionState currActionState;
@@ -52,6 +54,8 @@ public class Player : MonoBehaviour, IActor
     private void Update()
     {
         currActionState = currActionState.Update();
+
+        _fieldStatusUI.SetStatusPanel(GetHpPercent(), 1);
 
         if(Input.GetKeyDown(KeyCode.C))
         {

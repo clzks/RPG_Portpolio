@@ -8,6 +8,7 @@ public class BattleScene : MonoBehaviour
     private ObjectPoolManager _objectPool;
     private BaseMap _currMap = null;
     private Player _player;
+    public MiniMap _miniMap;
 
     private void Awake()
     {
