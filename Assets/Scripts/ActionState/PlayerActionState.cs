@@ -95,6 +95,9 @@ public abstract class PlayerAttackState : PlayerActionState
 {
     protected ActionInfo info;
     protected float currAnimTime;
+    protected string baseNormalAttackName = "Attack0";
+    protected string actionName;
+    private int _maxNormalAttackCount = 3;
     public PlayerAttackState(Player player) : base(player)
     {
 
@@ -125,10 +128,15 @@ public abstract class PlayerAttackState : PlayerActionState
     {
         if (currAnimTime >= info.ComboAvailableTime)
         {
-            if (true == _attackButton.GetButtonDown())
+            if (_player.GetCurrNormalAttackCount() < _maxNormalAttackCount)
             {
-                return true;
+                if (true == _attackButton.GetButtonDown())
+                {
+                    return true;
+                }
             }
+            
+            // 스킬 버튼을 눌렀을 때
         }
 
         return false;
@@ -146,6 +154,7 @@ public class PlayerIdleState : PlayerActionState
 
     public override void Enter()
     {
+        _player.ResetNormalAttackCount();
         Agent.avoidancePriority = 60;
         PlayAnimation("Idle");
     }
@@ -168,7 +177,7 @@ public class PlayerIdleState : PlayerActionState
 
         if(true == _attackButton.GetButtonDown())
         {
-            return ChangeState(new PlayerAttackOneState(_player));
+            return ChangeState(new PlayerNormalAttackState(_player));
         }
 
         if (true == _movePad.IsDrag())
@@ -194,6 +203,7 @@ public class PlayerRunState : PlayerActionState
 
     public override void Enter()
     {
+        _player.ResetNormalAttackCount();
         Agent.avoidancePriority = 60;
         PlayAnimation("Run");
     }
@@ -216,7 +226,7 @@ public class PlayerRunState : PlayerActionState
 
         if (true == _attackButton.GetButtonDown())
         {
-            return ChangeState(new PlayerAttackOneState(_player));
+            return ChangeState(new PlayerNormalAttackState(_player));
         }
 
         if (true == _movePad.IsDrag())
@@ -239,14 +249,14 @@ public class PlayerRunState : PlayerActionState
     }
 }
 
-public class PlayerAttackOneState : PlayerAttackState
+public class PlayerNormalAttackState : PlayerAttackState
 {
-    string actionName = "Attack01";
     float moveDistance;
     float moveDelay;
     float moveTime;
+    
 
-    public PlayerAttackOneState(Player player) : base(player)
+    public PlayerNormalAttackState(Player player) : base(player)
     {
         
     }
@@ -254,7 +264,9 @@ public class PlayerAttackOneState : PlayerAttackState
     public override void Enter()
     {
         base.Enter();
-        
+        _player.AddNormalAttackCount(1);
+        actionName = baseNormalAttackName + _player.GetCurrNormalAttackCount().ToString();
+
         if (true == _movePad.IsDrag())
         {
             var dir = _movePad.GetStickDirection();
@@ -288,156 +300,10 @@ public class PlayerAttackOneState : PlayerAttackState
 
         if(true == IsNextAttackState())
         {
-            return ChangeState(new PlayerAttackTwoState(_player));
+            return ChangeState(new PlayerNormalAttackState(_player));
         }
         
         if(currAnimTime >= 0.99f)
-        {
-            if (true == _movePad.IsDrag())
-            {
-                return ChangeState(new PlayerRunState(_player));
-            }
-            else
-            {
-                return ChangeState(new PlayerIdleState(_player));
-            }
-        }
-
-        return this;
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
-    }
-}
-
-public class PlayerAttackTwoState : PlayerAttackState
-{
-    string actionName = "Attack02";
-    float moveDistance;
-    float moveDelay;
-    float moveTime;
-    public PlayerAttackTwoState(Player player) : base(player)
-    {
-
-    }
-
-    public override void Enter()
-    {
-        base.Enter();
-
-        if (true == _movePad.IsDrag())
-        {
-            var dir = _movePad.GetStickDirection();
-            _player.SetForward(dir);
-            _player.MovePlayerByPad();
-        }
-
-        info = _player.GetActionInfo(actionName);
-        moveDistance = info.MoveDistance;
-        moveDelay = info.MoveStartTime;
-        moveTime = info.MoveTime;
-
-        if (null == info)
-        {
-
-        }
-
-        PlayAnimation(actionName);
-        currAnimTime = 0f;
-        _player.MoveCharacter(moveDelay, moveTime, moveDistance, _player.GetForward());
-    }
-
-    public override IActionState Update()
-    {
-        currAnimTime = GetAnimNormalTime(actionName);
-
-        if (null != GetDamageInfo())
-        {
-            return ChangeState(new PlayerDamageState(_player));
-        }
-
-        if (true == IsNextAttackState())
-        {
-            return ChangeState(new PlayerAttackThreeState(_player));
-        }
-
-        if (currAnimTime >= 0.99f)
-        {
-            if (true == _movePad.IsDrag())
-            {
-                return ChangeState(new PlayerRunState(_player));
-            }
-            else
-            {
-                return ChangeState(new PlayerIdleState(_player));
-            }
-        }
-
-        return this;
-    }
-
-    public override void Exit()
-    {
-        base.Exit();
-    }
-}
-
-public class PlayerAttackThreeState : PlayerAttackState
-{
-    string actionName = "Attack03";
-    float moveDistance;
-    float moveDelay;
-    float moveTime;
-
-    public PlayerAttackThreeState(Player player) : base(player)
-    {
-
-    }
-
-    public override void Enter()
-    {
-        base.Enter();
-
-        if (true == _movePad.IsDrag())
-        {
-            var dir = _movePad.GetStickDirection();
-            _player.SetForward(dir);
-            _player.MovePlayerByPad();
-        }
-
-        info = _player.GetActionInfo(actionName);
-        moveDistance = info.MoveDistance;
-        moveDelay = info.MoveStartTime;
-        moveTime = info.MoveTime;
-
-        if (null == info)
-        {
-
-        }
-
-        PlayAnimation(actionName);
-        currAnimTime = 0f;
-        _player.MoveCharacter(moveDelay, moveTime, moveDistance, _player.GetForward());
-    }
-
-    public override IActionState Update()
-    {
-        currAnimTime = GetAnimNormalTime(actionName);
-
-        if (null != GetDamageInfo())
-        {
-            return ChangeState(new PlayerDamageState(_player));
-        }
-
-
-        if (currAnimTime >= info.ComboAvailableTime)
-        {
-
-        }
-
-        if (currAnimTime >= 0.99f)
         {
             if (true == _movePad.IsDrag())
             {

@@ -30,6 +30,7 @@ public class Player : MonoBehaviour, IActor
     private IEnumerator _moveCoroutine = null;
     private bool _followCamera = true;
     private bool _isInBattle = false;
+    private int _currNormalAttackCount = 0;
     public Vector3 Position { get { return transform.position; } }
     
     private void Awake()
@@ -258,6 +259,21 @@ public class Player : MonoBehaviour, IActor
     public bool GetInBattle()
     {
         return _isInBattle;
+    }
+
+    public int GetCurrNormalAttackCount()
+    {
+        return _currNormalAttackCount;
+    }
+
+    public void AddNormalAttackCount(int value)
+    {
+        _currNormalAttackCount += value;
+    }
+
+    public void ResetNormalAttackCount()
+    {
+        _currNormalAttackCount = 0;
     }
 
     public void MoveCharacter(float time, float distance, Vector3 dir)
