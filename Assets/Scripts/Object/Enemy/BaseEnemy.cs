@@ -148,7 +148,7 @@ public class BaseEnemy : MonoBehaviour, IActor
 
     public void TakeDamage(HitUnitStatus hitUnit, ref bool isDead)
     {
-        Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼 입음");
+        //Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼 입음");
         status.currHp -= hitUnit.Damage;
 
         // TODO 데미지 이펙트 추가할 곳

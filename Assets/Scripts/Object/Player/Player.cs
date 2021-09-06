@@ -28,7 +28,8 @@ public class Player : MonoBehaviour, IActor
     private Status _status;
     private DamageInfo _damageInfo;
     private IEnumerator _moveCoroutine = null;
-    private bool followCamera = true;
+    private bool _followCamera = true;
+    private bool _isInBattle = false;
     public Vector3 Position { get { return transform.position; } }
     
     private void Awake()
@@ -45,7 +46,7 @@ public class Player : MonoBehaviour, IActor
 
     private void LateUpdate()
     {
-        if (true == followCamera)
+        if (true == _followCamera)
         {
             _camera.FollowPlayer(transform.position);
         }
@@ -59,7 +60,7 @@ public class Player : MonoBehaviour, IActor
 
         if(Input.GetKeyDown(KeyCode.C))
         {
-            followCamera = !followCamera;
+            _followCamera = !_followCamera;
         }
     }
 
@@ -208,7 +209,7 @@ public class Player : MonoBehaviour, IActor
 
     public void TakeDamage(HitUnitStatus hitUnit, ref bool isDead)
     {
-        Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼입힘");
+        //Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼입힘");
         _status.CurrHp -= hitUnit.Damage;
         
         // TODO 데미지 이펙트 추가할 곳
@@ -247,6 +248,16 @@ public class Player : MonoBehaviour, IActor
     public void SetActiveNavMeshAgent(bool enabled)
     {
         _agent.enabled = enabled;
+    }
+
+    public void SetInBattle(bool enabled)
+    {
+        _isInBattle = enabled;
+    }
+
+    public bool GetInBattle()
+    {
+        return _isInBattle;
     }
 
     public void MoveCharacter(float time, float distance, Vector3 dir)

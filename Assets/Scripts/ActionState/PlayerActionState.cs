@@ -8,9 +8,9 @@ public abstract class PlayerActionState : IActionState
     protected VirtualGamePad _movePad { get { return _player.GetVirtualGamePad(); } }
     protected ActionButton _attackButton { get { return _player.GetActionButton(); } }
     protected Animator _animator;
-    //protected bool isPossibleCombo;
-    //protected bool isActionEnd;
-
+    protected float _inBattleTimer = 0f;
+    protected float _inNonBattleTime = 5f;
+    
     public PlayerActionState(Player player)
     {
         _player = player;
@@ -68,6 +68,11 @@ public abstract class PlayerActionState : IActionState
         return currAnimTime;
     }
 
+    public void ResetInBattleTimer()
+    {
+        _inBattleTimer = 0f;
+    }
+
     #region sealed methods
     public sealed override bool Equals(object obj)
     {
@@ -86,11 +91,11 @@ public abstract class PlayerActionState : IActionState
     #endregion
 }
 
-public abstract class PlayerNormalAttackState : PlayerActionState
+public abstract class PlayerAttackState : PlayerActionState
 {
     protected ActionInfo info;
     protected float currAnimTime;
-    public PlayerNormalAttackState(Player player) : base(player)
+    public PlayerAttackState(Player player) : base(player)
     {
 
     }
@@ -98,6 +103,7 @@ public abstract class PlayerNormalAttackState : PlayerActionState
     public override void Enter()
     {
         Agent.avoidancePriority = 40;
+        _player.SetInBattle(true);
     }
 
     public override void Exit()
@@ -145,7 +151,17 @@ public class PlayerIdleState : PlayerActionState
     }
     public override IActionState Update()
     {
-        if(null != GetDamageInfo())
+        if (true == _player.GetInBattle())
+        {
+            _inBattleTimer += Time.deltaTime;
+
+            if (_inBattleTimer >= _inNonBattleTime)
+            {
+                _player.SetInBattle(false);
+            }
+        }
+
+        if (null != GetDamageInfo())
         {
             return ChangeState(new PlayerDamageState(_player));
         }
@@ -183,6 +199,16 @@ public class PlayerRunState : PlayerActionState
     }
     public override IActionState Update()
     {
+        if (true == _player.GetInBattle())
+        {
+            _inBattleTimer += Time.deltaTime;
+
+            if (_inBattleTimer >= _inNonBattleTime)
+            {
+                _player.SetInBattle(false);
+            }
+        }
+
         if (null != GetDamageInfo())
         {
             return ChangeState(new PlayerDamageState(_player));
@@ -213,7 +239,7 @@ public class PlayerRunState : PlayerActionState
     }
 }
 
-public class PlayerAttackOneState : PlayerNormalAttackState
+public class PlayerAttackOneState : PlayerAttackState
 {
     string actionName = "Attack01";
     float moveDistance;
@@ -286,7 +312,7 @@ public class PlayerAttackOneState : PlayerNormalAttackState
     }
 }
 
-public class PlayerAttackTwoState : PlayerNormalAttackState
+public class PlayerAttackTwoState : PlayerAttackState
 {
     string actionName = "Attack02";
     float moveDistance;
@@ -358,7 +384,7 @@ public class PlayerAttackTwoState : PlayerNormalAttackState
     }
 }
 
-public class PlayerAttackThreeState : PlayerNormalAttackState
+public class PlayerAttackThreeState : PlayerAttackState
 {
     string actionName = "Attack03";
     float moveDistance;
@@ -446,6 +472,7 @@ public class PlayerDamageState : PlayerActionState
 
     public override void Enter()
     {
+        _player.SetInBattle(true);
         Agent.avoidancePriority = 60;
         DamageInfo info = GetDamageInfo();
         knockBackTime = info.stiffNessTime;
@@ -474,7 +501,7 @@ public class PlayerDamageState : PlayerActionState
     }
 }
 
-public class PlayerSkillState : PlayerActionState
+public class PlayerSkillState : PlayerAttackState
 {
     public PlayerSkillState(Player player) : base(player)
     {
@@ -482,7 +509,7 @@ public class PlayerSkillState : PlayerActionState
 
     public override void Enter()
     {
-
+        _player.SetInBattle(true);
     }
     public override IActionState Update()
     {
