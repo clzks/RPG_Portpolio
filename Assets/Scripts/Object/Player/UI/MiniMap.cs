@@ -24,12 +24,13 @@ public class MiniMap : MonoBehaviour
         }
     }
 
-    public void MiniMapUpdate(Vector4[] enemyPosArray)
+    public void MiniMapUpdate(Vector4[] enemyPosArray, Vector4 PlayerPos)
     {
         var CameraBasicX = ScreenWidth / 2f;
-        var CameraBasicY = -ScreenHeight;
+        var CameraBasicY = -13f;
         var offset = new Vector2(_camera.transform.position.x - CameraBasicX, _camera.transform.position.z - CameraBasicY) * 0.01f;
         meshRenderer.material.mainTextureOffset = offset;
+        meshRenderer.material.SetVector("_PlayerPos", PlayerPos);
         meshRenderer.material.SetVectorArray("_EnemyPosArray", enemyPosArray);
     }
 

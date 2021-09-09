@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class InGameCamera : MonoBehaviour
 {
-    private Vector3 _cameraDistance = new Vector3(0, 30f, -21f);
+    private Vector3 _cameraDistance = new Vector3(0, 30f, -20.1f);
     public Vector3 Position { get { return transform.position; } set { transform.position = value; } }
     private float _limitR = 90f;
     private float _limitL = 9f;

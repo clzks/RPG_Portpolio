@@ -3,7 +3,7 @@
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _SampleEnemy("Vector", Vector) = (0,0,0,0)
+        //_SampleEnemy("Vector", Vector) = (0,0,0,0)
         _EnemyPointSize("Float", Range(0,1)) = 0.01
     }
     SubShader
@@ -42,7 +42,7 @@
             sampler2D _MainTex;
             float4 _MainTex_ST;
             float4 _EnemyPosArray[50];
-            float4 _SampleEnemy;
+            float4 _PlayerPos;
             float _EnemyPointSize;
 
             v2f vert (appdata v)
@@ -57,16 +57,30 @@
             {
                 // sample the texture
                 fixed4 col = tex2D(_MainTex, i.uv);
-                
-                if (_SampleEnemy.w >= 0)
-                {
-                    fixed4 uv = fixed4(i.uv.x, i.uv.y, 0, 0);
-                    fixed4 enemy = fixed4(_SampleEnemy.x, _SampleEnemy.z, 0, 0);
 
-                    if (distance(uv, enemy) <= _EnemyPointSize)
+                fixed4 uv = fixed4(i.uv.x, i.uv.y, 0, 0);
+                
+                [loop]
+                for (int index = 0; index < 50; ++index)
+                {
+                    if (_EnemyPosArray[index].w > 0)
                     {
-                        col.rgba = fixed4(1, 0, 0, 1);
+                        fixed4 enemy = fixed4(_EnemyPosArray[index].x, _EnemyPosArray[index].z, 0, 0);
+
+                        if (distance(uv, enemy) <= _EnemyPointSize)
+                        {
+                            col.rgba = fixed4(1,0,0,1);
+                        }
                     }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                if (distance(uv, _PlayerPos) <= _EnemyPointSize)
+                {
+                    col.rgba = fixed4(0, 0, 1, 1);
                 }
                 
                 return col;

@@ -53,7 +53,7 @@ public class Player : MonoBehaviour, IActor
         if (true == _followCamera)
         {
             _camera.FollowPlayer(transform.position);
-            _miniMap.MiniMapUpdate(array);
+            _miniMap.MiniMapUpdate(array, new Vector4(Position.x, Position.z, 0, 0) / 100f);
         }
     }
 
