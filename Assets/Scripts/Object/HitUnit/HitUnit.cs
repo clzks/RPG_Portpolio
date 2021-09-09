@@ -11,6 +11,7 @@ public class HitUnit : MonoBehaviour, IPoolObject
     private ObjectPoolManager _objectPool;
     private CancellationTokenSource _disableCancellation = new CancellationTokenSource();
     private ObjectType _type = ObjectType.HitUnit;
+    public Vector3 Position { get { return transform.position; } }
     public SphereCollider sphereCollider;
     public float lifeTime = 0.5f;
     public HitUnitStatus status;
@@ -32,7 +33,7 @@ public class HitUnit : MonoBehaviour, IPoolObject
 
     private void Start()
     {
-       
+        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -104,6 +105,11 @@ public class HitUnit : MonoBehaviour, IPoolObject
     public string GetName()
     {
         return "NormalHitUnit";
+    }
+
+    public Vector3 GetPosition()
+    {
+        return Position;
     }
 }
 

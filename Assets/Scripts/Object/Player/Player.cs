@@ -8,17 +8,18 @@ using UnityEngine.SceneManagement;
 #endif
 public class Player : MonoBehaviour, IActor
 {
-    private ObjectPoolManager _poolManager;
+    private ObjectPoolManager _objectPool;
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private InGameCamera _camera;
     [SerializeField] private Animator _animController;
     private SphereCollider _collider;
     [Header("UI")]
-    [SerializeField] private VirtualGamePad _movePad;
-    [SerializeField] private ActionButton _attackButton;
+    [SerializeField] private MovePad _movePad;
+    [SerializeField] private ActionPad _actionPad;
+    //[SerializeField] private ActionButton _attackButton;
     [SerializeField] private TargetInfoPanel _targetPanel;
     [SerializeField] private PlayerFieldStatusUI _fieldStatusUI;
-    [SerializeField] private Image _miniMap;
+    [SerializeField] private MiniMap _miniMap;
     [Header("Status")]
     public float speed = 30f;
     public IActionState currActionState;
@@ -35,7 +36,7 @@ public class Player : MonoBehaviour, IActor
     
     private void Awake()
     {
-        _poolManager = ObjectPoolManager.Get();
+        _objectPool = ObjectPoolManager.Get();
         //_camera.SetCameraDistance(transform.position);
         currActionState = new PlayerIdleState(this);
         _actionInfoList = DataManager.Get().GetActionInfoList();
@@ -47,9 +48,12 @@ public class Player : MonoBehaviour, IActor
 
     private void LateUpdate()
     {
+        var array = GetEnemyPosArray();
+
         if (true == _followCamera)
         {
             _camera.FollowPlayer(transform.position);
+            _miniMap.MiniMapUpdate(array);
         }
     }
 
@@ -110,7 +114,7 @@ public class Player : MonoBehaviour, IActor
         {
             return;
         }
-        HitUnit hitUnit = _poolManager.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
+        HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
         HitUnitInfo info = actionInfo.HitUnitList[index];
         hitUnit.SetHitUnit(this, info, transform);
     }
@@ -127,19 +131,23 @@ public class Player : MonoBehaviour, IActor
         _targetPanel.SetTargetInfo(actor, isKill);
     }
     #region GET SET
+    public Vector3 GetPosition()
+    {
+        return Position;
+    }
     public Animator GetAnimator()
     {
         return _animController;
     }
 
-    public VirtualGamePad GetVirtualGamePad()
+    public MovePad GetVirtualGamePad()
     {
         return _movePad;
     }
 
-    public ActionButton GetActionButton()
+    public ActionPad GetActionPad()
     {
-        return _attackButton;
+        return _actionPad;
     }
 
     public ActionInfo GetActionInfo(string key)
@@ -321,5 +329,27 @@ public class Player : MonoBehaviour, IActor
         }
 
         _moveCoroutine = null;
+    }
+
+    private Vector4[] GetEnemyPosArray()
+    {
+        Vector4[] array = new Vector4[50];
+        var list = _objectPool.GetEnemies();
+        list = list.FindAll(x => (x.GetPosition() - Position).magnitude <= 30f);
+
+        for(int i = 0; i < 50; ++i)
+        {
+            if(list.Count - 1 < i)
+            {
+                array[i] = new Vector4(0, 0, 0, -100) / 100f;
+            }
+            else
+            {
+                var enemyPos = list[i].GetPosition();
+                array[i] = new Vector4(enemyPos.x, enemyPos.y, enemyPos.z, 100) / 100f; 
+            }
+        } 
+
+        return array;
     }
 }

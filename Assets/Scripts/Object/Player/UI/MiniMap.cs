@@ -7,27 +7,32 @@ public class MiniMap : MonoBehaviour
     public Camera _camera;
     public MeshRenderer meshRenderer;
 
-    public float screenWidth = 17.77f;
-    public float screenHeight = 12.20776f;
-
+    public float ScreenWidth = 17.77f;
+    public float ScreenHeight = 12.20776f;
+    //public float Y = -8f;
 
     private void OnEnable()
     {
-        meshRenderer.material.mainTextureScale = new Vector2(screenWidth * 0.01f, screenWidth * 0.01f);
+        meshRenderer.material.mainTextureScale = new Vector2(ScreenWidth * 0.01f, ScreenWidth * 0.01f);
     }
 
-    public void MiniMapUpdate()
+    private void Update()
     {
-        var CameraBasicX = screenWidth / 2f;    
-        var CameraBasicY = screenHeight / 2f;
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            CheckDifferent();
+        }
+    }
+
+    public void MiniMapUpdate(Vector4[] enemyPosArray)
+    {
+        var CameraBasicX = ScreenWidth / 2f;
+        var CameraBasicY = -ScreenHeight;
         var offset = new Vector2(_camera.transform.position.x - CameraBasicX, _camera.transform.position.z - CameraBasicY) * 0.01f;
         meshRenderer.material.mainTextureOffset = offset;
+        meshRenderer.material.SetVectorArray("_EnemyPosArray", enemyPosArray);
     }
 
-    private void LateUpdate()
-    {
-        MiniMapUpdate();
-    }
 
    public void CheckScreenWidth()
    {
@@ -55,18 +60,22 @@ public class MiniMap : MonoBehaviour
         RaycastHit rbRayHit;
         RaycastHit luRayHit;
         RaycastHit ruRayHit;
+        RaycastHit ccRayHit;
 
         Vector3 cameraDir = _camera.transform.localRotation * Vector3.forward;
         Physics.Raycast(_camera.ViewportToWorldPoint(new Vector3(0, 0, 0)), cameraDir, out lbRayHit);
         Physics.Raycast(_camera.ViewportToWorldPoint(new Vector3(1, 0, 0)), cameraDir, out rbRayHit);
         Physics.Raycast(_camera.ViewportToWorldPoint(new Vector3(0, 1, 0)), cameraDir, out luRayHit);
         Physics.Raycast(_camera.ViewportToWorldPoint(new Vector3(1, 1, 0)), cameraDir, out ruRayHit);
+        Physics.Raycast(_camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 0)), cameraDir, out ccRayHit);
 
         Debug.Log(lbRayHit.point);
         Debug.Log(rbRayHit.point);
         Debug.Log(luRayHit.point);
         Debug.Log(ruRayHit.point);
-
+        Debug.Log(ccRayHit.point);
+        Debug.Log(_camera.transform.position);
+        
         Debug.Log(rbRayHit.point.x - lbRayHit.point.x);
         Debug.Log(ruRayHit.point.z - lbRayHit.point.z);
     }

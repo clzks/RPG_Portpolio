@@ -110,4 +110,9 @@ public class BaseMap : MonoBehaviour, IPoolObject
         enemy.transform.position = summonPos;
         enemy.SetActiveNavMeshAgent(true);
     }
+
+    public Vector3 GetPosition()
+    {
+        return new Vector3();
+    }
 }

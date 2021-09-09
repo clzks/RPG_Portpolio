@@ -5,25 +5,27 @@ using UnityEngine.EventSystems;
 public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     private bool _isClick = false;
-    private ActionInfo _info;
+    //private ActionInfo _info;
+    private ActionType _type;
+    [SerializeField]private string _actionName;
 
     public void OnPointerDown(PointerEventData eventData)
     {
         _isClick = true;
     }
-
-    //private void Update()
-    //{
-    //    _isClick = false;
-    //}
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        _isClick = false;
+    }
 
     public bool GetButtonDown()
     {
         return _isClick;
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+
+    public string GetActionName()
     {
-        _isClick = false;
+        return _actionName;
     }
 }

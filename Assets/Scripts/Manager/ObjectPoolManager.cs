@@ -251,4 +251,9 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     {
         return _materialList[name];
     }
+
+    public List<IPoolObject> GetEnemies()
+    {
+        return _activePoolList[ObjectType.Enemy];
+    }
 }

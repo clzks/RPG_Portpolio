@@ -5,8 +5,8 @@ public abstract class PlayerActionState : IActionState
     protected Player _player;
     protected GameManager _gameManager;
     protected NavMeshAgent Agent { get { return _player.GetNavMeshAgent(); } }
-    protected VirtualGamePad _movePad { get { return _player.GetVirtualGamePad(); } }
-    protected ActionButton _attackButton { get { return _player.GetActionButton(); } }
+    protected MovePad _movePad { get { return _player.GetVirtualGamePad(); } }
+    protected ActionPad _actionPad { get { return _player.GetActionPad(); } }
     protected Animator _animator;
     protected float _inBattleTimer = 0f;
     protected float _inNonBattleTime = 5f;
@@ -130,15 +130,12 @@ public abstract class PlayerAttackState : PlayerActionState
         {
             if (_player.GetCurrNormalAttackCount() < _maxNormalAttackCount)
             {
-                if (true == _attackButton.GetButtonDown())
+                if (true == _actionPad.GetButtonDown(out string name))
                 {
-                    return true;
+                    return name == "Attack0";
                 }
             }
-            
-            // 스킬 버튼을 눌렀을 때
         }
-
         return false;
     }
 }
@@ -175,7 +172,7 @@ public class PlayerIdleState : PlayerActionState
             return ChangeState(new PlayerDamageState(_player));
         }
 
-        if(true == _attackButton.GetButtonDown())
+        if(true == _actionPad.GetButtonDown(out string name))
         {
             return ChangeState(new PlayerNormalAttackState(_player));
         }
@@ -224,7 +221,7 @@ public class PlayerRunState : PlayerActionState
             return ChangeState(new PlayerDamageState(_player));
         }
 
-        if (true == _attackButton.GetButtonDown())
+        if (true == _actionPad.GetButtonDown(out string name))
         {
             return ChangeState(new PlayerNormalAttackState(_player));
         }
@@ -275,10 +272,8 @@ public class PlayerNormalAttackState : PlayerAttackState
         }
 
         info = _player.GetActionInfo(actionName);
-        moveDistance = info.MoveDistance;
-        moveDelay = info.MoveStartTime;
         moveTime = info.MoveTime;
-
+        
         if (null == info)
         {
 
@@ -286,7 +281,13 @@ public class PlayerNormalAttackState : PlayerAttackState
 
         PlayAnimation(actionName);
         currAnimTime = 0f;
-        _player.MoveCharacter(moveDelay, moveTime, moveDistance, _player.GetForward());
+
+        if (moveTime > 0f)
+        {
+            moveDistance = info.MoveDistance;
+            moveDelay = info.MoveStartTime;
+            _player.MoveCharacter(moveDelay, moveTime, moveDistance, _player.GetForward());
+        }
     }
 
     public override IActionState Update()
@@ -371,6 +372,7 @@ public class PlayerSkillState : PlayerAttackState
 {
     public PlayerSkillState(Player player) : base(player)
     {
+
     }
 
     public override void Enter()
@@ -392,6 +394,7 @@ public class PlayerDieState : PlayerActionState
 {
     public PlayerDieState(Player player) : base(player)
     {
+
     }
 
     public override void Enter()

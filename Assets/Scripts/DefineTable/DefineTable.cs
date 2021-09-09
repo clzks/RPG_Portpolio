@@ -30,6 +30,13 @@ public enum MapEventType
     Count
 }
 
+public enum ActionType
+{
+    NormalAttack,
+    Skill,
+    Count
+}
+
 public static class Formula
 {
     public static Vector3 BezierMove(Vector3 start, Vector3 p, Vector3 dest, float t)

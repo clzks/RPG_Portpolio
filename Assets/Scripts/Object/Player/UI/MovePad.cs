@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-public class VirtualGamePad : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler
+public class MovePad : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
     public RectTransform background;
     public RectTransform stick;

@@ -128,7 +128,7 @@ public class ActionCreator : MonoBehaviour
         {
             for (int i = 0; i < hitUnitList.Count; ++i)
             {
-                MakeSampleHitUnit(i);
+                //MakeSampleHitUnit(i);
             }
         }
     }

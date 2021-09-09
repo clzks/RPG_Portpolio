@@ -205,6 +205,11 @@ public class BaseEnemy : MonoBehaviour, IActor
         _actorList.Clear();
     }
 
+    public Vector3 GetPosition()
+    {
+        return Position;
+    }
+
     public int GetId()
     {
         return 0;
@@ -273,6 +278,7 @@ public class BaseEnemy : MonoBehaviour, IActor
 
         _moveCoroutine = null;
     }
+
 
 }
 
