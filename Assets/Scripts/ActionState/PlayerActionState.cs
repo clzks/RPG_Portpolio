@@ -10,12 +10,13 @@ public abstract class PlayerActionState : IActionState
     protected Animator _animator;
     protected float _inBattleTimer = 0f;
     protected float _inNonBattleTime = 5f;
-    
-    public PlayerActionState(Player player)
+    protected string actionName;
+    public PlayerActionState(Player player, string action)
     {
         _player = player;
         _animator = player.GetAnimator();
         _gameManager = GameManager.Get();
+        actionName = action;
         Enter();
     }
 
@@ -23,28 +24,34 @@ public abstract class PlayerActionState : IActionState
     public abstract IActionState Update();
     public abstract void Exit();
 
-    public IActionState ChangeState(IActionState state)
+    protected IActionState ChangeState(IActionState state)
     {
         Exit();
         return state;
     }
 
-    public void PlayAnimation(string anim)
+    protected void PlayAnimation(string anim)
     {
         _player.PlayAnimation(anim);
     }
+
+    protected void PlayAnimation()
+    {
+        _player.PlayAnimation(actionName);
+    }
+
 
     public virtual ActionInfo GetActionInfo()
     {
         return null;
     }
 
-    public DamageInfo GetDamageInfo()
+    protected DamageInfo GetDamageInfo()
     {
         return _player.GetDamageInfo();
     }
 
-    public float GetAnimNormalTime(string anim)
+    protected float GetAnimNormalTime(string anim)
     {
         var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
         float currAnimTime = 0f;
@@ -56,7 +63,7 @@ public abstract class PlayerActionState : IActionState
         return currAnimTime;
     }
 
-    public float GetAnimTotalTime(string anim)
+    protected float GetAnimTotalTime(string anim)
     {
         var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
         float currAnimTime = 0f;
@@ -68,9 +75,17 @@ public abstract class PlayerActionState : IActionState
         return currAnimTime;
     }
 
-    public void ResetInBattleTimer()
+    protected void ResetInBattleTimer()
     {
         _inBattleTimer = 0f;
+    }
+
+    protected void SetAvoidancePriority(int value)
+    {
+        if(null != Agent)
+        {
+            Agent.avoidancePriority = value;
+        }
     }
 
     #region sealed methods
@@ -95,17 +110,17 @@ public abstract class PlayerAttackState : PlayerActionState
 {
     protected ActionInfo info;
     protected float currAnimTime;
-    protected string baseNormalAttackName = "Attack0";
-    protected string actionName;
+    //protected string baseNormalAttackName = "Attack0";
+    
     private int _maxNormalAttackCount = 3;
-    public PlayerAttackState(Player player) : base(player)
+    public PlayerAttackState(Player player, string action) : base(player, action)
     {
 
     }
 
     public override void Enter()
     {
-        Agent.avoidancePriority = 40;
+        SetAvoidancePriority(40);
         _player.SetInBattle(true);
     }
 
@@ -124,18 +139,20 @@ public abstract class PlayerAttackState : PlayerActionState
         return this;
     }
 
-    public bool IsNextAttackState()
+    public bool IsNextAttackState(out string actionName)
     {
+        actionName = string.Empty;
+
         if (currAnimTime >= info.ComboAvailableTime)
         {
             if (_player.GetCurrNormalAttackCount() < _maxNormalAttackCount)
             {
-                if (true == _actionPad.GetButtonDown(out string name))
-                {
-                    return name == "Attack0";
-                }
+                bool takeNextState = _actionPad.GetButtonDown(out string name);
+                actionName = name;
+                return takeNextState;
             }
         }
+
         return false;
     }
 }
@@ -144,16 +161,16 @@ public abstract class PlayerAttackState : PlayerActionState
 
 public class PlayerIdleState : PlayerActionState
 {
-    public PlayerIdleState(Player player) : base(player)
+    public PlayerIdleState(Player player, string action = "Idle") : base(player, action)
     {
-
+        
     }
 
     public override void Enter()
     {
         _player.ResetNormalAttackCount();
-        Agent.avoidancePriority = 60;
-        PlayAnimation("Idle");
+        SetAvoidancePriority(60);
+        PlayAnimation();
     }
     public override IActionState Update()
     {
@@ -174,7 +191,14 @@ public class PlayerIdleState : PlayerActionState
 
         if(true == _actionPad.GetButtonDown(out string name))
         {
-            return ChangeState(new PlayerNormalAttackState(_player));
+            if (string.Equals(name, "Attack0"))
+            {
+                return ChangeState(new PlayerNormalAttackState(_player));
+            }
+            else
+            {
+                return ChangeState(new PlayerSkillState(_player, name));
+            }
         }
 
         if (true == _movePad.IsDrag())
@@ -193,16 +217,16 @@ public class PlayerIdleState : PlayerActionState
 
 public class PlayerRunState : PlayerActionState
 {
-    public PlayerRunState(Player player) : base(player)
+    public PlayerRunState(Player player , string action = "Run") : base(player, action)
     {
-
+        
     }
 
     public override void Enter()
     {
         _player.ResetNormalAttackCount();
-        Agent.avoidancePriority = 60;
-        PlayAnimation("Run");
+        SetAvoidancePriority(60);
+        PlayAnimation();
     }
     public override IActionState Update()
     {
@@ -223,7 +247,14 @@ public class PlayerRunState : PlayerActionState
 
         if (true == _actionPad.GetButtonDown(out string name))
         {
-            return ChangeState(new PlayerNormalAttackState(_player));
+            if (string.Equals(name, "Attack0"))
+            {
+                return ChangeState(new PlayerNormalAttackState(_player));
+            }
+            else
+            {
+                return ChangeState(new PlayerSkillState(_player, name));
+            }
         }
 
         if (true == _movePad.IsDrag())
@@ -234,7 +265,7 @@ public class PlayerRunState : PlayerActionState
         }
         else
         {
-            return ChangeState(new PlayerIdleState(_player));
+            return ChangeState(new PlayerIdleState(_player, "Idle"));
         }
 
         return this;
@@ -253,7 +284,7 @@ public class PlayerNormalAttackState : PlayerAttackState
     float moveTime;
     
 
-    public PlayerNormalAttackState(Player player) : base(player)
+    public PlayerNormalAttackState(Player player, string action = "Attack0") : base(player, action)
     {
         
     }
@@ -262,7 +293,7 @@ public class PlayerNormalAttackState : PlayerAttackState
     {
         base.Enter();
         _player.AddNormalAttackCount(1);
-        actionName = baseNormalAttackName + _player.GetCurrNormalAttackCount().ToString();
+        actionName += _player.GetCurrNormalAttackCount().ToString();
 
         if (true == _movePad.IsDrag())
         {
@@ -279,7 +310,7 @@ public class PlayerNormalAttackState : PlayerAttackState
 
         }
 
-        PlayAnimation(actionName);
+        PlayAnimation();
         currAnimTime = 0f;
 
         if (moveTime > 0f)
@@ -299,9 +330,16 @@ public class PlayerNormalAttackState : PlayerAttackState
             return ChangeState(new PlayerDamageState(_player));
         }
 
-        if(true == IsNextAttackState())
+        if(true == IsNextAttackState(out string name))
         {
-            return ChangeState(new PlayerNormalAttackState(_player));
+            if (string.Equals(name, "Attack0"))
+            {
+                return ChangeState(new PlayerNormalAttackState(_player));
+            }
+            else
+            {
+                return ChangeState(new PlayerSkillState(_player, name));
+            }
         }
         
         if(currAnimTime >= 0.99f)
@@ -332,7 +370,7 @@ public class PlayerDamageState : PlayerActionState
     float distance;
     Vector3 knockBackDir;
 
-    public PlayerDamageState(Player player) : base(player)
+    public PlayerDamageState(Player player, string action = "Damage") : base(player, action)
     {
 
     }
@@ -340,14 +378,14 @@ public class PlayerDamageState : PlayerActionState
     public override void Enter()
     {
         _player.SetInBattle(true);
-        Agent.avoidancePriority = 60;
+        SetAvoidancePriority(60);
         DamageInfo info = GetDamageInfo();
         knockBackTime = info.stiffNessTime;
         distance = info.distance;
         knockBackDir = (_player.Position - info.actorPos).normalized;
         _player.ResetDamageInfo();
         timer = 0f;
-        PlayAnimation("Damage");
+        PlayAnimation();
         _player.MoveCharacter(0.2f, distance, knockBackDir);
     }
     public override IActionState Update()
@@ -370,7 +408,7 @@ public class PlayerDamageState : PlayerActionState
 
 public class PlayerSkillState : PlayerAttackState
 {
-    public PlayerSkillState(Player player) : base(player)
+    public PlayerSkillState(Player player, string action) : base(player, action)
     {
 
     }
@@ -379,8 +417,14 @@ public class PlayerSkillState : PlayerAttackState
     {
         _player.SetInBattle(true);
     }
+
     public override IActionState Update()
     {
+        if (null == _player.GetActionInfo(actionName))
+        {
+            return new PlayerIdleState(_player, "Idle");
+        }
+
         return this;
     }
 
@@ -392,7 +436,7 @@ public class PlayerSkillState : PlayerAttackState
 
 public class PlayerDieState : PlayerActionState
 {
-    public PlayerDieState(Player player) : base(player)
+    public PlayerDieState(Player player, string action = "Die") : base(player, action)
     {
 
     }

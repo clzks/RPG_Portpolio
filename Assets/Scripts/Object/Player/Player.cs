@@ -342,6 +342,7 @@ public class Player : MonoBehaviour, IActor
             if(list.Count - 1 < i)
             {
                 array[i] = new Vector4(0, 0, 0, -100) / 100f;
+                break;
             }
             else
             {
