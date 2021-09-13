@@ -220,11 +220,14 @@ public class Player : MonoBehaviour, IActor
     {
         //Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼입힘");
         _status.CurrHp -= hitUnit.Damage;
-        
+
         // TODO 데미지 이펙트 추가할 곳
+        var damageText = _objectPool.MakeObject(ObjectType.DamageText, "DamageText").GetComponent<DamageText>();
+        damageText.SetText(DamageTextType.Player, (int)hitUnit.Damage, Position);
+        damageText.ExecuteFloat();
 
         // 넉백 및 경직이 없다는 뜻
-        if(0f >= hitUnit.Strength)
+        if (0f >= hitUnit.Strength)
         {
             return;
         }

@@ -20,6 +20,7 @@ public class BattleScene : MonoBehaviour
     
     public void EnterNewWorld(int worldId, int SummonIndex)
     {
+        _objectPool.ReturnAllObject();
         _player.SetActiveNavMeshAgent(false);
 
         if (null != _currMap)

@@ -467,8 +467,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _camera: {fileID: 963194227}
   meshRenderer: {fileID: 464629791}
-  screenWidth: 17.77
-  screenHeight: 12.20776
+  ScreenWidth: 17.77
+  ScreenHeight: 12.20776
 --- !u!1 &488812216
 GameObject:
   m_ObjectHideFlags: 0

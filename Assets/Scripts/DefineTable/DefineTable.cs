@@ -8,6 +8,7 @@ public enum ObjectType
     Enemy,
     Effect,
     Map,
+    DamageText,
     Count
 }
 
@@ -34,6 +35,16 @@ public enum ActionType
 {
     NormalAttack,
     Skill,
+    Count
+}
+
+public enum DamageTextType
+{ 
+    Player,
+    Enemy,
+    Boss,
+    Shield,
+    Object,
     Count
 }
 

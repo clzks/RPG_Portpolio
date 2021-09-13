@@ -11,6 +11,7 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        // 쿨타임이나 소모값 등을 계산해야한다 
         _isClick = true;
     }
     public void OnPointerUp(PointerEventData eventData)

@@ -110,7 +110,6 @@ public abstract class PlayerAttackState : PlayerActionState
 {
     protected ActionInfo info;
     protected float currAnimTime;
-    //protected string baseNormalAttackName = "Attack0";
     
     private int _maxNormalAttackCount = 3;
     public PlayerAttackState(Player player, string action) : base(player, action)
@@ -303,16 +302,16 @@ public class PlayerNormalAttackState : PlayerAttackState
         }
 
         info = _player.GetActionInfo(actionName);
-        moveTime = info.MoveTime;
         
         if (null == info)
         {
 
         }
 
-        PlayAnimation();
         currAnimTime = 0f;
+        PlayAnimation();
 
+        moveTime = info.MoveTime;
         if (moveTime > 0f)
         {
             moveDistance = info.MoveDistance;
@@ -377,12 +376,14 @@ public class PlayerDamageState : PlayerActionState
 
     public override void Enter()
     {
+        _player.ResetNormalAttackCount();
         _player.SetInBattle(true);
         SetAvoidancePriority(60);
         DamageInfo info = GetDamageInfo();
         knockBackTime = info.stiffNessTime;
         distance = info.distance;
         knockBackDir = (_player.Position - info.actorPos).normalized;
+        // ResetDamageInfo를 Exit으로 빼면 피격 모션동안 무적 상태 가능할듯
         _player.ResetDamageInfo();
         timer = 0f;
         PlayAnimation();
@@ -415,14 +416,15 @@ public class PlayerSkillState : PlayerAttackState
 
     public override void Enter()
     {
-        _player.SetInBattle(true);
+        base.Enter();
+        PlayAnimation();
     }
 
     public override IActionState Update()
     {
         if (null == _player.GetActionInfo(actionName))
         {
-            return new PlayerIdleState(_player, "Idle");
+            return new PlayerIdleState(_player);
         }
 
         return this;
@@ -443,6 +445,7 @@ public class PlayerDieState : PlayerActionState
 
     public override void Enter()
     {
+        _player.ResetNormalAttackCount();
         PlayAnimation("Die");
     }
     public override IActionState Update()
@@ -452,7 +455,7 @@ public class PlayerDieState : PlayerActionState
 
     public override void Exit()
     {
-
+        
     }
 }
 

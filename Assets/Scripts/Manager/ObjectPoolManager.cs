@@ -22,6 +22,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         LoadEnemyPrefab();
         LoadHitUnit();
         LoadMapPrefab();
+        LoadDamageText();
         LoadMaterials();
     }
 
@@ -159,7 +160,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         if (true == list.Contains(poolObject))
         {
             GameObject obj = poolObject.GetObject();
-            obj.transform.rotation = new Quaternion();
+            //obj.transform.rotation = new Quaternion();
             obj.SetActive(false);
             list.Remove(poolObject);
             pool.Add(poolObject);
@@ -204,6 +205,12 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         _materialList.Add("DesertRock_Normal", normal);
         var trans = Resources.Load<Material>("Materials/DesertRock_TransParent");
         _materialList.Add("DesertRock_TransParent", trans);
+    }
+
+    private void LoadDamageText()
+    {
+        var text = Resources.Load<GameObject>("Prefabs/DamageText/DamageText");
+        prefabList.Add("DamageText", text);
     }
     #endregion
     public void InitPool()

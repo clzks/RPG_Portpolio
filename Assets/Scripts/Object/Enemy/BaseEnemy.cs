@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 #endif
 public class BaseEnemy : MonoBehaviour, IActor
 {
-    private ObjectPoolManager _poolManager;
+    private ObjectPoolManager _objectPool;
     public Vector3 Position { get { return transform.position; } }
     [SerializeField]private NavMeshAgent _agent;
     public Animator animator;
@@ -72,7 +72,7 @@ public class BaseEnemy : MonoBehaviour, IActor
     private void OnEnable()
     {
         //MakeSampleStatus();
-        _poolManager = ObjectPoolManager.Get();
+        _objectPool = ObjectPoolManager.Get();
         currActionState = new EnemyIdleState(this);
     }
     private void Update()
@@ -105,7 +105,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         {
             return;
         }
-        HitUnit hitUnit = _poolManager.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
+        HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
         HitUnitInfo info = actionInfo.HitUnitList[index];
         hitUnit.SetHitUnit(this, info, transform);
     }
@@ -138,7 +138,7 @@ public class BaseEnemy : MonoBehaviour, IActor
     public void ReturnObject()
     {
         _agent.enabled = false;
-        _poolManager.ReturnObject(this);
+        _objectPool.ReturnObject(this);
     }
 
     public void SetActiveNavMeshAgent(bool enabled)
@@ -152,7 +152,9 @@ public class BaseEnemy : MonoBehaviour, IActor
         status.currHp -= hitUnit.Damage;
 
         // TODO 데미지 이펙트 추가할 곳
-
+        var damageText = _objectPool.MakeObject(ObjectType.DamageText, "DamageText").GetComponent<DamageText>();
+        damageText.SetText(DamageTextType.Enemy, (int)hitUnit.Damage, Position);
+        damageText.ExecuteFloat();
         // 넉백 및 경직이 없다는 뜻
         if (0f >= hitUnit.Strength)
         {
