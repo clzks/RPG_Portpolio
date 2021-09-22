@@ -1,0 +1,20 @@
+{
+    "Description": {
+    	"Id" : "정보를 구분짓기 위한 값",
+        "Name": "애니메이터상의 스테이트 이름",
+        "Type" : "버프 내용, Damage, AttackSpeed, Speed, Dot,, ",
+        "CalculateType" : "계산 방식, Add, Multiply,,,",
+        "Value": "값",
+        "Life" : "지속시간 seconds"
+    },
+    "BuffInfo": [
+        {
+        	"Id" : 0,
+            "Name": "Force",
+            "Type" : "Damage",
+            "CalculateType" : "Add",
+            "Value": 1,
+            "Life" : 30
+        }
+    ]
+}

@@ -18,6 +18,7 @@ public class LoadingScene : MonoBehaviour
         loadComplete &= await _dataManager.LoadEnemyActionList();
         loadComplete &= await _dataManager.LoadEnemyInfoList();
         loadComplete &= await _dataManager.LoadMapInfoList();
+        loadComplete &= await _dataManager.LoadBuffInfoList();
 
         if (true == loadComplete)
         {

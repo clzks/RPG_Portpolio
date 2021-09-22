@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 #endif
 public class Player : MonoBehaviour, IActor
 {
+    private GameManager _gameManager;
     private ObjectPoolManager _objectPool;
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private InGameCamera _camera;
@@ -26,24 +27,32 @@ public class Player : MonoBehaviour, IActor
     private Dictionary<string, ActionInfo> _actionInfoList;
     //public GameObject hitUnitPrefab;
     private List<IActor> _actorList;
-    private Status _status;
+    private List<IBuff> _buffList;
+    private Status _originStatus;
+    private Status _validStatus;
     private DamageInfo _damageInfo;
     private IEnumerator _moveCoroutine = null;
     private bool _followCamera = true;
     private bool _isInBattle = false;
     private int _currNormalAttackCount = 0;
     public Vector3 Position { get { return transform.position; } }
-    
+    private WaitForSeconds _buffYield;
+    private float _tick;
     private void Awake()
     {
+        _gameManager = GameManager.Get();
         _objectPool = ObjectPoolManager.Get();
         //_camera.SetCameraDistance(transform.position);
         currActionState = new PlayerIdleState(this);
         _actionInfoList = DataManager.Get().GetActionInfoList();
         _collider = GetComponent<SphereCollider>();
         _actorList = new List<IActor>();
-        _status = Status.MakeSampleStatus();
+        _buffList = new List<IBuff>();
+        _originStatus = Status.MakeSampleStatus();
+        _validStatus = _originStatus;
         _damageInfo = null;
+        _tick = _gameManager.tick;
+        _buffYield = new WaitForSeconds(_tick);
     }
 
     private void LateUpdate()
@@ -198,12 +207,27 @@ public class Player : MonoBehaviour, IActor
 
     public float GetHpPercent()
     {
-        return _status.CurrHp / _status.MaxHp;
+        return _originStatus.CurrHp / _originStatus.MaxHp;
     }
 
     public NavMeshAgent GetNavMeshAgent()
     {
         return _agent;
+    }
+
+    public bool GetInBattle()
+    {
+        return _isInBattle;
+    }
+
+    public int GetCurrNormalAttackCount()
+    {
+        return _currNormalAttackCount;
+    }
+
+    public Status GetValidStatus()
+    {
+        return _validStatus;
     }
     #endregion
     public void Init()
@@ -219,7 +243,7 @@ public class Player : MonoBehaviour, IActor
     public void TakeDamage(HitUnitStatus hitUnit, ref bool isDead)
     {
         //Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼입힘");
-        _status.CurrHp -= hitUnit.Damage;
+        _originStatus.CurrHp -= hitUnit.Damage;
 
         // TODO 데미지 이펙트 추가할 곳
         var damageText = _objectPool.MakeObject(ObjectType.DamageText, "DamageText").GetComponent<DamageText>();
@@ -232,12 +256,12 @@ public class Player : MonoBehaviour, IActor
             return;
         }
 
-        if(null == _damageInfo && false == _status.IsInvincible)
+        if(null == _damageInfo && false == _originStatus.IsInvincible)
         {
             _damageInfo = new DamageInfo(hitUnit.ActorPosition, hitUnit.Strength, hitUnit.Strength * 0.2f);
         }
 
-        if(_status.CurrHp <= 0)
+        if(_originStatus.CurrHp <= 0)
         {
             isDead = true;
         }
@@ -267,15 +291,6 @@ public class Player : MonoBehaviour, IActor
         _isInBattle = enabled;
     }
 
-    public bool GetInBattle()
-    {
-        return _isInBattle;
-    }
-
-    public int GetCurrNormalAttackCount()
-    {
-        return _currNormalAttackCount;
-    }
 
     public void AddNormalAttackCount(int value)
     {
@@ -356,4 +371,28 @@ public class Player : MonoBehaviour, IActor
 
         return array;
     }
+
+    private IEnumerator StatusUpdate()
+    {
+        while (true)
+        {
+            _validStatus = _originStatus;
+
+            if (null != _buffList)
+            {
+                foreach (var buff in _buffList)
+                {
+                    buff.Update(_tick, this);
+                }
+            }
+            yield return _buffYield;
+        }
+    }
+
+    public void RemoveBuff(IBuff buff)
+    {
+        _buffList.Remove(buff);
+    }
+
+   
 }

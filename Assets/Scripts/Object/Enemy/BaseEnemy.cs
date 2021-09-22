@@ -7,7 +7,9 @@ using UnityEngine.SceneManagement;
 #endif
 public class BaseEnemy : MonoBehaviour, IActor
 {
+    private GameManager _gameManager;
     private ObjectPoolManager _objectPool;
+    private DataManager _dataManager;
     public Vector3 Position { get { return transform.position; } }
     [SerializeField]private NavMeshAgent _agent;
     public Animator animator;
@@ -17,44 +19,52 @@ public class BaseEnemy : MonoBehaviour, IActor
     private Player _player;
     //public GameObject hitUnitPrefab;
     private List<IActor> _actorList;
-    public EnemyStatus status;
+    private List<IBuff> _buffList;
+    private Status _originStatus;
+    private Status _validStatus;
     private DamageInfo _damageInfo;
     private float _currStareTimer;
     private IEnumerator _moveCoroutine = null;
+    
+    private WaitForSeconds _buffYield;
+    private float _tick;
     public void MakeSampleStatus()
     {
         _name = "TurtleShell";
-        status = new EnemyStatus();
-        status.maxHp = 100;
-        status.currHp = status.maxHp;
-        status.chaseSpeed = 4;
-        status.patrolSpeed = 2.5f;
-        status.damage = 5;
-        status.attackRange = 1.4f;
-        status.attackTerm = 1.0f;
-        status.detectionDistance = 6;
-        status.chaseDistance = 8;
-        status.patrolCycle = 3;
-        _currStareTimer = status.attackTerm;
+        _originStatus = new Status();
+        _originStatus.MaxHp = 100;
+        _originStatus.CurrHp = _originStatus.MaxHp;
+        _originStatus.ChaseSpeed = 4;
+        _originStatus.PatrolSpeed = 2.5f;
+        _originStatus.Damage = 5;
+        _originStatus.AttackRange = 1.4f;
+        _originStatus.AttackTerm = 1.0f;
+        _originStatus.DetectionDistance = 6;
+        _originStatus.ChaseDistance = 8;
+        _originStatus.PatrolCycle = 3;
+        _currStareTimer = _originStatus.AttackTerm;
         _actorList = new List<IActor>();
+        _buffList = new List<IBuff>();
     }
 
     public void SetEnemy(EnemyInfo info)
     {
         _name = info.Name;
-        status = new EnemyStatus();
-        status.maxHp = info.Hp;
-        status.currHp = status.maxHp;
-        status.chaseSpeed = info.ChaseSpeed;
-        status.patrolSpeed = info.PatrolSpeed;
-        status.damage = info.Damage;
-        status.attackRange = info.AttackRange;
-        status.attackTerm = info.AttackTerm;
-        status.detectionDistance = info.DetectionDistance;
-        status.chaseDistance = info.ChaseDistance;
-        status.patrolCycle = info.PatrolCycle;
-        _currStareTimer = status.attackTerm;
+        _originStatus = new Status();
+        _originStatus.MaxHp = info.Hp;
+        _originStatus.CurrHp = _originStatus.MaxHp;
+        _originStatus.ChaseSpeed = info.ChaseSpeed;
+        _originStatus.PatrolSpeed = info.PatrolSpeed;
+        _originStatus.Damage = info.Damage;
+        _originStatus.AttackRange = info.AttackRange;
+        _originStatus.AttackTerm = info.AttackTerm;
+        _originStatus.DetectionDistance = info.DetectionDistance;
+        _originStatus.ChaseDistance = info.ChaseDistance;
+        _originStatus.PatrolCycle = info.PatrolCycle;
+        _currStareTimer = _originStatus.AttackTerm;
+        _validStatus = _originStatus;
         _actorList = new List<IActor>();
+        _buffList = new List<IBuff>();
     }
 
     public void SetFoward(Vector2 dir)
@@ -71,8 +81,27 @@ public class BaseEnemy : MonoBehaviour, IActor
     }
     private void OnEnable()
     {
-        //MakeSampleStatus();
-        _objectPool = ObjectPoolManager.Get();
+        if(null ==_gameManager)
+        {
+            _gameManager = GameManager.Get();
+        }
+
+        if(null == _dataManager)
+        {
+            _dataManager = DataManager.Get();
+        }
+
+        if (null == _buffYield)
+        {
+            _tick = _gameManager.tick;
+            _buffYield = new WaitForSeconds(_tick);
+        }
+
+        if (null == _objectPool)
+        {
+            _objectPool = ObjectPoolManager.Get();
+        }
+        StartCoroutine(StatusUpdate());
         currActionState = new EnemyIdleState(this);
     }
     private void Update()
@@ -149,7 +178,7 @@ public class BaseEnemy : MonoBehaviour, IActor
     public void TakeDamage(HitUnitStatus hitUnit, ref bool isDead)
     {
         //Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼 입음");
-        status.currHp -= hitUnit.Damage;
+        _originStatus.CurrHp -= hitUnit.Damage;
 
         // TODO 데미지 이펙트 추가할 곳
         var damageText = _objectPool.MakeObject(ObjectType.DamageText, "DamageText").GetComponent<DamageText>();
@@ -162,12 +191,12 @@ public class BaseEnemy : MonoBehaviour, IActor
         }
 
         // 무적상태는 추후에 또 고려해봐야함
-        if (null == _damageInfo && false == status.isInvincible)
+        if (null == _damageInfo && false == _originStatus.IsInvincible)
         {
             _damageInfo = new DamageInfo(hitUnit.ActorPosition, hitUnit.Strength, hitUnit.Strength * 0.3f);
         }
 
-        if(status.currHp <= 0)
+        if(_originStatus.CurrHp <= 0)
         {
             isDead = true;
         }
@@ -207,6 +236,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         _actorList.Clear();
     }
 
+    #region GET SET
     public Vector3 GetPosition()
     {
         return Position;
@@ -224,7 +254,7 @@ public class BaseEnemy : MonoBehaviour, IActor
 
     public float GetDamage()
     {
-        return status.damage;
+        return _validStatus.Damage;
     }
 
     public void SetPlayer(Player player)
@@ -252,12 +282,16 @@ public class BaseEnemy : MonoBehaviour, IActor
         return _agent;
     }
 
-
     public float GetHpPercent()
     {
-        return status.currHp / status.maxHp;
+        return _originStatus.CurrHp / _validStatus.MaxHp;
     }
 
+    public Status GetValidStatus()
+    {
+        return _validStatus;
+    }
+    #endregion
     public void MoveCharacter(float time, float distance, Vector3 dir)
     {
         if (null != _moveCoroutine)
@@ -281,21 +315,25 @@ public class BaseEnemy : MonoBehaviour, IActor
         _moveCoroutine = null;
     }
 
+    private IEnumerator StatusUpdate()
+    {
+        while(true)
+        {
+            _validStatus = _originStatus;
 
-}
+            if (null != _buffList)
+            {
+                foreach (var buff in _buffList)
+                {
+                    buff.Update(_tick, this);
+                }
+            }
+            yield return _buffYield;
+        }
+    }
 
-public struct EnemyStatus
-{
-    public float maxHp;
-    public float currHp;
-    public float chaseSpeed;
-    public float patrolSpeed;
-    public float damage;
-    public float attackRange;
-    public float attackTerm;
-
-    public float detectionDistance;
-    public float chaseDistance;
-    public float patrolCycle;
-    public bool isInvincible;
+    public void RemoveBuff(IBuff buff)
+    {
+        _buffList.Remove(buff);
+    }
 }

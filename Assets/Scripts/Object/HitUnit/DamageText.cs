@@ -81,8 +81,7 @@ public class DamageText : MonoBehaviour, IPoolObject
 
     public void ReturnObject()
     {
-        //_textMesh.color = new Color(1, 1, 1, 0);
-        transform.position = new Vector3(5000, 5000, 5000);
+        //transform.position = new Vector3(5000, 5000, 5000);
         _objectPool.ReturnObject(this);
     }
 

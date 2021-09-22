@@ -10,13 +10,12 @@ public abstract class EnemyActionState : IActionState
     protected NavMeshAgent Agent { get { return _enemy.GetNavMeshAgent(); } }
     protected Animator _animator;
     protected Vector3 _targetPos;
-    protected EnemyStatus _status;
+    protected Status _status { get { return _enemy.GetValidStatus(); } }
     public EnemyActionState(BaseEnemy enemy)
     {
         _dataManager = DataManager.Get();
         _enemy = enemy;
         _animator = enemy.animator;
-        _status = enemy.status;
         Enter();
     }
 
@@ -31,7 +30,7 @@ public abstract class EnemyActionState : IActionState
 
     public virtual bool CheckDetectPlayer()
     {
-        if ((_enemy.Position - _enemy.GetPlayer().Position).magnitude <= _status.detectionDistance)
+        if ((_enemy.Position - _enemy.GetPlayer().Position).magnitude <= _status.DetectionDistance)
         {
             return true;
         }
@@ -133,7 +132,7 @@ public class EnemyIdleState : EnemyActionState
             return ChangeState(new EnemyChaseState(_enemy));
         }
 
-        if (idleTimer >= _status.patrolCycle)
+        if (idleTimer >= _status.PatrolCycle)
         {
             return ChangeState(new EnemyPatrolState(_enemy));
         }
@@ -165,7 +164,7 @@ public class EnemyPatrolState : EnemyActionState
         //베이스 캠프에서 패트롤 거리 이내의 아무 위치로 이동
         _targetPos = Formula.GetRandomPatrolPosition(_enemy.GetBaseCamp().position, 5f);
         Agent.SetDestination(_targetPos);
-        Agent.speed = _status.patrolSpeed;
+        Agent.speed = _status.PatrolSpeed;
         PlayAnimation("Run");
     }
 
@@ -223,7 +222,7 @@ public class EnemyChaseState : EnemyActionState
     public override void Enter()
     {
         chaseCount = 0;
-        Agent.speed = _status.chaseSpeed;
+        Agent.speed = _status.ChaseSpeed;
         PlayAnimation("Run");
     }
 
@@ -236,13 +235,13 @@ public class EnemyChaseState : EnemyActionState
             return ChangeState(new EnemyDamageState(_enemy));
         }
 
-        if (GetPlayerDistance() >= _status.chaseDistance)
+        if (GetPlayerDistance() >= _status.ChaseDistance)
         {
             return ChangeState(new EnemyPatrolState(_enemy));
         }
-        else if(GetPlayerDistance() <= _status.attackRange)
+        else if(GetPlayerDistance() <= _status.AttackRange)
         {
-            if (_enemy.GetStareTime() >= _status.attackTerm)
+            if (_enemy.GetStareTime() >= _status.AttackTerm)
             {
                 return ChangeState(new EnemyAttackState(_enemy));
             }
@@ -359,10 +358,10 @@ public class EnemyStareState : EnemyActionState
             return ChangeState(new EnemyDamageState(_enemy));
         }
 
-        if (_enemy.GetStareTime() >= _status.attackTerm)
+        if (_enemy.GetStareTime() >= _status.AttackTerm)
         {
             // 플레이어가 거리에서 멀어졌다면 Chase로 변환
-            if (GetPlayerDistance() > _status.attackRange)
+            if (GetPlayerDistance() > _status.AttackRange)
             {
                 return ChangeState(new EnemyChaseState(_enemy));
             }

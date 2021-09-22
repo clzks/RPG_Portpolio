@@ -48,6 +48,38 @@ public enum DamageTextType
     Count
 }
 
+public enum CalculateType
+{ 
+    Add,
+    Multiply,
+    Count
+}
+
+public enum BuffType
+{ 
+    Damage,
+    AttackSpeed,
+    Speed,
+    Dot,
+    Count
+}
+
+public enum EquipType
+{ 
+    Weapon,
+    Armor,
+    Accessory,
+    Count
+}
+
+public enum ItemType
+{
+    Equipment,
+    Quest,
+    Consumable,
+    Count
+}
+
 public static class Formula
 {
     public static Vector3 BezierMove(Vector3 start, Vector3 p, Vector3 dest, float t)

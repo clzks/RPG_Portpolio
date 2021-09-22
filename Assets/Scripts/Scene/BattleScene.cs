@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class BattleScene : MonoBehaviour
 {
     private DataManager _dataManager;
@@ -9,6 +9,8 @@ public class BattleScene : MonoBehaviour
     private BaseMap _currMap = null;
     private Player _player;
     public MiniMap _miniMap;
+
+    
 
     private void Awake()
     {
@@ -34,5 +36,10 @@ public class BattleScene : MonoBehaviour
         _currMap.Init();
         _player.transform.position = _currMap.GetPointPosition(SummonIndex);
         _player.SetActiveNavMeshAgent(true);
+    }
+
+    public void OnClickEquipmenButton()
+    {
+
     }
 }

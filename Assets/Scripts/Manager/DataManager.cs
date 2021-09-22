@@ -9,13 +9,14 @@ public class DataManager : Singleton<DataManager>
     private Dictionary<string, Dictionary<string,EnemyAction>> _enemyActionList;
     private Dictionary<int, EnemyInfo> _enemyInfoList;
     private Dictionary<int, MapInfo> _mapInfoList;
-
+    private Dictionary<int, BuffInfo> _buffInfoList;
     private void Awake()
     {
         _actionInfoList = new Dictionary<string, ActionInfo>();
         _enemyActionList = new Dictionary<string, Dictionary<string, EnemyAction>>();
         _enemyInfoList = new Dictionary<int, EnemyInfo>();
         _mapInfoList = new Dictionary<int, MapInfo>();
+        _buffInfoList = new Dictionary<int, BuffInfo>();
     }
 
     public async UniTask<bool> LoadPlayerActionList()
@@ -93,6 +94,22 @@ public class DataManager : Singleton<DataManager>
         }
     }
 
+    public async UniTask<bool> LoadBuffInfoList()
+    {
+        _buffInfoList = await JsonConverter<BuffInfo>.GetJsonToDictionaryKeyId();
+
+        if(null != _buffInfoList)
+        {
+            Debug.Log("버프 정보 읽기 성공");
+            return true;
+        }
+        else
+        {
+            Debug.Log("버프 정보 읽기 실패");
+            return false;
+        }
+    }
+
     public Dictionary<string, ActionInfo> GetActionInfoList()
     {
         return _actionInfoList;
@@ -121,5 +138,10 @@ public class DataManager : Singleton<DataManager>
     public MapInfo GetMapInfo(int id)
     {
         return _mapInfoList[id];
+    }
+
+    public BuffInfo GetBuffInfo(int id)
+    {
+        return _buffInfoList[id];
     }
 }
