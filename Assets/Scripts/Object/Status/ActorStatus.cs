@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,5 +34,24 @@ public class Status
         st.Strength = 1f;
         st.IsInvincible = false;
         return st;
+    }
+
+    public void CopyStatus(Status status)
+    {
+        AttackRange = status.AttackRange;
+        AttackSpeed = status.AttackSpeed;
+        AttackTerm = status.AttackTerm;
+        ChaseDistance = status.ChaseDistance;
+        ChaseSpeed = status.ChaseSpeed;
+        CurrHp = status.CurrHp;
+        Damage = status.Damage;
+        DetectionDistance = status.DetectionDistance;
+        IsInvincible = status.IsInvincible;
+        MaxHp = status.MaxHp;
+        PatrolCycle = status.PatrolCycle;
+        PatrolSpeed = status.PatrolSpeed;
+        Speed = status.Speed;
+        Stamina = status.Stamina;
+        Strength = status.Strength;
     }
 }

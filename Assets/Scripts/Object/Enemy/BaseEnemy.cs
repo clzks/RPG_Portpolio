@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System;
 #if UNITY_EDITOR
 using UnityEngine.SceneManagement;
 #endif
@@ -25,9 +26,13 @@ public class BaseEnemy : MonoBehaviour, IActor
     private DamageInfo _damageInfo;
     private float _currStareTimer;
     private IEnumerator _moveCoroutine = null;
-    
     private WaitForSeconds _buffYield;
     private float _tick;
+
+    [Header("Drop")]
+    [SerializeField] private int _exp;
+    [SerializeField] private int _gold;
+    [SerializeField] private List<int> _itemList;
     public void MakeSampleStatus()
     {
         _name = "TurtleShell";
@@ -51,20 +56,26 @@ public class BaseEnemy : MonoBehaviour, IActor
     {
         _name = info.Name;
         _originStatus = new Status();
-        _originStatus.MaxHp = info.Hp;
+        _originStatus.CopyStatus(info.Status);
         _originStatus.CurrHp = _originStatus.MaxHp;
-        _originStatus.ChaseSpeed = info.ChaseSpeed;
-        _originStatus.PatrolSpeed = info.PatrolSpeed;
-        _originStatus.Damage = info.Damage;
-        _originStatus.AttackRange = info.AttackRange;
-        _originStatus.AttackTerm = info.AttackTerm;
-        _originStatus.DetectionDistance = info.DetectionDistance;
-        _originStatus.ChaseDistance = info.ChaseDistance;
-        _originStatus.PatrolCycle = info.PatrolCycle;
+        //_originStatus.ChaseSpeed = info.ChaseSpeed;
+        //_originStatus.PatrolSpeed = info.PatrolSpeed;
+        //_originStatus.Damage = info.Damage;
+        //_originStatus.AttackRange = info.AttackRange;
+        //_originStatus.AttackTerm = info.AttackTerm;
+        //_originStatus.DetectionDistance = info.DetectionDistance;
+        //_originStatus.ChaseDistance = info.ChaseDistance;
+        //_originStatus.PatrolCycle = info.PatrolCycle;
         _currStareTimer = _originStatus.AttackTerm;
-        _validStatus = _originStatus;
+        _validStatus = new Status();
         _actorList = new List<IActor>();
         _buffList = new List<IBuff>();
+        SetItems(info);
+        SetGold(info);
+        _exp = info.Exp;
+
+        StartCoroutine(StatusUpdate());
+        currActionState = new EnemyIdleState(this);
     }
 
     public void SetFoward(Vector2 dir)
@@ -101,8 +112,6 @@ public class BaseEnemy : MonoBehaviour, IActor
         {
             _objectPool = ObjectPoolManager.Get();
         }
-        StartCoroutine(StatusUpdate());
-        currActionState = new EnemyIdleState(this);
     }
     private void Update()
     {
@@ -181,7 +190,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         _originStatus.CurrHp -= hitUnit.Damage;
 
         // TODO 데미지 이펙트 추가할 곳
-        var damageText = _objectPool.MakeObject(ObjectType.DamageText, "DamageText").GetComponent<DamageText>();
+        var damageText = _objectPool.MakeObject(ObjectType.DamageText).GetComponent<DamageText>();
         damageText.SetText(DamageTextType.Enemy, (int)hitUnit.Damage, Position);
         damageText.ExecuteFloat();
         // 넉백 및 경직이 없다는 뜻
@@ -196,9 +205,25 @@ public class BaseEnemy : MonoBehaviour, IActor
             _damageInfo = new DamageInfo(hitUnit.ActorPosition, hitUnit.Strength, hitUnit.Strength * 0.3f);
         }
 
-        if(_originStatus.CurrHp <= 0)
+        // IsDead는 적군 정보 표기에 사용됨
+        if (_originStatus.CurrHp <= 0)
         {
             isDead = true;
+            if (0 != _itemList.Count)
+            {
+                foreach (var item in _itemList)
+                {
+                    var groundItem = _objectPool.MakeObject(ObjectType.GroundItem).GetComponent<GroundItem>();
+                    groundItem.SetGroundItem(item);
+                }
+            }
+
+            if(0 != _gold)
+            {
+
+            }
+
+            ReturnObject();
         }
         else
         {
@@ -319,7 +344,8 @@ public class BaseEnemy : MonoBehaviour, IActor
     {
         while(true)
         {
-            _validStatus = _originStatus;
+            _validStatus.CopyStatus(_originStatus);
+
 
             if (null != _buffList)
             {
@@ -335,5 +361,44 @@ public class BaseEnemy : MonoBehaviour, IActor
     public void RemoveBuff(IBuff buff)
     {
         _buffList.Remove(buff);
+    }
+
+    private void SetGold(EnemyInfo info)
+    {
+        bool isDrop = info.DropGoldPercentage > UnityEngine.Random.Range(0, 1f);
+
+        if(false == isDrop)
+        {
+            return;
+        }
+
+        _gold = UnityEngine.Random.Range(info.MinGold, info.MaxGold);
+    }
+
+    private void SetItems(EnemyInfo info)
+    {
+        if (null == info.DropItemList)
+        {
+            return;
+        }
+        else
+        {
+            if (0 == info.DropItemList.Count)
+            {
+                return;
+            }
+        }
+
+        for (int i = 0; i < info.DropItemList.Count; ++i)
+        {
+            bool isDrop = info.DropItemPercentage > UnityEngine.Random.Range(0, 1f);
+
+            if (false == isDrop)
+            {
+                continue;
+            }
+
+            _itemList.Add(info.DropItemList[i]);
+        }
     }
 }

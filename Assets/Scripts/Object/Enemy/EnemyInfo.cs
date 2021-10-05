@@ -6,15 +6,13 @@ public class EnemyInfo : IData
 {
     public int Id { get; set; }
     public string Name { get; set; }
-    public float Hp { get; set; }
-    public float ChaseSpeed { get; set; }
-    public float PatrolSpeed { get; set; }
-    public float Damage { get; set; }
-    public float AttackRange { get; set; }
-    public float AttackTerm { get; set; }
-    public float DetectionDistance { get; set; }
-    public float ChaseDistance { get; set; }
-    public float PatrolCycle { get; set; }
+    public Status Status { get; set; }
+    public List<int> DropItemList { get; set; }
+    public float DropItemPercentage { get; set; }
+    public int MinGold { get; set; }
+    public int MaxGold { get; set; }
+    public float DropGoldPercentage { get; set; }
+    public int Exp { get; set; }
 
     public int GetId()
     {

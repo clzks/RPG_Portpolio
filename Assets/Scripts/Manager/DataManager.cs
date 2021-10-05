@@ -5,11 +5,15 @@ using UnityEngine;
 
 public class DataManager : Singleton<DataManager>
 {
+    private PlayerData _playerData;
     private Dictionary<string, ActionInfo> _actionInfoList;
     private Dictionary<string, Dictionary<string,EnemyAction>> _enemyActionList;
     private Dictionary<int, EnemyInfo> _enemyInfoList;
     private Dictionary<int, MapInfo> _mapInfoList;
     private Dictionary<int, BuffInfo> _buffInfoList;
+    private Dictionary<int, ItemInfo> _itemInfoList;
+    
+
     private void Awake()
     {
         _actionInfoList = new Dictionary<string, ActionInfo>();
@@ -17,6 +21,7 @@ public class DataManager : Singleton<DataManager>
         _enemyInfoList = new Dictionary<int, EnemyInfo>();
         _mapInfoList = new Dictionary<int, MapInfo>();
         _buffInfoList = new Dictionary<int, BuffInfo>();
+        _itemInfoList = new Dictionary<int, ItemInfo>();
     }
 
     public async UniTask<bool> LoadPlayerActionList()
@@ -110,6 +115,51 @@ public class DataManager : Singleton<DataManager>
         }
     }
 
+    public async UniTask<bool> LoadPlayerData()
+    {
+        _playerData = await JsonConverter<PlayerData>.LoadJson();
+
+        // 불러오는 작업 후
+        if (null == _playerData)
+        {
+            Debug.Log("플레이어 정보 없음. 플레이어 정보 새로 생성");
+            MakeNewPlayerData();
+            return false;
+        }
+        else
+        {
+            Debug.Log("플레이어 정보 읽기 성공");
+            return true;
+        }
+    }
+
+    public async UniTask<bool> LoadItemList()
+    {
+        _itemInfoList = await JsonConverter<ItemInfo>.GetJsonToDictionaryKeyId();
+
+        if (null != _itemInfoList)
+        {
+            Debug.Log("버프 정보 읽기 성공");
+            return true;
+        }
+        else
+        {
+            Debug.Log("버프 정보 읽기 실패");
+            return false;
+        }
+    }
+
+    public void MakeNewPlayerData()
+    {
+        _playerData = PlayerData.MakeNewPlayerData();
+        SavePlayerData();
+    }
+
+    public void SavePlayerData()
+    {
+        JsonConverter<PlayerData>.WriteJson(_playerData);
+    }
+
     public Dictionary<string, ActionInfo> GetActionInfoList()
     {
         return _actionInfoList;
@@ -143,5 +193,15 @@ public class DataManager : Singleton<DataManager>
     public BuffInfo GetBuffInfo(int id)
     {
         return _buffInfoList[id];
+    }
+
+    public PlayerData GetPlayerData()
+    {
+        return _playerData;
+    }
+
+    public void SetPlayerData(PlayerData data)
+    {
+        _playerData = data;
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class BattleScene : MonoBehaviour
 {
+    private GameManager _gameManager;
     private DataManager _dataManager;
     private ObjectPoolManager _objectPool;
     private BaseMap _currMap = null;
@@ -14,6 +15,8 @@ public class BattleScene : MonoBehaviour
 
     private void Awake()
     {
+        _gameManager = GameManager.Get();
+        
         _dataManager = DataManager.Get();
         _objectPool = ObjectPoolManager.Get();
         _player = GameObject.Find("Player").GetComponent<Player>();

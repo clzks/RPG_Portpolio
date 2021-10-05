@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
-public class ItemSlot
+public class ItemSlot : MonoBehaviour
 {
-
+    public Image image;
 }
 

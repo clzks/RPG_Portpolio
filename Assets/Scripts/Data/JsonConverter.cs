@@ -5,13 +5,15 @@ using Newtonsoft.Json.Linq;
 using System.IO;
 using Cysharp.Threading.Tasks;
 using UnityEngine.Networking;
-
+using Newtonsoft.Json;
 public static class JsonConverter<T> where T : class, IData
 {
+    // dataPath는 지정 경로에서 불러오는 것(PersistentDataPath)
+    // dataPath가 없으면 StreamingAssets 에서 불러온다 (파일 이름은 ClassName + Data.json 으로 통일된다)
     public static async UniTask<Dictionary<int, T>> GetJsonToDictionaryKeyId(string dataPath)
     {
         string text = string.Empty;
-        text = await LoadJsonTextFromDataPath(typeof(T).Name, dataPath);
+        text = await LoadJsonTextFromDataPath(dataPath);
 
         if (text == string.Empty)
         {
@@ -39,7 +41,7 @@ public static class JsonConverter<T> where T : class, IData
     public static async UniTask<Dictionary<string, T>> GetJsonToDictionaryKeyName(string dataPath)
     {
         string text = string.Empty;
-        text = await LoadJsonTextFromDataPath(typeof(T).Name, dataPath);
+        text = await LoadJsonTextFromDataPath(dataPath);
 
         if (text == string.Empty)
         {
@@ -71,25 +73,41 @@ public static class JsonConverter<T> where T : class, IData
 #if UNITY_EDITOR
         var filePath = Path.Combine(Application.streamingAssetsPath, className + "Data.json");
 #elif UNITY_ANDROID
-        var filePath = Path.Combine("jar:file://" + Application.dataPath + "!/assets/", className + _fileNameTermination);
+        var filePath = Path.Combine("jar:file://" + Application.dataPath + "!/assets/", className + "Data.json");
 #endif 
         var text = await LoadJsonString(filePath);
 
         return text;
     }
-    private static async UniTask<string> LoadJsonTextFromDataPath(string className, string dataPath)
+    private static async UniTask<string> LoadJsonTextFromDataPath(string dataPath)
     {
-        var filePath = Path.Combine(Application.dataPath, dataPath + className + "Data.json");
+        var filePath = Path.Combine(Application.persistentDataPath, dataPath);
         var text = await LoadJsonString(filePath);
         return text;
     }
     private static async UniTask<string> LoadJsonString(string url)
     {
+        FileInfo info = new FileInfo(url);
+        if(false == info.Exists)
+        {
+            return string.Empty;
+        }
+
         UnityWebRequest www = UnityWebRequest.Get($"{url}");
+        www.timeout = 3;
+
         while (!www.isDone)
         {
             await www.SendWebRequest();
-            Debug.Log("SendWebRequest 중");
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log("data arrived");
+            }
         }
         return www.downloadHandler.text;
     }
@@ -116,6 +134,54 @@ public static class JsonConverter<T> where T : class, IData
         return dic;
     }
 
+    public static void WriteJson(string path, T data)
+    {
+        var filePath = Path.Combine(Application.persistentDataPath, path);
+
+        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+        File.WriteAllText(path, json);
+    }
+
+    public static void WriteJson(T data)
+    {
+#if UNITY_EDITOR
+        var filePath = Path.Combine(Application.streamingAssetsPath, typeof(T).Name + ".json");
+#elif UNITY_ANDROID
+        var filePath = Path.Combine("jar:file://" + Application.dataPath + "!/assets/", typeof(T).Name + "Data.json");
+#endif 
+
+        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+        File.WriteAllText(filePath, json);
+    }
+
+    public static async UniTask<T> LoadJson()
+    {
+        string text = string.Empty;
+
+#if UNITY_EDITOR
+        var filePath = Path.Combine(Application.streamingAssetsPath, typeof(T).Name + ".json");
+#elif UNITY_ANDROID
+        var filePath = Path.Combine("jar:file://" + Application.dataPath + "!/assets/", className + "Data.json");
+#endif 
+        text = await LoadJsonString(filePath);
+
+        if(text.Equals(string.Empty))
+        {
+            return null;
+        }
+
+        T value = JObject.Parse(text).ToObject<T>();
+        return value;
+    }
+
+    public static async UniTask<T> LoadJson(string path)
+    {
+        string text = string.Empty;
+        text = await LoadJsonTextFromDataPath(path);
+
+        T value = JObject.Parse(text).ToObject<T>();
+        return value;
+    }
 }
 
 

@@ -24,6 +24,65 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         LoadMapPrefab();
         LoadDamageText();
         LoadMaterials();
+        LoadGroundItem();
+    }
+    
+    /// <summary>
+    /// 한 타입에 한종류의 오브젝트만 존재할 경우에 사용한다. type과 오브젝트 네임은 동일해야 한다
+    /// </summary>
+    /// <param name="type">오브젝트 타입 = 오브젝트 이름</param>
+    /// <returns></returns>
+    public GameObject MakeObject(ObjectType type)
+    {
+        IPoolObject obj;
+
+        List<IPoolObject> pool;
+        List<IPoolObject> activePool;
+
+        if (_objectPoolList.ContainsKey(type) == true)
+        {
+            pool = _objectPoolList[type];
+        }
+        else
+        {
+            pool = new List<IPoolObject>();
+            _objectPoolList.Add(type, pool);
+        }
+
+        var objName = type.ToString();
+
+        if (pool.Count != 0)
+        {
+            obj = pool.FirstOrDefault(x => x.GetName() == objName);
+
+            if (null != obj)
+            {
+                obj.GetObject().SetActive(true);
+                pool.Remove(obj);
+            }
+            else
+            {
+                obj = Instantiate(prefabList[objName]).GetComponent<IPoolObject>();
+            }
+        }
+        else
+        {
+            obj = Instantiate(prefabList[objName]).GetComponent<IPoolObject>();
+        }
+
+        if (_activePoolList.ContainsKey(type) == true)
+        {
+            activePool = _activePoolList[type];
+        }
+        else
+        {
+            activePool = new List<IPoolObject>();
+            _activePoolList.Add(type, activePool);
+        }
+
+        activePool.Add(obj);
+
+        return obj.GetObject();
     }
 
     public GameObject MakeObject(ObjectType type, string objName)
@@ -211,6 +270,12 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     {
         var text = Resources.Load<GameObject>("Prefabs/DamageText/DamageText");
         prefabList.Add("DamageText", text);
+    }
+
+    private void LoadGroundItem()
+    {
+        var obj = Resources.Load<GameObject>("Prefabs/Item/TestItem");
+        prefabList.Add("GroundItem", obj);
     }
     #endregion
     public void InitPool()

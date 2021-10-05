@@ -10,6 +10,7 @@ public class Player : MonoBehaviour, IActor
 {
     private GameManager _gameManager;
     private ObjectPoolManager _objectPool;
+    private DataManager _dataManager;
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private InGameCamera _camera;
     [SerializeField] private Animator _animController;
@@ -26,9 +27,10 @@ public class Player : MonoBehaviour, IActor
     public IActionState currActionState;
     private Dictionary<string, ActionInfo> _actionInfoList;
     //public GameObject hitUnitPrefab;
+    private PlayerData _data { get { return _dataManager.GetPlayerData(); } set { _dataManager.SetPlayerData(value); } }
     private List<IActor> _actorList;
     private List<IBuff> _buffList;
-    private Status _originStatus;
+    private Status _originStatus { get { return _data.Status; } set { _data.Status = value; } }
     private Status _validStatus;
     private DamageInfo _damageInfo;
     private IEnumerator _moveCoroutine = null;
@@ -41,6 +43,7 @@ public class Player : MonoBehaviour, IActor
     private void Awake()
     {
         _gameManager = GameManager.Get();
+        _dataManager = DataManager.Get();
         _objectPool = ObjectPoolManager.Get();
         //_camera.SetCameraDistance(transform.position);
         currActionState = new PlayerIdleState(this);
@@ -48,7 +51,6 @@ public class Player : MonoBehaviour, IActor
         _collider = GetComponent<SphereCollider>();
         _actorList = new List<IActor>();
         _buffList = new List<IBuff>();
-        _originStatus = Status.MakeSampleStatus();
         _validStatus = _originStatus;
         _damageInfo = null;
         _tick = _gameManager.tick;
@@ -246,14 +248,14 @@ public class Player : MonoBehaviour, IActor
         _originStatus.CurrHp -= hitUnit.Damage;
 
         // TODO 데미지 이펙트 추가할 곳
-        var damageText = _objectPool.MakeObject(ObjectType.DamageText, "DamageText").GetComponent<DamageText>();
+        var damageText = _objectPool.MakeObject(ObjectType.DamageText).GetComponent<DamageText>();
         damageText.SetText(DamageTextType.Player, (int)hitUnit.Damage, Position);
         damageText.ExecuteFloat();
 
         // 넉백 및 경직이 없다는 뜻
         if (0f >= hitUnit.Strength)
         {
-            return;
+            
         }
 
         if(null == _damageInfo && false == _originStatus.IsInvincible)
@@ -394,5 +396,15 @@ public class Player : MonoBehaviour, IActor
         _buffList.Remove(buff);
     }
 
-   
+    public bool AddItem(int id)
+    {
+
+
+        return true;
+    }
+
+    public void AddGold(int value)
+    {
+
+    }
 }

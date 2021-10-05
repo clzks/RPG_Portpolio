@@ -9,6 +9,7 @@ public enum ObjectType
     Effect,
     Map,
     DamageText,
+    GroundItem,
     Count
 }
 
@@ -74,11 +75,32 @@ public enum EquipType
 
 public enum ItemType
 {
-    Equipment,
+    Weapon,
+    Armor,
+    Accessory,
     Quest,
     Consumable,
+    BuffConsumable,
     Count
 }
+
+public enum ItemClassType
+{ 
+    Normal,
+    Unique,
+    Epic,
+    Legendary,
+    Count
+}
+
+public enum GroundItemType
+{ 
+    Gold,
+    Buff,
+    Item,
+    Count
+}
+
 
 public static class Formula
 {

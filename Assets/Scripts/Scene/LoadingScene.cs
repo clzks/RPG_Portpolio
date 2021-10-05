@@ -6,20 +6,22 @@ using UnityEngine.SceneManagement;
 
 public class LoadingScene : MonoBehaviour
 {
+    private GameManager _gameManager;
     private DataManager _dataManager;
     private ObjectPoolManager _poolManager;
-
     private async UniTask Awake()
     {
+        _gameManager = GameManager.Get();
         _dataManager = DataManager.Get();
         _poolManager = ObjectPoolManager.Get();
 
+        await _dataManager.LoadPlayerData();
         var loadComplete = await _dataManager.LoadPlayerActionList();
         loadComplete &= await _dataManager.LoadEnemyActionList();
         loadComplete &= await _dataManager.LoadEnemyInfoList();
         loadComplete &= await _dataManager.LoadMapInfoList();
         loadComplete &= await _dataManager.LoadBuffInfoList();
-
+        loadComplete &= await _dataManager.LoadItemList();
         if (true == loadComplete)
         {
             _poolManager.InitPool();
