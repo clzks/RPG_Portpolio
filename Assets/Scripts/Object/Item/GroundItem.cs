@@ -6,36 +6,50 @@ using TMPro;
 public class GroundItem : MonoBehaviour, IPoolObject
 {
     private ObjectPoolManager _objectPool;
+    private DataManager _dataManager;
     private GroundItemType _type;
     private int _value;
     private int _id;
     private BaseItem _item;
     [SerializeField]private TextMeshPro _textMesh;
-    private BoxCollider _collider;
+    [SerializeField]private BoxCollider _collider;
 
     private void Awake()
     {
+        _dataManager = DataManager.Get();
         _objectPool = ObjectPoolManager.Get();
     }
 
     private void OnEnable()
     {
         _collider.enabled = false;
+        StartCoroutine(AnimateItem());
     }
 
     public void SetGroundGold(int value)
     {
+        _type = GroundItemType.Gold;
         _value = value;
+        _textMesh.text = value.ToString() + "°ñµå";
     }
 
     public void SetGroundItem(int id)
     {
-        
+        _type = GroundItemType.Item;
+        var info = _dataManager.GetItemInfo(id);
+        _textMesh.text = info.DisplayName;
     }
 
-    public void AnimateItem()
+    public IEnumerator AnimateItem()
     {
         // ¾ÆÀÌÅÛ ¶³¾îÁö´Â ¸ð¼Ç ÈÄ ÄÝ¶óÀÌ´õ °¡µ¿
+        var timer = 0f;
+
+        while(timer <= .3f)
+        {
+            yield return null;
+            timer += Time.deltaTime;
+        }
         _collider.enabled = true;
     }
 
@@ -48,6 +62,7 @@ public class GroundItem : MonoBehaviour, IPoolObject
         {
             if(true == player.AddItem(_id))
             {
+                Debug.Log("¾ÆÀÌÅÛÀ» È¹µæ!");
                 ReturnObject();
             }
             else
@@ -57,7 +72,9 @@ public class GroundItem : MonoBehaviour, IPoolObject
         }
         else if(GroundItemType.Gold == _type)
         {
+            Debug.Log("°ñµå È¹µæ!");
             player.AddGold(_value);
+            ReturnObject();
         }
     }
 

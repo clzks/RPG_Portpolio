@@ -274,7 +274,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
 
     private void LoadGroundItem()
     {
-        var obj = Resources.Load<GameObject>("Prefabs/Item/TestItem");
+        var obj = Resources.Load<GameObject>("Prefabs/Item/GroundItem");
         prefabList.Add("GroundItem", obj);
     }
     #endregion

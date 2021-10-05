@@ -6,7 +6,7 @@ public class GameManager : Singleton<GameManager>
 {
     public float tick = 0.032f;
     private bool _isPause = false;
-
+    private bool _onePunchMode = false;
 
     private void Update()
     {
@@ -23,5 +23,16 @@ public class GameManager : Singleton<GameManager>
                 Time.timeScale = 1;
             }
         }
+
+        if(Input.GetKeyDown(KeyCode.O))
+        {
+            _onePunchMode = !_onePunchMode;
+            Debug.Log("한방 모드 :" + _onePunchMode);
+        }
+    }
+
+    public bool IsOnePunchMode()
+    {
+        return _onePunchMode;
     }
 }

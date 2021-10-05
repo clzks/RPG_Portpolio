@@ -204,4 +204,9 @@ public class DataManager : Singleton<DataManager>
     {
         _playerData = data;
     }
+
+    public ItemInfo GetItemInfo(int id)
+    {
+        return _itemInfoList[id];
+    }
 }
