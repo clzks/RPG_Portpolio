@@ -9,7 +9,7 @@ public class PlayerData : IData
     public Status Status { get; set; }
     public int Gold { get; set; }
     public int Exp { get; set; }
-    public List<int> Inventory { get; set; }
+    public Dictionary<ItemType, ICollection> Inventory { get; set; }
 
     public static PlayerData MakeNewPlayerData()
     {
@@ -18,11 +18,16 @@ public class PlayerData : IData
         data.EquipmentList.Add(0);
         data.EquipmentList.Add(2);
         data.EquipmentList.Add(-1);
+        data.Inventory = new Dictionary<ItemType, ICollection>();
+        data.Inventory.Add(ItemType.Weapon, new SortedSet<int>());
+        data.Inventory.Add(ItemType.Armor, new SortedSet<int>());
+        data.Inventory.Add(ItemType.Accessory, new SortedSet<int>());
+        data.Inventory.Add(ItemType.Consumable, new SortedList<int, int>());
+        data.Inventory.Add(ItemType.Quest, new SortedList<int, int>());
         data.Status = Status.MakeSampleStatus();
         data.Level = 1;
         data.Gold = 0;
         data.Exp = 0;
-        data.Inventory = new List<int>();
         return data;
     }
 

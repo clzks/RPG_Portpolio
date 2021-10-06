@@ -36,7 +36,7 @@
             	"PatrolCycle" : 3
         	},
         	"DropItemList" : [
-        			60000
+        			50000
         	],
         	"DropItemPercentage" : 0.1,
         	"MinGold" : 20,
@@ -60,7 +60,7 @@
             	"PatrolCycle" : 0
         	},
         	"DropItemList" : [
-        		0,1,2
+        		
         	],
         	"DropItemPercentage" : 0.03,
         	"MinGold" : 40,

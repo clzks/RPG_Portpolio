@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
+using System.Linq;
 #if UNITY_EDITOR
 using UnityEngine.SceneManagement;
 #endif
@@ -30,6 +31,7 @@ public class Player : MonoBehaviour, IActor
     private PlayerData _data { get { return _dataManager.GetPlayerData(); } set { _dataManager.SetPlayerData(value); } }
     private List<IActor> _actorList;
     private List<IBuff> _buffList;
+    private Dictionary<ItemType, ICollection> _inventory { get { return _data.Inventory; } set { _data.Inventory = value; } }
     private Status _originStatus { get { return _data.Status; } set { _data.Status = value; } }
     private Status _validStatus;
     private DamageInfo _damageInfo;
@@ -398,13 +400,108 @@ public class Player : MonoBehaviour, IActor
 
     public bool AddItem(int id)
     {
-
+        var itemInfo = _dataManager.GetItemInfo(id);
+        var Type = itemInfo.Type;
+        switch (Type)
+        {
+            case ItemType.Weapon:
+            case ItemType.Armor:
+            case ItemType.Accessory:
+                var set = _inventory[Type] as SortedSet<int>;
+                if(set.Count <= 99)
+                {
+                    set.Add(id);
+                }
+                else
+                {
+                    Debug.Log("인벤토리가 가득 찼읍니다");
+                    return false;
+                }
+                break;
+            case ItemType.Quest:
+            case ItemType.Consumable:
+                var list = _inventory[Type] as SortedList<int, int>;
+                if(false == list.ContainsKey(id))
+                {
+                    list.Add(id, 1);
+                }
+                else
+                {
+                    if(list[id] < itemInfo.InventoryMaxCount)
+                    {
+                        list[id] += 1;
+                    }
+                    else
+                    {
+                        Debug.Log("아이템을 더 얻을 수 없습니다");
+                        return false;
+                    }
+                }
+                break;
+        }
 
         return true;
     }
 
-    public void AddGold(int value)
+    public bool AddItem(int id, int count)
     {
+        var itemInfo = _dataManager.GetItemInfo(id);
+        var Type = itemInfo.Type;
+        switch (Type)
+        {
+            case ItemType.Weapon:
+            case ItemType.Armor:
+            case ItemType.Accessory:
+                var set = _inventory[Type] as SortedSet<int>;
+                if (set.Count + count <= 100)
+                {
+                    for (int i = 0; i < count; ++i)
+                    {
+                        set.Add(id);
+                    }
+                }
+                else
+                {
+                    Debug.Log("인벤토리가 가득 찼읍니다");
+                    return false;
+                }
+                break;
+            case ItemType.Quest:
+            case ItemType.Consumable:
+                var list = _inventory[Type] as SortedList<int, int>;
+                if (false == list.ContainsKey(id))
+                {
+                    list.Add(id, 1);
+                }
+                else
+                {
+                    if (list[id] + count <= itemInfo.InventoryMaxCount)
+                    {
+                        list[id] += count;
+                    }
+                    else
+                    {
+                        Debug.Log("아이템을 더 얻을 수 없습니다");
+                        return false;
+                    }
+                }
+                break;
+        }
 
+        return true;
+    }
+
+    public bool AddGold(int value)
+    {
+        if (_data.Gold + value < 0)
+        {
+            Debug.Log("골드가 부족합니다");
+            return false;
+        }
+        else
+        {
+            _data.Gold += value;
+            return true;
+        }
     }
 }

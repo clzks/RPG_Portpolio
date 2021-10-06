@@ -12,6 +12,7 @@ public class ItemInfo : IData
     public ItemClassType Class { get; set; }
     public int PurchasePrice { get; set; }
     public int SellPrice { get; set; }
+    public int InventoryMaxCount { get; set; }
     public int GetId()
     {
         return Id;

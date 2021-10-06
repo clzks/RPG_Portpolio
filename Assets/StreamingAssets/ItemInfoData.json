@@ -4,10 +4,11 @@
         "Name": "아이템 이름(영어)",
         "DisplayName" : "UI에 표시될 이름(한글)",
         "Values" : "버프 내용, Damage, AttackSpeed, Speed, ",
-        "Type" : "아이템 종류, Weapon, Armor, Accessory, Quest, Consumable, BuffConsumable",
+        "Type" : "아이템 종류, Weapon, Armor, Accessory, Quest, Consumable",
         "Class" : "등급, Normal, Unique, Epic, Legendary",
         "PurchasePrice" : "매입가, (int)",
         "SellPrice" : "판매가, (int)",
+        "InventoryMaxCount" : "인벤토리 한 칸당 최대 숫자"
     },
     "ItemInfo": [
         {
@@ -21,7 +22,7 @@
             "Type" : "Weapon",
             "Class": "Normal",
             "PurchasePrice" : 50,
-            "SellPrice" : 5
+            "SellPrice" : 5,
         },
         {
         	"Id" : 10001,
@@ -86,28 +87,31 @@
             "Type" : "Consumable",
             "Class": "Normal",
             "PurchasePrice" : 30,
-            "SellPrice" : 3
+            "SellPrice" : 3,
+            "InventoryMaxCount" : 999
         },
         {
-        	"Id" : 50000,
+        	"Id" : 40100,
             "Name": "WrathPotion",
             "DisplayName" : "분노의영약",
             "Values" : {
             	"Damage" : 3,
             },
-            "Type" : "BuffConsumable",
+            "Type" : "Consumable",
             "Class": "Normal",
             "PurchasePrice" : 500,
-            "SellPrice" : 50
+            "SellPrice" : 50,
+            "InventoryMaxCount" : 999
         },
         {
-        	"Id" : 60000,
+        	"Id" : 50000,
             "Name": "Shell",
             "DisplayName" : "등껍질",
             "Type" : "Quest",
             "Class": "Normal",
             "PurchasePrice" : 100,
-            "SellPrice" : 1
+            "SellPrice" : 1,
+            "InventoryMaxCount" : 9999
         }
     ]
 }

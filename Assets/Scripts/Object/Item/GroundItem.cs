@@ -37,6 +37,7 @@ public class GroundItem : MonoBehaviour, IPoolObject
     {
         _type = GroundItemType.Item;
         var info = _dataManager.GetItemInfo(id);
+        _id = id;
         _textMesh.text = info.DisplayName;
     }
 

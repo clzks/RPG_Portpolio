@@ -10,7 +10,7 @@ public class BattleScene : MonoBehaviour
     private BaseMap _currMap = null;
     private Player _player;
     public MiniMap _miniMap;
-
+    public Button saveButton;
     
 
     private void Awake()
@@ -39,6 +39,11 @@ public class BattleScene : MonoBehaviour
         _currMap.Init();
         _player.transform.position = _currMap.GetPointPosition(SummonIndex);
         _player.SetActiveNavMeshAgent(true);
+    }
+
+    public void OnClickSave()
+    {
+        DataManager.Get().SavePlayerData();
     }
 
     public void OnClickEquipmenButton()

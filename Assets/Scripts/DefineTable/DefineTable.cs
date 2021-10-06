@@ -80,7 +80,6 @@ public enum ItemType
     Accessory,
     Quest,
     Consumable,
-    BuffConsumable,
     Count
 }
 
