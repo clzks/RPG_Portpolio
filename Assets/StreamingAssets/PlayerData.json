@@ -6,7 +6,7 @@
   ],
   "Level": 1,
   "Status": {
-    "CurrHp": 80.0,
+    "CurrHp": 75.0,
     "MaxHp": 100.0,
     "Speed": 5.0,
     "AttackSpeed": 1.0,
@@ -22,12 +22,12 @@
     "PatrolCycle": 0.0,
     "IsInvincible": false
   },
-  "Gold": 174,
+  "Gold": 165,
   "Exp": 0,
   "Inventory": {
-    "Weapon": [],
-    "Armor": [],
-    "Accessory": [],
+    "Weapon": {},
+    "Armor": {},
+    "Accessory": {},
     "Consumable": {},
     "Quest": {
       "50000": 1

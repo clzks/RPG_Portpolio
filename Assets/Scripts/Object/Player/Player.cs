@@ -31,7 +31,7 @@ public class Player : MonoBehaviour, IActor
     private PlayerData _data { get { return _dataManager.GetPlayerData(); } set { _dataManager.SetPlayerData(value); } }
     private List<IActor> _actorList;
     private List<IBuff> _buffList;
-    private Dictionary<ItemType, ICollection> _inventory { get { return _data.Inventory; } set { _data.Inventory = value; } }
+    private Dictionary<ItemType, SortedList<int,int>> _inventory { get { return _data.Inventory; } set { _data.Inventory = value; } }
     private Status _originStatus { get { return _data.Status; } set { _data.Status = value; } }
     private Status _validStatus;
     private DamageInfo _damageInfo;
@@ -407,10 +407,10 @@ public class Player : MonoBehaviour, IActor
             case ItemType.Weapon:
             case ItemType.Armor:
             case ItemType.Accessory:
-                var set = _inventory[Type] as SortedSet<int>;
+                var set = _inventory[Type];
                 if(set.Count <= 99)
                 {
-                    set.Add(id);
+                    set.Add(id, 1);
                 }
                 else
                 {
@@ -420,7 +420,7 @@ public class Player : MonoBehaviour, IActor
                 break;
             case ItemType.Quest:
             case ItemType.Consumable:
-                var list = _inventory[Type] as SortedList<int, int>;
+                var list = _inventory[Type];
                 if(false == list.ContainsKey(id))
                 {
                     list.Add(id, 1);
@@ -445,6 +445,12 @@ public class Player : MonoBehaviour, IActor
 
     public bool AddItem(int id, int count)
     {
+        if(count <= 0)
+        {
+            Debug.Log("잘못된 접근 방식입니다");
+            return false;
+        }
+
         var itemInfo = _dataManager.GetItemInfo(id);
         var Type = itemInfo.Type;
         switch (Type)
@@ -452,12 +458,12 @@ public class Player : MonoBehaviour, IActor
             case ItemType.Weapon:
             case ItemType.Armor:
             case ItemType.Accessory:
-                var set = _inventory[Type] as SortedSet<int>;
+                var set = _inventory[Type];
                 if (set.Count + count <= 100)
                 {
                     for (int i = 0; i < count; ++i)
                     {
-                        set.Add(id);
+                        set.Add(id, 1);
                     }
                 }
                 else
@@ -468,7 +474,7 @@ public class Player : MonoBehaviour, IActor
                 break;
             case ItemType.Quest:
             case ItemType.Consumable:
-                var list = _inventory[Type] as SortedList<int, int>;
+                var list = _inventory[Type];
                 if (false == list.ContainsKey(id))
                 {
                     list.Add(id, 1);
