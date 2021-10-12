@@ -10,6 +10,7 @@ public enum ObjectType
     Map,
     DamageText,
     GroundItem,
+    InventoryIcon,
     Count
 }
 

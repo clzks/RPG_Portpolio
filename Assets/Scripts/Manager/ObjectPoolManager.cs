@@ -6,14 +6,16 @@ using UnityEngine.U2D;
 public class ObjectPoolManager : Singleton<ObjectPoolManager>
 {
     private DataManager _dataManager;
-    public Dictionary<string, GameObject> prefabList;
-    public Dictionary<ObjectType, List<IPoolObject>> _objectPoolList;
-    public Dictionary<ObjectType, List<IPoolObject>> _activePoolList;
-    public Dictionary<string, Material> _materialList;
+    private Dictionary<string, GameObject> prefabList;
+    private Dictionary<ObjectType, List<IPoolObject>> _objectPoolList;
+    private Dictionary<ObjectType, List<IPoolObject>> _activePoolList;
+    private Dictionary<string, Material> _materialList;
+    private Dictionary<string, Sprite> _spriteList;
     private void Awake()
     {
         prefabList = new Dictionary<string, GameObject>();
         _materialList = new Dictionary<string, Material>();
+        _spriteList = new Dictionary<string, Sprite>();
         _dataManager = DataManager.Get();
     }
 
@@ -25,8 +27,43 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         LoadDamageText();
         LoadMaterials();
         LoadGroundItem();
+        LoadInventroyIcon();
     }
     
+    public void LoadSprite()
+    {
+        LoadResourcesSprite("Apple");
+        LoadResourcesSprite("Armor");
+        LoadResourcesSprite("Bag");
+        LoadResourcesSprite("Belts");
+        LoadResourcesSprite("Book");
+        LoadResourcesSprite("Boots");
+        LoadResourcesSprite("Bow");
+        LoadResourcesSprite("Bracers");
+        LoadResourcesSprite("Cloaks");
+        LoadResourcesSprite("Coins");
+        LoadResourcesSprite("Gem");
+        LoadResourcesSprite("Helmets");
+        LoadResourcesSprite("Hp");
+        LoadResourcesSprite("Ingots");
+        LoadResourcesSprite("Meat");
+        LoadResourcesSprite("Mp");
+        LoadResourcesSprite("Necklace");
+        LoadResourcesSprite("Pants");
+        LoadResourcesSprite("Rings");
+        LoadResourcesSprite("Scroll");
+        LoadResourcesSprite("Shield");
+        LoadResourcesSprite("Shoulders");
+        LoadResourcesSprite("Sword");
+    }
+
+    private void LoadResourcesSprite(string name)
+    {
+        var sprite = Resources.Load<Sprite>("Sprites/" + name);
+
+        _spriteList.Add(name, sprite);
+    }
+
     /// <summary>
     /// 한 타입에 한종류의 오브젝트만 존재할 경우에 사용한다. type과 오브젝트 네임은 동일해야 한다
     /// </summary>
@@ -277,6 +314,12 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         var obj = Resources.Load<GameObject>("Prefabs/Item/GroundItem");
         prefabList.Add("GroundItem", obj);
     }
+
+    private void LoadInventroyIcon()
+    {
+        var obj = Resources.Load<GameObject>("Prefabs/Inventory/InventoryIcon");
+        prefabList.Add("InventoryIcon", obj);
+    }
     #endregion
     public void InitPool()
     {
@@ -327,5 +370,10 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     public List<IPoolObject> GetEnemies()
     {
         return _activePoolList[ObjectType.Enemy];
+    }
+
+    public Sprite GetSprite(string name)
+    {
+        return _spriteList[name];
     }
 }

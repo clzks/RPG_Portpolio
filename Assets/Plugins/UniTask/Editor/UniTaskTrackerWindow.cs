@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System;
+#if !UNITY_ANDROID
 using UnityEditor.IMGUI.Controls;
+
 using Cysharp.Threading.Tasks.Internal;
 
 namespace Cysharp.Threading.Tasks.Editor
@@ -61,7 +63,7 @@ namespace Cysharp.Threading.Tasks.Editor
             SplitterGUILayout.EndVerticalSplit();
         }
 
-        #region HeadPanel
+#region HeadPanel
 
         public static bool EnableAutoReload => TaskTracker.EditorEnableState.EnableAutoReload;
         public static bool EnableTracking => TaskTracker.EditorEnableState.EnableTracking;
@@ -111,9 +113,9 @@ namespace Cysharp.Threading.Tasks.Editor
             EditorGUILayout.EndVertical();
         }
 
-        #endregion
+#endregion
 
-        #region TableColumn
+#region TableColumn
 
         Vector2 tableScroll;
         GUIStyle tableListStyle;
@@ -162,9 +164,9 @@ namespace Cysharp.Threading.Tasks.Editor
             }
         }
 
-        #endregion
+#endregion
 
-        #region Details
+#region Details
 
         static GUIStyle detailsStyle;
         Vector2 detailsScroll;
@@ -203,7 +205,7 @@ namespace Cysharp.Threading.Tasks.Editor
             EditorGUILayout.EndScrollView();
         }
 
-        #endregion
+#endregion
     }
 }
-
+#endif

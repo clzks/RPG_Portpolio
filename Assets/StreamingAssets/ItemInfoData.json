@@ -3,6 +3,7 @@
     	"Id" : "정보를 구분짓기 위한 값",
         "Name": "아이템 이름(영어)",
         "DisplayName" : "UI에 표시될 이름(한글)",
+        "ImageName" : "이미지 이름",
         "Values" : "버프 내용, Damage, AttackSpeed, Speed, ",
         "Type" : "아이템 종류, Weapon, Armor, Accessory, Quest, Consumable",
         "Class" : "등급, Normal, Unique, Epic, Legendary",
@@ -15,6 +16,7 @@
         	"Id" : 10000,
             "Name": "Knife",
             "DisplayName" : "나이프",
+            "ImageName" : "Sword",
             "Values" : {
             	"Damage" : 3,
             	"MaxHp" : 10
@@ -28,6 +30,7 @@
         	"Id" : 10001,
             "Name": "LongSword",
             "DisplayName" : "롱소드",
+            "ImageName" : "Sword",
             "Values" : {
             	"Damage" : 7,
             },
@@ -40,6 +43,7 @@
         	"Id" : 20000,
             "Name": "ClothArmor",
             "DisplayName" : "천갑옷",
+            "ImageName" : "Armor",
             "Values" : {
             	"Defence" : 3,
             	"MaxHp" : 10
@@ -53,6 +57,7 @@
         	"Id" : 20001,
             "Name": "LeatherArmor",
             "DisplayName" : "가죽갑옷",
+            "ImageName" : "Armor",
             "Values" : {
             	"Defence" : 4,
             	"MaxHp" : 15,
@@ -64,9 +69,10 @@
             "SellPrice" : 10
         },
         {
-        	"Id" : 30001,
+        	"Id" : 30000,
             "Name": "LowNeckless",
             "DisplayName" : "하급 목걸이",
+            "ImageName" : "Necklace",
             "Values" : {
             	"Damage" : 1,
             	"MaxHp" : 3,
@@ -81,6 +87,7 @@
         	"Id" : 40000,
             "Name": "HealingPotion",
             "DisplayName" : "체력회복 물약",
+            "ImageName" : "Hp",
             "Values" : {
             	"CurrHp" : 50,
             },
@@ -94,6 +101,7 @@
         	"Id" : 40100,
             "Name": "WrathPotion",
             "DisplayName" : "분노의영약",
+            "ImageName" : "Hp",
             "Values" : {
             	"Damage" : 3,
             },
@@ -107,6 +115,7 @@
         	"Id" : 50000,
             "Name": "Shell",
             "DisplayName" : "등껍질",
+            "ImageName" : "Apple",
             "Type" : "Quest",
             "Class": "Normal",
             "PurchasePrice" : 100,

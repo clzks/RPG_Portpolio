@@ -7,6 +7,7 @@ public class ItemInfo : IData
     public int Id { get; set; }
     public string Name { get; set; }
     public string DisplayName { get; set; }
+    public string ImageName { get; set; }
     public Status Values { get; set; }
     public ItemType Type { get; set; }
     public ItemClassType Class { get; set; }

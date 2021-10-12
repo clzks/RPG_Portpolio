@@ -7,10 +7,10 @@ using UnityEngine.UI;
 public class EquipSlot : MonoBehaviour, IPointerClickHandler
 {
     public EquipType _type;
-    public Image image;
+    public InventoryIcon icon;
     private int _itemId;
     private UnityAction _action;
-    public GameObject infoPanel;
+    //public GameObject infoPanel;
 
 
     public void OnPointerClick(PointerEventData eventData)

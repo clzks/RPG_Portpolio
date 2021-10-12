@@ -161,7 +161,7 @@ public static class JsonConverter<T> where T : class, IData
 #if UNITY_EDITOR
         var filePath = Path.Combine(Application.streamingAssetsPath, typeof(T).Name + ".json");
 #elif UNITY_ANDROID
-        var filePath = Path.Combine("jar:file://" + Application.dataPath + "!/assets/", className + "Data.json");
+        var filePath = Path.Combine("jar:file://" + Application.dataPath + "!/assets/", typeof(T).Name + "Data.json");
 #endif 
         text = await LoadJsonString(filePath);
 

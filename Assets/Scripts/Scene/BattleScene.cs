@@ -10,8 +10,9 @@ public class BattleScene : MonoBehaviour
     private BaseMap _currMap = null;
     private Player _player;
     public MiniMap _miniMap;
-    public Button saveButton;
-    
+    [SerializeField] private GameObject EquipmentWindowPopUp;
+    [SerializeField] private GameObject SkillWindowPopUp;
+    [SerializeField] private GameObject SettingWindowPopUp;
 
     private void Awake()
     {
@@ -46,7 +47,17 @@ public class BattleScene : MonoBehaviour
         DataManager.Get().SavePlayerData();
     }
 
-    public void OnClickEquipmenButton()
+    public void OnClickEquipmentButton()
+    {
+        EquipmentWindowPopUp.SetActive(true);
+    }
+
+    public void OnClickSkillButton()
+    {
+
+    }
+
+    public void OnClickSettingButton()
     {
 
     }

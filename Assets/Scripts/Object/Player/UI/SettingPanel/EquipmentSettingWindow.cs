@@ -2,16 +2,39 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class EquipmentSettingWindow : MonoBehaviour
+public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
 {
+    private DataManager _dataManager;
+    private ObjectPoolManager _objectPool;
+    public Button exitButton;
     public List<EquipSlot> equipSlotList;
     public Transform inventorySlotParent;
     public List<InventoryTab> _tabList;
     public ItemType currClickTabType = ItemType.Weapon;
+    [SerializeField] private Player _player;
+    private List<InventoryIcon> _iconList;
+    private InventoryIcon _currSelectInventoryIcon;
+    
     private void Awake()
     {
+        _dataManager = DataManager.Get();
+        _objectPool = ObjectPoolManager.Get();
+        _iconList = new List<InventoryIcon>();
         SetInventoryTabClickEvent();
+        exitButton.onClick.AddListener(() => OnClickExitButton());
+    }
+
+    private void OnEnable()
+    {
+        UpdateInventoryIcon();
+    }
+
+    private void OnDisable()
+    {
+        currClickTabType = ItemType.Weapon;
     }
 
     public void SetEquipSlot(EquipSlot slot)
@@ -24,19 +47,96 @@ public class EquipmentSettingWindow : MonoBehaviour
 
     public void OnClickEquipSlot()
     {
+        
+    }
+
+    public void OnClickIconObject(InventoryIcon obj)
+    {
+        OnClickIcon(obj);
+        _currSelectInventoryIcon = obj;
+    }
+
+    public void OnClickInventoryTab(ItemType type)
+    {
+        if (currClickTabType != type)
+        {
+            currClickTabType = type;
+
+            UpdateInventoryIcon();
+        }
+    }
+
+    public void SetClickEquipmentIcon()
+    {
 
     }
 
-    public void SetCurrClickTabType(ItemType type)
+    public void UpdateInventoryIcon()
     {
-        currClickTabType = type;
+        if(_iconList.Count != 0)
+        {
+            for(int i = _iconList.Count - 1; i >= 0; --i)
+            {
+                _iconList[i].ReturnObject();
+            }
+
+            _iconList.Clear();
+        }
+
+        var inventory = _player.GetInventory();
+        var itemList = inventory[currClickTabType];
+        foreach (var item in itemList)
+        {
+            var info = _dataManager.GetItemInfo(item.Key);
+            var icon = _objectPool.MakeObject(ObjectType.InventoryIcon).GetComponent<InventoryIcon>();
+            icon.SetImage(_objectPool.GetSprite(info.ImageName));
+            if(info.Type == ItemType.Consumable || info.Type == ItemType.Quest)
+            {
+                icon.SetCountText(item.Value);
+            }
+            else
+            {
+                icon.ResetCountText();
+            }
+            icon.transform.SetParent(inventorySlotParent);
+            icon.SetClickEvents(() => OnClickIconObject(icon));
+            _iconList.Add(icon);
+        }
     }
 
     public void SetInventoryTabClickEvent()
     {
         foreach (var item in _tabList)
         {
-            item.SetClickEvent(() => SetCurrClickTabType(item.type));
+            item.SetClickEvent(() => OnClickInventoryTab(item.type));
         }
+    }
+
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (_currSelectInventoryIcon != null)
+        {
+            _currSelectInventoryIcon.ViewIconDescription(false);
+            _currSelectInventoryIcon = null;
+        }
+    }
+
+    public void OnClickIcon(InventoryIcon obj)
+    {
+        if (_currSelectInventoryIcon != null)
+        {
+            if (obj != _currSelectInventoryIcon.GetObject())
+            {
+                _currSelectInventoryIcon.ViewIconDescription(false);
+                _currSelectInventoryIcon = null;
+            }
+        }
+    }
+
+    
+    public void OnClickExitButton()
+    {
+        gameObject.SetActive(false);
     }
 }

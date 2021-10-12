@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System;
+#if !UNITY_ANDROID
 using UnityEditor.IMGUI.Controls;
 using Cysharp.Threading.Tasks.Internal;
 using System.Text;
@@ -179,4 +180,4 @@ namespace Cysharp.Threading.Tasks.Editor
     }
 
 }
-
+#endif

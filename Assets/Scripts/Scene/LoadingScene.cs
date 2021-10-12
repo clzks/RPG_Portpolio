@@ -26,6 +26,7 @@ public class LoadingScene : MonoBehaviour
         {
             _poolManager.InitPool();
             _poolManager.LoadPrefabs();
+            _poolManager.LoadSprite();
             SceneManager.LoadScene("MainScene");
         }
         else

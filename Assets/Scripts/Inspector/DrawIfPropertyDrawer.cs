@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using UnityEditor;
 using UnityEngine;
-
+#if UNITY_ANDROID && UNITY_EDITOR
 /// <summary>
 /// Based on: https://forum.unity.com/threads/draw-a-field-only-if-a-condition-is-met.448855/
 /// </summary>
 [CustomPropertyDrawer(typeof(DrawIfAttribute))]
 public class DrawIfPropertyDrawer : PropertyDrawer
 {
-    #region Fields
+#region Fields
 
     // Reference to the attribute on the property.
     DrawIfAttribute drawIf;
@@ -16,7 +16,7 @@ public class DrawIfPropertyDrawer : PropertyDrawer
     // Field that is being compared.
     SerializedProperty comparedField;
 
-    #endregion
+#endregion
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
         if (!ShowMe(property) && drawIf.disablingType == DrawIfAttribute.DisablingType.DontDraw)
@@ -123,3 +123,4 @@ public class DrawIfPropertyDrawer : PropertyDrawer
     }
 
 }
+#endif
