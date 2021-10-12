@@ -88,21 +88,39 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
         foreach (var item in itemList)
         {
             var info = _dataManager.GetItemInfo(item.Key);
-            var icon = _objectPool.MakeObject(ObjectType.InventoryIcon).GetComponent<InventoryIcon>();
-            icon.SetImage(_objectPool.GetSprite(info.ImageName));
-            if(info.Type == ItemType.Consumable || info.Type == ItemType.Quest)
+
+            if (info.Type == ItemType.Consumable || info.Type == ItemType.Quest)
             {
-                icon.SetCountText(item.Value);
+                MakeInventoryIcon(info, true, item.Value);
             }
             else
             {
-                icon.ResetCountText();
+                for (int i = 0; i < item.Value; ++i)
+                {
+                    MakeInventoryIcon(info, false);
+                }
             }
-            icon.transform.SetParent(inventorySlotParent);
-            icon.SetClickEvents(() => OnClickIconObject(icon));
-            _iconList.Add(icon);
         }
     }
+
+    private void MakeInventoryIcon(ItemInfo info, bool isConsumption, int count = 1)
+    {
+        var icon = _objectPool.MakeObject(ObjectType.InventoryIcon).GetComponent<InventoryIcon>();
+        icon.SetImage(_objectPool.GetSprite(info.ImageName));
+        if(true == isConsumption)
+        {
+            icon.SetCountText(count);
+        }
+        else
+        {
+            icon.ResetCountText();
+        }
+
+        icon.transform.SetParent(inventorySlotParent);
+        icon.SetClickEvents(() => OnClickIconObject(icon));
+        _iconList.Add(icon);
+    }
+
 
     public void SetInventoryTabClickEvent()
     {

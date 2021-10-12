@@ -412,17 +412,24 @@ public class Player : MonoBehaviour, IActor
             case ItemType.Weapon:
             case ItemType.Armor:
             case ItemType.Accessory:
-                //var set = _inventory[Type];
-                //if(set.Count <= 99)
-                //{
-                //    set.Add(id, 1);
-                //}
-                //else
-                //{
-                //    Debug.Log("ÀÎº¥Åä¸®°¡ °¡µæ Ã¡À¾´Ï´Ù");
-                //    return false;
-                //}
-                //break;
+                var set = _inventory[Type];
+                if(set.Count <= 99)
+                {
+                    if (false == set.ContainsKey(id))
+                    {
+                        set.Add(id, 1);
+                    }
+                    else
+                    {
+                        set[id] += 1;
+                    }
+                }
+                else
+                {
+                    Debug.Log("ÀÎº¥Åä¸®°¡ °¡µæ Ã¡À¾´Ï´Ù");
+                    return false;
+                }
+                break;
             case ItemType.Quest:
             case ItemType.Consumable:
                 var list = _inventory[Type];
@@ -463,20 +470,24 @@ public class Player : MonoBehaviour, IActor
             case ItemType.Weapon:
             case ItemType.Armor:
             case ItemType.Accessory:
-                //var set = _inventory[Type];
-                //if (set.Count + count <= 100)
-                //{
-                //    for (int i = 0; i < count; ++i)
-                //    {
-                //        set.Add(id, 1);
-                //    }
-                //}
-                //else
-                //{
-                //    Debug.Log("ÀÎº¥Åä¸®°¡ °¡µæ Ã¡À¾´Ï´Ù");
-                //    return false;
-                //}
-                //break;
+                var set = _inventory[Type];
+                if (set.Count + count <= 100)
+                {
+                    if (false == set.ContainsKey(id))
+                    {
+                        set.Add(id, count);
+                    }
+                    else
+                    {
+                        set[id] += count;
+                    }
+                }
+                else
+                {
+                    Debug.Log("ÀÎº¥Åä¸®°¡ °¡µæ Ã¡À¾´Ï´Ù");
+                    return false;
+                }
+                break;
             case ItemType.Quest:
             case ItemType.Consumable:
                 var list = _inventory[Type];
