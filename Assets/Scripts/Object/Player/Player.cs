@@ -526,4 +526,9 @@ public class Player : MonoBehaviour, IActor
             return true;
         }
     }
+
+    public List<int> GetEquipmentList()
+    {
+        return _data.EquipmentList;
+    }
 }

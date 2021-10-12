@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System;
-#if !UNITY_ANDROID
+#if !UNITY_ANDROID || UNITY_EDITOR
 using UnityEditor.IMGUI.Controls;
 using Cysharp.Threading.Tasks.Internal;
 using System.Text;

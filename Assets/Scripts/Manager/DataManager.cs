@@ -207,6 +207,11 @@ public class DataManager : Singleton<DataManager>
 
     public ItemInfo GetItemInfo(int id)
     {
+        if(-1 == id)
+        {
+            return null;
+        }
+
         return _itemInfoList[id];
     }
 }

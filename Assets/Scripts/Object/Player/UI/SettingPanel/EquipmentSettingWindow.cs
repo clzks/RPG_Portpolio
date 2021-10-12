@@ -10,7 +10,7 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
     private DataManager _dataManager;
     private ObjectPoolManager _objectPool;
     public Button exitButton;
-    public List<EquipSlot> equipSlotList;
+    public List<EquipmentIcon> equipIconList;
     public Transform inventorySlotParent;
     public List<InventoryTab> _tabList;
     public ItemType currClickTabType = ItemType.Weapon;
@@ -24,6 +24,7 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
         _objectPool = ObjectPoolManager.Get();
         _iconList = new List<InventoryIcon>();
         SetInventoryTabClickEvent();
+        SetEquipSlot();
         exitButton.onClick.AddListener(() => OnClickExitButton());
     }
 
@@ -37,17 +38,38 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
         currClickTabType = ItemType.Weapon;
     }
 
-    public void SetEquipSlot(EquipSlot slot)
+    public void SetEquipSlot()
     {
-        foreach (var item in equipSlotList)
+        var equimpmentList = _player.GetEquipmentList();
+        ItemInfo info = null;
+        foreach (var item in equipIconList)
         {
-            //item.SetAction();
-        }
-    }
+            item.SetClickEvents(() => OnClickIconObject(item));
+            item.AddListenerToUnwearButton(() => OnClickUnwearButton(item.itemType));
+            switch (item.itemType)
+            {
+                case EquipType.Weapon:
+                    info = _dataManager.GetItemInfo(equimpmentList[0]);
+                    break;
+                case EquipType.Armor:
+                    info = _dataManager.GetItemInfo(equimpmentList[1]);
+                    break;
+                case EquipType.Accessory:
+                    info = _dataManager.GetItemInfo(equimpmentList[2]);
+                    break;
+            }
 
-    public void OnClickEquipSlot()
-    {
-        
+            if (null != info)
+            {
+                item.SetImage(_objectPool.GetSprite(info.ImageName));
+                item.SetId(info.Id);
+            }
+            else
+            {
+                item.SetEmptyImage();
+                item.SetId(-1);
+            }
+        }
     }
 
     public void OnClickIconObject(InventoryIcon obj)
@@ -140,7 +162,7 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public void OnClickIcon(InventoryIcon obj)
+    private void OnClickIcon(InventoryIcon obj)
     {
         if (_currSelectInventoryIcon != null)
         {
@@ -152,8 +174,39 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    
-    public void OnClickExitButton()
+    private void OnClickUnwearButton(EquipType type)
+    {
+        var equipList = _player.GetEquipmentList();
+
+        switch (type)
+        {
+            case EquipType.Weapon:
+                if (_player.AddItem(equipList[0]))
+                {
+                    equipList[0] = -1;
+                    equipIconList[0].SetEmptyImage();
+                }
+                break;
+            case EquipType.Armor:
+                if (_player.AddItem(equipList[1]))
+                {
+                    equipList[1] = -1;
+                    equipIconList[1].SetEmptyImage();
+                }
+                break;
+            case EquipType.Accessory:
+                if (_player.AddItem(equipList[2]))
+                {
+                    equipList[2] = -1;
+                    equipIconList[2].SetEmptyImage();
+                }
+                break;
+        }
+
+        UpdateInventoryIcon();
+    }
+
+    private void OnClickExitButton()
     {
         gameObject.SetActive(false);
     }

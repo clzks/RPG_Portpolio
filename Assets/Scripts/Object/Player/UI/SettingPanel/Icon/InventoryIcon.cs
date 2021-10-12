@@ -23,6 +23,7 @@ public class InventoryIcon : MonoBehaviour, IPoolObject, IPointerClickHandler
         itemImage.sprite = image;
     }
 
+
     public void SetCountText(int count)
     {
         countText.text = "x" + count.ToString();
@@ -60,11 +61,11 @@ public class InventoryIcon : MonoBehaviour, IPoolObject, IPointerClickHandler
 
     public virtual void OnPointerClick(PointerEventData eventData)
     {
-        _clickEvent.Invoke();
+        OnPointerClickAction();
         ViewIconDescription(true);
     }
 
-    public void ViewIconDescription(bool enabled)
+    public virtual void ViewIconDescription(bool enabled)
     {
         if(true == enabled)
         {
@@ -79,5 +80,10 @@ public class InventoryIcon : MonoBehaviour, IPoolObject, IPointerClickHandler
     public void SetClickEvents(UnityAction clickEvent)
     {
         _clickEvent = clickEvent;
+    }
+
+    protected void OnPointerClickAction()
+    {
+        _clickEvent.Invoke();
     }
 }
