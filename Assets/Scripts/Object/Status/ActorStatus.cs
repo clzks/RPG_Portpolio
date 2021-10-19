@@ -5,22 +5,23 @@ using UnityEngine;
 
 public class Status
 {
-    public float CurrHp;
-    public float MaxHp;
-    public float Speed;
-    public float AttackSpeed;
-    public float Stamina;
-    public float Strength;
-    public float Damage;
+    public float CurrHp { get; set; }
+    public float MaxHp { get; set; }
+    public float Speed { get; set; }
+    public float AttackSpeed { get; set; }
+    public float Stamina { get; set; }
+    public float Strength { get; set; }
+    public float Defence { get; set; }
+    public float Damage { get; set; }
 
-    public float ChaseSpeed;
-    public float PatrolSpeed;
-    public float AttackRange;
-    public float AttackTerm;
-    public float DetectionDistance;
-    public float ChaseDistance;
-    public float PatrolCycle;
-    public bool IsInvincible;
+    public float ChaseSpeed { get; set; }
+    public float PatrolSpeed { get; set; }
+    public float AttackRange { get; set; }
+    public float AttackTerm { get; set; }
+    public float DetectionDistance { get; set; }
+    public float ChaseDistance { get; set; }
+    public float PatrolCycle { get; set; }
+    public bool IsInvincible { get; set; }
 
 
     public static Status MakeSampleStatus()
@@ -31,6 +32,7 @@ public class Status
         st.Speed = 5f;
         st.AttackSpeed = 1f;
         st.Stamina = 100f;
+        st.Defence = 0f;
         st.Strength = 1f;
         st.IsInvincible = false;
         return st;

@@ -133,4 +133,22 @@ public static class Formula
 
         return result;
     }
+
+    public static EquipType ConvertItemTypeToEquipType(ItemType iType)
+    {
+        switch (iType)
+        {
+            case ItemType.Weapon:
+                return EquipType.Weapon;
+            case ItemType.Armor:
+                return EquipType.Armor;
+            case ItemType.Accessory:
+                return EquipType.Accessory;
+            case ItemType.Quest:
+            case ItemType.Consumable:
+            case ItemType.Count:
+            default:
+                return EquipType.Count;
+        }
+    }
 }

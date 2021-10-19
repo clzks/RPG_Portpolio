@@ -33,6 +33,7 @@ public class Player : MonoBehaviour, IActor
     private List<IBuff> _buffList;
     private Dictionary<ItemType, SortedList<int,int>> _inventory { get { return _data.Inventory; } set { _data.Inventory = value; } }
     private Status _originStatus { get { return _data.Status; } set { _data.Status = value; } }
+    private Status _equipedStatus;
     private Status _validStatus;
     private DamageInfo _damageInfo;
     private IEnumerator _moveCoroutine = null;
@@ -57,6 +58,7 @@ public class Player : MonoBehaviour, IActor
         _damageInfo = null;
         _tick = _gameManager.tick;
         _buffYield = new WaitForSeconds(_tick);
+        EquipStatusUpdate();
     }
 
     private void LateUpdate()
@@ -381,11 +383,40 @@ public class Player : MonoBehaviour, IActor
         return array;
     }
 
-    private IEnumerator StatusUpdate()
+    public void EquipStatusUpdate()
+    {
+        _equipedStatus.CopyStatus(_originStatus);
+
+        var list = _data.EquipmentList;
+
+        if(null != list)
+        {
+            for(int i = 0; i < 3; ++i)
+            {
+                if(list[i] == -1)
+                {
+                    continue;
+                }
+                else
+                {
+                    Status stat = _dataManager.GetItemInfo(list[i]).Values;
+
+                    _equipedStatus.Damage += stat.Damage;
+                    _equipedStatus.Defence += stat.Defence;
+                    _equipedStatus.Strength += stat.Strength;
+                    _equipedStatus.MaxHp += stat.MaxHp;
+                    _equipedStatus.Speed += stat.Speed;
+                    _equipedStatus.AttackSpeed += stat.AttackSpeed;
+                }
+            }
+        }
+    }
+
+    private IEnumerator BuffUpdate()
     {
         while (true)
         {
-            _validStatus = _originStatus;
+            _validStatus.CopyStatus(_equipedStatus);
 
             if (null != _buffList)
             {
@@ -394,6 +425,7 @@ public class Player : MonoBehaviour, IActor
                     buff.Update(_tick, this);
                 }
             }
+
             yield return _buffYield;
         }
     }
@@ -457,11 +489,11 @@ public class Player : MonoBehaviour, IActor
 
     public bool AddItem(int id, int count)
     {
-        if(count <= 0)
-        {
-            Debug.Log("잘못된 접근 방식입니다");
-            return false;
-        }
+        //if(count <= 0)
+        //{
+        //    Debug.Log("잘못된 접근 방식입니다");
+        //    return false;
+        //}
 
         var itemInfo = _dataManager.GetItemInfo(id);
         var Type = itemInfo.Type;
@@ -471,40 +503,87 @@ public class Player : MonoBehaviour, IActor
             case ItemType.Armor:
             case ItemType.Accessory:
                 var set = _inventory[Type];
-                if (set.Count + count <= 100)
+
+                if (count < 0)
                 {
-                    if (false == set.ContainsKey(id))
+                    if (true == set.ContainsKey(id))
                     {
-                        set.Add(id, count);
+                        if (set[id] + count < 0)
+                        {
+                            Debug.Log("잘못된 접근 방식입니다");
+                            return false;
+                        }
+                        else
+                        {
+                            set[id] += count;
+                        }
                     }
                     else
                     {
-                        set[id] += count;
+                        Debug.Log("잘못된 접근 방식입니다");
+                        return false;
                     }
                 }
                 else
                 {
-                    Debug.Log("인벤토리가 가득 찼읍니다");
-                    return false;
+                    if (set.Count + count <= 100)
+                    {
+                        if (false == set.ContainsKey(id))
+                        {
+                            set.Add(id, count);
+                        }
+                        else
+                        {
+                            set[id] += count;
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("인벤토리가 가득 찼읍니다");
+                        return false;
+                    }
                 }
+               
                 break;
             case ItemType.Quest:
             case ItemType.Consumable:
                 var list = _inventory[Type];
-                if (false == list.ContainsKey(id))
+
+                if (count < 0)
                 {
-                    list.Add(id, 1);
-                }
-                else
-                {
-                    if (list[id] + count <= itemInfo.InventoryMaxCount)
+                    if (true == list.ContainsKey(id))
                     {
-                        list[id] += count;
+                        if(list[id] + count < 0)
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            list[id] += count;
+                        }
                     }
                     else
                     {
-                        Debug.Log("아이템을 더 얻을 수 없습니다");
                         return false;
+                    }
+                }
+                else
+                {
+                    if (false == list.ContainsKey(id))
+                    {
+                        list.Add(id, count);
+                    }
+                    else
+                    {
+                        if (list[id] + count <= itemInfo.InventoryMaxCount)
+                        {
+                            list[id] += count;
+                        }
+                        else
+                        {
+                            Debug.Log("아이템을 더 얻을 수 없습니다");
+                            return false;
+                        }
                     }
                 }
                 break;

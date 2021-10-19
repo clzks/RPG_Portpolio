@@ -17,7 +17,8 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Player _player;
     private List<InventoryIcon> _iconList;
     private InventoryIcon _currSelectInventoryIcon;
-    
+    [SerializeField] private InventoryIconInfoPanel _iconInfoPanel;
+
     private void Awake()
     {
         _dataManager = DataManager.Get();
@@ -25,6 +26,8 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
         _iconList = new List<InventoryIcon>();
         SetInventoryTabClickEvent();
         SetEquipSlot();
+        _iconInfoPanel.SetWearAction(() => OnClickWearButton(_iconInfoPanel.GetEquipType(), _iconInfoPanel.GetItemInfo()));
+        _iconInfoPanel.SetUnwearAction(() => OnClickUnwearButton(_iconInfoPanel.GetEquipType()));
         exitButton.onClick.AddListener(() => OnClickExitButton());
     }
 
@@ -36,6 +39,10 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
     private void OnDisable()
     {
         currClickTabType = ItemType.Weapon;
+        if(true == _iconInfoPanel.gameObject.activeSelf)
+        {
+            _iconInfoPanel.gameObject.SetActive(false);
+        }
     }
 
     public void SetEquipSlot()
@@ -45,7 +52,7 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
         foreach (var item in equipIconList)
         {
             item.SetClickEvents(() => OnClickIconObject(item));
-            item.AddListenerToUnwearButton(() => OnClickUnwearButton(item.itemType));
+            //item.AddListenerToUnwearButton(() => OnClickWearUnwearButton(item.itemType));
             switch (item.itemType)
             {
                 case EquipType.Weapon:
@@ -62,12 +69,12 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
             if (null != info)
             {
                 item.SetImage(_objectPool.GetSprite(info.ImageName));
-                item.SetId(info.Id);
+                item.SetItemInfo(info);
             }
             else
             {
                 item.SetEmptyImage();
-                item.SetId(-1);
+                item.SetItemInfo(null);
             }
         }
     }
@@ -129,6 +136,7 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
     {
         var icon = _objectPool.MakeObject(ObjectType.InventoryIcon).GetComponent<InventoryIcon>();
         icon.SetImage(_objectPool.GetSprite(info.ImageName));
+        icon.SetInfoPanel(_iconInfoPanel, info);
         if(true == isConsumption)
         {
             icon.SetCountText(count);
@@ -202,7 +210,111 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
                 }
                 break;
         }
+        _player.EquipStatusUpdate();
+        UpdateInventoryIcon();
+    }
 
+    private void OnClickWearButton(EquipType type, ItemInfo info)
+    {
+        var equipList = _player.GetEquipmentList();
+
+        switch (type)
+        {
+            case EquipType.Weapon:
+                if (-1 == equipList[0])
+                {
+                    if(_player.AddItem(info.Id, -1))
+                    {
+                        equipList[0] = info.Id;
+                        equipIconList[0].SetImage(_objectPool.GetSprite(info.ImageName));
+                        equipIconList[0].SetItemInfo(info);
+                    }
+                }
+                else
+                { 
+                    if(_player.AddItem(equipList[0]))
+                    {
+                        if(_player.AddItem(info.Id, -1))
+                        {
+                            equipList[0] = info.Id;
+                            equipIconList[0].SetImage(_objectPool.GetSprite(info.ImageName));
+                            equipIconList[0].SetItemInfo(info);
+                        }
+                        else
+                        {
+                            _player.AddItem(equipList[0], -1);
+                        }
+                    }
+                    else
+                    {
+                       
+                    }
+                }
+                break;
+            case EquipType.Armor:
+                if (-1 == equipList[1])
+                {
+                    if (_player.AddItem(info.Id, -1))
+                    {
+                        equipList[1] = info.Id;
+                        equipIconList[1].SetImage(_objectPool.GetSprite(info.ImageName));
+                        equipIconList[1].SetItemInfo(info);
+                    }
+                }
+                else
+                {
+                    if (_player.AddItem(equipList[1]))
+                    {
+                        if (_player.AddItem(info.Id, -1))
+                        {
+                            equipList[1] = info.Id;
+                            equipIconList[1].SetImage(_objectPool.GetSprite(info.ImageName));
+                            equipIconList[1].SetItemInfo(info);
+                        }
+                        else
+                        {
+                            _player.AddItem(equipList[1], -1);
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                }
+                break;
+            case EquipType.Accessory:
+                if (-1 == equipList[2])
+                {
+                    if (_player.AddItem(info.Id, -1))
+                    {
+                        equipList[2] = info.Id;
+                        equipIconList[2].SetImage(_objectPool.GetSprite(info.ImageName));
+                        equipIconList[2].SetItemInfo(info);
+                    }
+                }
+                else
+                {
+                    if (_player.AddItem(equipList[2]))
+                    {
+                        if (_player.AddItem(info.Id, -1))
+                        {
+                            equipList[2] = info.Id;
+                            equipIconList[2].SetImage(_objectPool.GetSprite(info.ImageName));
+                            equipIconList[2].SetItemInfo(info);
+                        }
+                        else
+                        {
+                            _player.AddItem(equipList[2], -1);
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                }
+                break;
+        }
+        _player.EquipStatusUpdate();
         UpdateInventoryIcon();
     }
 

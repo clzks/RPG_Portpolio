@@ -11,18 +11,18 @@ public class EquipmentIcon : InventoryIcon
     private int _itemId;
     [SerializeField] Sprite _emptySprite;
     [SerializeField] private EquipInfoPanel _panel;
-    [SerializeField] private Button _unwearItemButton;
+    //[SerializeField] private Button _unwearItemButton;
 
     private void OnEnable()
     {
-        ActiveUnwearButton(false);
+        //ActiveUnwearButton(false);
         ViewIconDescription(false);
     }
 
     public override void OnPointerClick(PointerEventData eventData)
     {
         OnPointerClickAction();
-        if(-1 == _itemId)
+        if(null == _info)
         {
             return;
         }
@@ -31,17 +31,15 @@ public class EquipmentIcon : InventoryIcon
 
     public override void ViewIconDescription(bool enabled)
     {
-        ActiveUnwearButton(enabled);
-        // 패널에 세팅하는거
-
-        //if (true == enabled)
-        //{
-        //    borderImage.color = new Color(1, 1, 0, 1);
-        //}
-        //else
-        //{
-        //    borderImage.color = new Color(0.5f, 0.5f, 0.5f, 1f);
-        //}
+        if (true == enabled)
+        {
+            _infoPanel.SetPanel(_info, false);
+            _infoPanel.gameObject.SetActive(true);
+        }
+        else
+        {
+            _infoPanel.gameObject.SetActive(false);
+        }
     }
 
     public void SetId(int id)
@@ -51,18 +49,18 @@ public class EquipmentIcon : InventoryIcon
 
     public void SetEmptyImage()
     {
-        _itemId = -1;
+        _info = null;
         itemImage.sprite = _emptySprite;
     }
 
-    private void ActiveUnwearButton(bool enabled)
-    {
-        _unwearItemButton.gameObject.SetActive(enabled);
-    }
+    //private void ActiveUnwearButton(bool enabled)
+    //{
+    //    _unwearItemButton.gameObject.SetActive(enabled);
+    //}
 
-    public void AddListenerToUnwearButton(UnityAction action)
-    {
-        _unwearItemButton.onClick.AddListener(action);
-        _unwearItemButton.onClick.AddListener(() => ActiveUnwearButton(false));
-    }
+    //public void AddListenerToUnwearButton(UnityAction action)
+    //{
+    //    _unwearItemButton.onClick.AddListener(action);
+    //    _unwearItemButton.onClick.AddListener(() => ActiveUnwearButton(false));
+    //}
 }

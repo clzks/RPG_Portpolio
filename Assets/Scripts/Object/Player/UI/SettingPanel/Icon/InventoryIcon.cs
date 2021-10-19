@@ -12,6 +12,9 @@ public class InventoryIcon : MonoBehaviour, IPoolObject, IPointerClickHandler
     public Image borderImage;
     public Text countText;
     protected UnityAction _clickEvent;
+    [SerializeField]protected InventoryIconInfoPanel _infoPanel;
+    protected ItemInfo _info;
+    //[SerializeField] protected Button itemEquipButton;
 
     private void Awake()
     {
@@ -27,6 +30,17 @@ public class InventoryIcon : MonoBehaviour, IPoolObject, IPointerClickHandler
     public void SetCountText(int count)
     {
         countText.text = "x" + count.ToString();
+    }
+
+    public void SetInfoPanel(InventoryIconInfoPanel panel, ItemInfo info)
+    {
+        _infoPanel = panel;
+        _info = info;
+    }
+
+    public void SetItemInfo(ItemInfo info)
+    {
+        _info = info;
     }
 
     public void ResetCountText()
@@ -70,10 +84,13 @@ public class InventoryIcon : MonoBehaviour, IPoolObject, IPointerClickHandler
         if(true == enabled)
         {
             borderImage.color = new Color(1, 1, 0, 1);
+            _infoPanel.SetPanel(_info, true);
+            _infoPanel.gameObject.SetActive(true);
         }
         else
         {
             borderImage.color = new Color(0.5f, 0.5f, 0.5f, 1f);
+            _infoPanel.gameObject.SetActive(false);
         }
     }
 
