@@ -25,7 +25,7 @@ public class InventoryIconInfoPanel : MonoBehaviour
         wearUnwearButton.onClick.AddListener(() => OnClickWearUnwearButton());
     }
 
-    public void SetPanel(ItemInfo info, bool wear)
+    public void SetPanel(float posX, ItemInfo info, bool wear)
     {
         itemName.text = info.DisplayName;
         _info = info;
@@ -81,6 +81,7 @@ public class InventoryIconInfoPanel : MonoBehaviour
                 break;
         }
         rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, startHeight + count * lineHeight);
+        rectTransform.position = new Vector2(posX, rectTransform.position.y);
         description.text = info.Description;
         isWear = wear;
         if(true == isWear)

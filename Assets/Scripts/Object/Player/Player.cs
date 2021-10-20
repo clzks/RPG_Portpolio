@@ -55,6 +55,7 @@ public class Player : MonoBehaviour, IActor
         _actorList = new List<IActor>();
         _buffList = new List<IBuff>();
         _validStatus = _originStatus;
+        _equipedStatus = new Status();
         _damageInfo = null;
         _tick = _gameManager.tick;
         _buffYield = new WaitForSeconds(_tick);

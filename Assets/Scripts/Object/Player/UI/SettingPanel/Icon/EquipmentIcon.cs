@@ -33,7 +33,7 @@ public class EquipmentIcon : InventoryIcon
     {
         if (true == enabled)
         {
-            _infoPanel.SetPanel(_info, false);
+            _infoPanel.SetPanel(transform.position.x, _info, false);
             _infoPanel.gameObject.SetActive(true);
         }
         else

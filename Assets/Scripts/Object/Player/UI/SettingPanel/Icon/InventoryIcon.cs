@@ -84,7 +84,7 @@ public class InventoryIcon : MonoBehaviour, IPoolObject, IPointerClickHandler
         if(true == enabled)
         {
             borderImage.color = new Color(1, 1, 0, 1);
-            _infoPanel.SetPanel(_info, true);
+            _infoPanel.SetPanel(transform.position.x, _info, true);
             _infoPanel.gameObject.SetActive(true);
         }
         else
