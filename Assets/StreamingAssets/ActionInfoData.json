@@ -16,7 +16,8 @@
         "HitUnitList": "액션에 생성될 히트유닛 리스트. 인덱스 순서대로 AnimationEvent에서 생성한다",
         "MoveStartTime" : "이동하는 동작이 있을 시 딜레이",
         "MoveTime" : "이동시간",
-        "MoveDistance" : "이동거리(일단 방향은 코드에서 설정해준다)"
+        "MoveDistance" : "이동거리(일단 방향은 코드에서 설정해준다)",
+        "AnimationEndTime" : "애니메이션을 강제로 종료하는 시간(NormalizedTime)"
     },
     "ActionInfo": [
         {
@@ -153,6 +154,20 @@
                 	"Layer" : 8
                 }
             ]
+        },
+        {
+        	"Id" : 10010,
+            "Name": "Barrier",
+            "CharacterName" : "SwordPlayer",
+            "Level" : 1,
+            "MaxLevel" : 1,
+            "Cost" : 0,
+            "Exp" : 0,
+            "LevelPerExp" : 0,
+            "IsLearn" : true,
+            "Type" : "Skill",
+            "ComboAvailableTime" : 0.0,
+            "AnimationEndTime" : 0.4
         }
     ]
 }

@@ -41,7 +41,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         _originStatus.CurrHp = _originStatus.MaxHp;
         _originStatus.ChaseSpeed = 4;
         _originStatus.PatrolSpeed = 2.5f;
-        _originStatus.Damage = 5;
+        _originStatus.Attack = 5;
         _originStatus.AttackRange = 1.4f;
         _originStatus.AttackTerm = 1.0f;
         _originStatus.DetectionDistance = 6;
@@ -56,7 +56,7 @@ public class BaseEnemy : MonoBehaviour, IActor
     {
         _name = info.Name;
         _originStatus = new Status();
-        _originStatus.CopyStatus(info.Status);
+        _originStatus = Status.CopyStatus(info.Status);
         _originStatus.CurrHp = _originStatus.MaxHp;
         //_originStatus.ChaseSpeed = info.ChaseSpeed;
         //_originStatus.PatrolSpeed = info.PatrolSpeed;
@@ -204,7 +204,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         }
 
         // 무적상태는 추후에 또 고려해봐야함
-        if (null == _damageInfo && false == _originStatus.IsInvincible)
+        if (null == _damageInfo)
         {
             _damageInfo = new DamageInfo(hitUnit.ActorPosition, hitUnit.Strength, hitUnit.Strength * 0.3f);
         }
@@ -284,9 +284,9 @@ public class BaseEnemy : MonoBehaviour, IActor
         return _name;
     }
 
-    public float GetDamage()
+    public float GetAttackValue()
     {
-        return _validStatus.Damage;
+        return _validStatus.Attack;
     }
 
     public void SetPlayer(Player player)
@@ -323,6 +323,16 @@ public class BaseEnemy : MonoBehaviour, IActor
     {
         return _validStatus;
     }
+
+    public Status GetOriginStatus()
+    {
+        return _originStatus;
+    }
+
+    public float GetShield()
+    {
+        return _originStatus.Shield;
+    }
     #endregion
     public void MoveCharacter(float time, float distance, Vector3 dir)
     {
@@ -351,8 +361,7 @@ public class BaseEnemy : MonoBehaviour, IActor
     {
         while(true)
         {
-            _validStatus.CopyStatus(_originStatus);
-
+            _validStatus = Status.CopyStatus(_originStatus);
 
             if (null != _buffList)
             {
@@ -368,6 +377,22 @@ public class BaseEnemy : MonoBehaviour, IActor
     public void RemoveBuff(IBuff buff)
     {
         _buffList.Remove(buff);
+    }
+
+    public bool AddBuff(IBuff buff)
+    {
+        var Buff = _buffList.Find(x => x.GetId() == buff.GetId());
+
+        if (null == Buff)
+        {
+            _buffList.Add(buff);
+            return true;
+        }
+        else
+        {
+            Buff.Renew();
+            return false;
+        }
     }
 
     private void SetGold(EnemyInfo info)
@@ -407,5 +432,10 @@ public class BaseEnemy : MonoBehaviour, IActor
 
             _itemList.Add(info.DropItemList[i]);
         }
+    }
+
+    public void ResetShield()
+    {
+        _originStatus.Shield = 0;
     }
 }

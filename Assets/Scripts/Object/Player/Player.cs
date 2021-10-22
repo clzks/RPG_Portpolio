@@ -16,6 +16,7 @@ public class Player : MonoBehaviour, IActor
     [SerializeField] private InGameCamera _camera;
     [SerializeField] private Animator _animController;
     private SphereCollider _collider;
+
     [Header("UI")]
     [SerializeField] private MovePad _movePad;
     [SerializeField] private ActionPad _actionPad;
@@ -23,16 +24,16 @@ public class Player : MonoBehaviour, IActor
     [SerializeField] private TargetInfoPanel _targetPanel;
     [SerializeField] private PlayerFieldStatusUI _fieldStatusUI;
     [SerializeField] private MiniMap _miniMap;
+
     [Header("Status")]
     public float speed = 30f;
     public IActionState currActionState;
     private Dictionary<string, ActionInfo> _actionInfoList;
-    //public GameObject hitUnitPrefab;
     private PlayerData _data { get { return _dataManager.GetPlayerData(); } set { _dataManager.SetPlayerData(value); } }
     private List<IActor> _actorList;
     private List<IBuff> _buffList;
     private Dictionary<ItemType, SortedList<int,int>> _inventory { get { return _data.Inventory; } set { _data.Inventory = value; } }
-    private Status _originStatus { get { return _data.Status; } set { _data.Status = value; } }
+    private Status OriginStatus { get { return _data.Status; } set { _data.Status = value; } }
     private Status _equipedStatus;
     private Status _validStatus;
     private DamageInfo _damageInfo;
@@ -54,12 +55,13 @@ public class Player : MonoBehaviour, IActor
         _collider = GetComponent<SphereCollider>();
         _actorList = new List<IActor>();
         _buffList = new List<IBuff>();
-        _validStatus = _originStatus;
+        _validStatus = OriginStatus;
         _equipedStatus = new Status();
         _damageInfo = null;
         _tick = _gameManager.tick;
         _buffYield = new WaitForSeconds(_tick);
         EquipStatusUpdate();
+        StartCoroutine(BuffUpdate());
     }
 
     private void LateUpdate()
@@ -75,6 +77,8 @@ public class Player : MonoBehaviour, IActor
 
     private void Update()
     {
+        Debug.Log(OriginStatus.Shield);
+
         currActionState = currActionState.Update();
 
         _fieldStatusUI.SetStatusPanel(GetHpPercent(), 1);
@@ -207,14 +211,14 @@ public class Player : MonoBehaviour, IActor
         return _damageInfo;
     }
 
-    public float GetDamage()
+    public float GetAttackValue()
     {
-        return 3f;
+        return _validStatus.Attack;
     }
 
     public float GetHpPercent()
     {
-        return _originStatus.CurrHp / _originStatus.MaxHp;
+        return OriginStatus.CurrHp / OriginStatus.MaxHp;
     }
 
     public NavMeshAgent GetNavMeshAgent()
@@ -237,9 +241,19 @@ public class Player : MonoBehaviour, IActor
         return _validStatus;
     }
 
+    public Status GetOriginStatus()
+    {
+        return OriginStatus;
+    }
+
     public Dictionary<ItemType, SortedList<int, int>> GetInventory()
     {
         return _inventory;
+    }
+
+    public float GetShield()
+    {
+        return OriginStatus.Shield;
     }
     #endregion
     public void Init()
@@ -255,8 +269,14 @@ public class Player : MonoBehaviour, IActor
     public void TakeDamage(HitUnitStatus hitUnit, ref bool isDead)
     {
         //Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼입힘");
-        _originStatus.CurrHp -= hitUnit.Damage;
-
+        if (GetShield() > 0f)
+        {
+            OriginStatus.Shield -= hitUnit.Damage;
+        }
+        else
+        {
+            OriginStatus.CurrHp -= hitUnit.Damage;
+        }
         // TODO 데미지 이펙트 추가할 곳
         var damageText = _objectPool.MakeObject(ObjectType.DamageText).GetComponent<DamageText>();
         damageText.SetText(DamageTextType.Player, (int)hitUnit.Damage, Position);
@@ -268,12 +288,12 @@ public class Player : MonoBehaviour, IActor
             
         }
 
-        if(null == _damageInfo && false == _originStatus.IsInvincible)
+        if(null == _damageInfo)
         {
             _damageInfo = new DamageInfo(hitUnit.ActorPosition, hitUnit.Strength, hitUnit.Strength * 0.2f);
         }
 
-        if(_originStatus.CurrHp <= 0)
+        if(OriginStatus.CurrHp <= 0)
         {
             isDead = true;
         }
@@ -386,7 +406,7 @@ public class Player : MonoBehaviour, IActor
 
     public void EquipStatusUpdate()
     {
-        _equipedStatus.CopyStatus(_originStatus);
+        _equipedStatus = Status.CopyStatus(OriginStatus);
 
         var list = _data.EquipmentList;
 
@@ -402,7 +422,7 @@ public class Player : MonoBehaviour, IActor
                 {
                     Status stat = _dataManager.GetItemInfo(list[i]).Values;
 
-                    _equipedStatus.Damage += stat.Damage;
+                    _equipedStatus.Attack += stat.Attack;
                     _equipedStatus.Defence += stat.Defence;
                     _equipedStatus.Strength += stat.Strength;
                     _equipedStatus.MaxHp += stat.MaxHp;
@@ -417,13 +437,16 @@ public class Player : MonoBehaviour, IActor
     {
         while (true)
         {
-            _validStatus.CopyStatus(_equipedStatus);
+            _validStatus = Status.CopyStatus(_equipedStatus);
 
             if (null != _buffList)
             {
-                foreach (var buff in _buffList)
+                if (_buffList.Count != 0)
                 {
-                    buff.Update(_tick, this);
+                    for(int i = 0; i < _buffList.Count; ++i)
+                    {
+                        _buffList[i].Update(_tick, this);
+                    }
                 }
             }
 
@@ -434,6 +457,22 @@ public class Player : MonoBehaviour, IActor
     public void RemoveBuff(IBuff buff)
     {
         _buffList.Remove(buff);
+    }
+
+    public bool AddBuff(IBuff buff)
+    {
+        var Buff = _buffList.Find(x => x.GetId() == buff.GetId());
+
+        if (null == Buff)
+        { 
+            _buffList.Add(buff);
+            return true;
+        }
+        else
+        {
+            Buff.Renew();
+            return false;
+        }
     }
 
     public bool AddItem(int id)
@@ -611,4 +650,39 @@ public class Player : MonoBehaviour, IActor
     {
         return _data.EquipmentList;
     }
+
+    public void ResetShield()
+    {
+        OriginStatus.Shield = 0;
+    }
+
+
+    #region SKILL
+    public void ExecuteBarrier()
+    {
+        BarrierSkill skill = new BarrierSkill(_dataManager.GetBuffInfo(1));
+        skill.TakeActor(this);
+        skill.StartBuff(this);
+    }
+
+    public void ExecuteBerserk()
+    {
+
+    }
+
+    public void ExecuteShockWave()
+    {
+
+    }
+
+    public void ExecuteLightningShield()
+    {
+
+    }
+
+    public void ExecuteSummonSword()
+    {
+
+    }
+    #endregion
 }

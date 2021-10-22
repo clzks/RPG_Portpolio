@@ -119,6 +119,7 @@ public abstract class PlayerAttackState : PlayerActionState
 
     public override void Enter()
     {
+        currAnimTime = 0;
         SetAvoidancePriority(40);
         _player.SetInBattle(true);
     }
@@ -196,7 +197,14 @@ public class PlayerIdleState : PlayerActionState
             }
             else
             {
-                return ChangeState(new PlayerSkillState(_player, name));
+                if (true == string.Equals(name, string.Empty))
+                {
+
+                }
+                else
+                {
+                    return ChangeState(new PlayerSkillState(_player, name));
+                }
             }
         }
 
@@ -252,7 +260,14 @@ public class PlayerRunState : PlayerActionState
             }
             else
             {
-                return ChangeState(new PlayerSkillState(_player, name));
+                if (true == string.Equals(name, string.Empty))
+                {
+
+                }
+                else
+                {
+                    return ChangeState(new PlayerSkillState(_player, name));
+                }
             }
         }
 
@@ -417,12 +432,20 @@ public class PlayerSkillState : PlayerAttackState
     public override void Enter()
     {
         base.Enter();
+        info = _player.GetActionInfo(actionName);
         PlayAnimation();
     }
 
     public override IActionState Update()
     {
+        currAnimTime = GetAnimNormalTime(actionName);
+
         if (null == _player.GetActionInfo(actionName))
+        {
+            return new PlayerIdleState(_player);
+        }
+
+        if (currAnimTime >= info.AnimationEndTime)
         {
             return new PlayerIdleState(_player);
         }

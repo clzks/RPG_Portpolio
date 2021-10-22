@@ -50,7 +50,7 @@ public class HitUnit : MonoBehaviour, IPoolObject
         lifeTime = info.Life;
         sphereCollider.radius = info.ColliderRadius;
         status.ActorPosition = actorTransform.position;
-        status.Damage = info.DamageFactor * _actor.GetDamage();
+        status.Damage = info.DamageFactor * _actor.GetAttackValue();
         status.Strength = info.StrengthFactor;
         actorTransform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
         transform.position = actorTransform.position + new Vector3(info.SidePos, 0f, info.FrontPos);

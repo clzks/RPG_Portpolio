@@ -8,9 +8,13 @@ public interface IActor : IPoolObject
     void TakeDamage(HitUnitStatus status, ref bool isDead);
     void ResetActorList();
     int GetId();
-    float GetDamage();
+    float GetAttackValue();
     float GetHpPercent();
     void MoveCharacter(float animTime, float distance, Vector3 dir);
+    bool AddBuff(IBuff buff);
     void RemoveBuff(IBuff buff);
     Status GetValidStatus();
+    Status GetOriginStatus();
+    float GetShield();
+    void ResetShield();
 }

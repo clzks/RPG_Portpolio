@@ -63,6 +63,7 @@ public enum BuffType
     AttackSpeed,
     Speed,
     Dot,
+    Shield,
     Count
 }
 

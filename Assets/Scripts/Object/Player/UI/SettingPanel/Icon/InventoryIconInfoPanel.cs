@@ -59,9 +59,9 @@ public class InventoryIconInfoPanel : MonoBehaviour
                     count += 1;
                 }
 
-                if (status.Damage != 0)
+                if (status.Attack != 0)
                 {
-                    str += "공격력 : " + status.Damage + "\n";
+                    str += "공격력 : " + status.Attack + "\n";
                     count += 1;
                 }
 

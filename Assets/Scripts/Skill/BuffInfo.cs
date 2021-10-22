@@ -10,6 +10,7 @@ public class BuffInfo : IData
     public CalculateType CalculateType { get; set; }
     public float Value { get; set; }
     public float Life { get; set; }
+    public float Tick { get; set; }
     public int GetId()
     {
         return Id;

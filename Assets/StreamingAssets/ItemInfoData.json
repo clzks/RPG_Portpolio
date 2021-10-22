@@ -5,7 +5,7 @@
         "DisplayName" : "UI에 표시될 이름(한글)",
         "ImageName" : "이미지 이름",
         "Description" : "아이템 설명",
-        "Values" : "버프 내용, Damage, AttackSpeed, Speed, ",
+        "Values" : "버프 내용, Attack, AttackSpeed, Speed, ",
         "Type" : "아이템 종류, Weapon, Armor, Accessory, Quest, Consumable",
         "Class" : "등급, Normal, Unique, Epic, Legendary",
         "PurchasePrice" : "매입가, (int)",
@@ -20,7 +20,7 @@
             "ImageName" : "Sword",
             "Description" : "기본적인 단검. 약하다", 
             "Values" : {
-            	"Damage" : 3,
+            	"Attack" : 3,
             	"MaxHp" : 10
             },
             "Type" : "Weapon",
@@ -35,7 +35,7 @@
             "ImageName" : "Sword",
             "Description" : "기본적인 장검. 약하다", 
             "Values" : {
-            	"Damage" : 7,
+            	"Attack" : 7,
             },
             "Type" : "Weapon",
             "Class": "Normal",
@@ -80,7 +80,7 @@
             "ImageName" : "Necklace",
             "Description" : "기본적인 목걸이. 전투 능력치를 약간 보조해준다", 
             "Values" : {
-            	"Damage" : 1,
+            	"Attack" : 1,
             	"MaxHp" : 3,
             	"Stamina" : 5
             },
@@ -111,7 +111,7 @@
             "ImageName" : "Hp",
             "Description" : "복용한 사람의 공격성을 끌어올려주는 물약", 
             "Values" : {
-            	"Damage" : 3,
+            	"Attack" : 3,
             },
             "Type" : "Consumable",
             "Class": "Normal",

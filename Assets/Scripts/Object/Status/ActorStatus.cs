@@ -12,8 +12,8 @@ public class Status
     public float Stamina { get; set; }
     public float Strength { get; set; }
     public float Defence { get; set; }
-    public float Damage { get; set; }
-
+    public float Attack { get; set; }
+    public float Shield { get; set; }
     public float ChaseSpeed { get; set; }
     public float PatrolSpeed { get; set; }
     public float AttackRange { get; set; }
@@ -21,7 +21,6 @@ public class Status
     public float DetectionDistance { get; set; }
     public float ChaseDistance { get; set; }
     public float PatrolCycle { get; set; }
-    public bool IsInvincible { get; set; }
 
 
     public static Status MakeSampleStatus()
@@ -34,26 +33,29 @@ public class Status
         st.Stamina = 100f;
         st.Defence = 0f;
         st.Strength = 1f;
-        st.IsInvincible = false;
         return st;
     }
 
-    public void CopyStatus(Status status)
+    public static Status CopyStatus(Status status)
     {
-        AttackRange = status.AttackRange;
-        AttackSpeed = status.AttackSpeed;
-        AttackTerm = status.AttackTerm;
-        ChaseDistance = status.ChaseDistance;
-        ChaseSpeed = status.ChaseSpeed;
-        CurrHp = status.CurrHp;
-        Damage = status.Damage;
-        DetectionDistance = status.DetectionDistance;
-        IsInvincible = status.IsInvincible;
-        MaxHp = status.MaxHp;
-        PatrolCycle = status.PatrolCycle;
-        PatrolSpeed = status.PatrolSpeed;
-        Speed = status.Speed;
-        Stamina = status.Stamina;
-        Strength = status.Strength;
+        Status s = new Status();
+
+        s.AttackRange = status.AttackRange;
+        s.AttackSpeed = status.AttackSpeed;
+        s.AttackTerm = status.AttackTerm;
+        s.ChaseDistance = status.ChaseDistance;
+        s.ChaseSpeed = status.ChaseSpeed;
+        s.Shield = status.Shield;
+        s.CurrHp = status.CurrHp;
+        s.MaxHp = status.MaxHp;
+        s.Attack = status.Attack;
+        s.DetectionDistance = status.DetectionDistance;
+        s.PatrolCycle = status.PatrolCycle;
+        s.PatrolSpeed = status.PatrolSpeed;
+        s.Speed = status.Speed;
+        s.Stamina = status.Stamina;
+        s.Strength = status.Strength;
+
+        return s;
     }
 }
