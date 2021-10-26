@@ -660,9 +660,10 @@ public class Player : MonoBehaviour, IActor
     public void ExecuteBarrier()
     {
         var effect = _objectPool.MakeObject(ObjectType.Effect, "Barrier").GetComponent<BaseEffect>();
+        effect.SetTargetObject(gameObject);
+        effect.SetTargetPos(new Vector3(0, 1.5f, -0.7f));
         BarrierSkill skill = new BarrierSkill(_dataManager.GetBuffInfo(1), effect);
         skill.StartBuff(this);
-        effect.SetParent(transform);
     }
 
     public void ExecuteBerserk()
@@ -670,6 +671,7 @@ public class Player : MonoBehaviour, IActor
         var effect = _objectPool.MakeObject(ObjectType.Effect, "BerserkBuff").GetComponent<BaseEffect>();
         BaseBuff buff = new BaseBuff(_dataManager.GetBuffInfo(0), effect);
         buff.StartBuff(this);
+        effect.SetPosition(Position);
         effect.SetParent(transform);
     }
 

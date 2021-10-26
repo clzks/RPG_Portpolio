@@ -69,8 +69,7 @@ public class BaseBuff : IBuff
 
         if(_life <= 0f)
         {
-            SetActiveEffect(actor, false);
-            actor.RemoveBuff(this);
+            ResetBuff(actor);
         }
         else
         {
@@ -80,7 +79,11 @@ public class BaseBuff : IBuff
 
     public virtual void SetActiveEffect(IActor actor, bool enabled)
     {
-
+        if (false == enabled)
+        {
+            actor.RemoveBuff(this);
+            _effect.ReturnObject();
+        }
     }
 
     public int GetId()
@@ -97,7 +100,6 @@ public class BaseBuff : IBuff
     {
         SetActiveEffect(actor, false);
         actor.RemoveBuff(this);
-        _effect.ReturnObject();
     }
 }
 

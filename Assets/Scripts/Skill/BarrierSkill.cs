@@ -25,7 +25,7 @@ public class BarrierSkill : BaseBuff
     {
         _life -= tick;
 
-        if(actor.GetShield() <= 0f || _life <= 0f)
+        if (actor.GetShield() <= 0f || _life <= 0f)
         {
             ResetBuff(actor);
         }
