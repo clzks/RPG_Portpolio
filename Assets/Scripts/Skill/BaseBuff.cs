@@ -7,11 +7,11 @@ public class BaseBuff : IBuff
     protected float _life;
     private float _lifeValue;
     protected float _value;
-    protected GameObject _effect;
+    protected BaseEffect _effect;
     private float _tick;
     private float _timer;
 
-    public BaseBuff(BuffInfo info)
+    public BaseBuff(BuffInfo info, BaseEffect effect = null)
     {
         _id = info.Id;
         _lifeValue = info.Life;
@@ -19,11 +19,12 @@ public class BaseBuff : IBuff
         _tick = info.Tick;
         _value = info.Value;
         _timer = 0;
+        _effect = effect;
     }
 
     public virtual void StartBuff(IActor actor)
     {
-        if(true == actor.AddBuff(this))
+        if (true == actor.AddBuff(this))
         {
             SetActiveEffect(actor, true);
         }
@@ -36,7 +37,7 @@ public class BaseBuff : IBuff
 
         switch (info.Type)
         {
-            case BuffType.Damage:
+            case BuffType.Attack:
                 status.Attack += _value;
                 break;
 
@@ -77,25 +78,6 @@ public class BaseBuff : IBuff
         }
     }
 
-    //public virtual void Update(IActor actor)
-    //{
-    //    _timer += Time.deltaTime;
-    //
-    //    if (_life <= 0f)
-    //    {
-    //        ResetBuff(actor);
-    //    }
-    //    else
-    //    {
-    //        if(_timer >= _tick)
-    //        {
-    //            _life -= _tick;
-    //            _timer = 0f;
-    //            TakeActor(actor);
-    //        }
-    //    }
-    //}
-
     public virtual void SetActiveEffect(IActor actor, bool enabled)
     {
 
@@ -115,6 +97,7 @@ public class BaseBuff : IBuff
     {
         SetActiveEffect(actor, false);
         actor.RemoveBuff(this);
+        _effect.ReturnObject();
     }
 }
 

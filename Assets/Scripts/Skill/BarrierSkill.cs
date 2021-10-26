@@ -1,11 +1,17 @@
-
 using UnityEngine;
 
 public class BarrierSkill : BaseBuff
 {
-    public BarrierSkill(BuffInfo info) : base(info)
+    public BarrierSkill(BuffInfo info, BaseEffect effect = null) : base(info, effect)
     {
 
+    }
+
+    public override void StartBuff(IActor actor)
+    {
+        TakeActor(actor);
+
+        base.StartBuff(actor);
     }
 
     public override void TakeActor(IActor actor)

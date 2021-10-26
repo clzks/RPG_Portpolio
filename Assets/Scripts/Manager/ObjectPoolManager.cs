@@ -11,11 +11,13 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     private Dictionary<ObjectType, List<IPoolObject>> _activePoolList;
     private Dictionary<string, Material> _materialList;
     private Dictionary<string, Sprite> _spriteList;
+    private Dictionary<string, GameObject> _skillEffectList;
     private void Awake()
     {
         prefabList = new Dictionary<string, GameObject>();
         _materialList = new Dictionary<string, Material>();
         _spriteList = new Dictionary<string, Sprite>();
+        _skillEffectList = new Dictionary<string, GameObject>();
         _dataManager = DataManager.Get();
     }
 
@@ -28,6 +30,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         LoadMaterials();
         LoadGroundItem();
         LoadInventroyIcon();
+        LoadSkillEffects();
     }
     
     public void LoadSprite()
@@ -319,6 +322,18 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     {
         var obj = Resources.Load<GameObject>("Prefabs/Inventory/InventoryIcon");
         prefabList.Add("InventoryIcon", obj);
+    }
+    
+    private void LoadSkillEffects()
+    {
+        var list = DataManager.Get().GetEffectInfoList();
+
+        foreach (var item in list)
+        {
+            EffectInfo info = item.Value;
+            var obj = Resources.Load<GameObject>("Prefabs/Skills/" + info.Name);
+            prefabList.Add(info.Name, obj);
+        }
     }
     #endregion
     public void InitPool()

@@ -11,10 +11,10 @@
         {
         	"Id" : 0,
             "Name": "Berserk",
-            "Type" : "Damage",
+            "Type" : "Attack",
             "CalculateType" : "Add",
-            "Value": 1,
-            "Life" : 30
+            "Value": 3,
+            "Life" : 3
         },
         {
         	"Id" : 1,
@@ -27,7 +27,7 @@
         {
         	"Id" : 2,
             "Name": "Ex",
-            "Type" : "Damage",
+            "Type" : "Attack",
             "CalculateType" : "Add",
             "Value": 1,
             "Life" : 30
@@ -35,7 +35,7 @@
         {
         	"Id" : 3,
             "Name": "Force1",
-            "Type" : "Damage",
+            "Type" : "Attack",
             "CalculateType" : "Add",
             "Value": 1,
             "Life" : 30
@@ -43,7 +43,7 @@
         {
         	"Id" : 4,
             "Name": "Force2",
-            "Type" : "Damage",
+            "Type" : "Attack",
             "CalculateType" : "Add",
             "Value": 1,
             "Life" : 30

@@ -168,6 +168,48 @@
             "Type" : "Skill",
             "ComboAvailableTime" : 0.0,
             "AnimationEndTime" : 0.4
+        },
+        {
+        	"Id" : 10020,
+            "Name": "Berserk",
+            "CharacterName" : "SwordPlayer",
+            "Level" : 1,
+            "MaxLevel" : 1,
+            "Cost" : 0,
+            "Exp" : 0,
+            "LevelPerExp" : 0,
+            "IsLearn" : true,
+            "Type" : "Skill",
+            "ComboAvailableTime" : 0.0,
+            "AnimationEndTime" : 0.4
+        },
+        {
+        	"Id" : 10030,
+            "Name": "SummonSword",
+            "CharacterName" : "SwordPlayer",
+            "Level" : 1,
+            "MaxLevel" : 1,
+            "Cost" : 0,
+            "Exp" : 0,
+            "LevelPerExp" : 0,
+            "IsLearn" : true,
+            "Type" : "Skill",
+            "ComboAvailableTime" : 0.0,
+            "AnimationEndTime" : 0.8
+        },
+        {
+        	"Id" : 10040,
+            "Name": "ShockWave",
+            "CharacterName" : "SwordPlayer",
+            "Level" : 1,
+            "MaxLevel" : 1,
+            "Cost" : 0,
+            "Exp" : 0,
+            "LevelPerExp" : 0,
+            "IsLearn" : true,
+            "Type" : "Skill",
+            "ComboAvailableTime" : 0.0,
+            "AnimationEndTime" : 0.8
         }
     ]
 }

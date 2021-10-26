@@ -5765,7 +5765,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1178f0dfce6043e469b5fe858a9ca9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionName: 
+  _actionName: Berserk
 --- !u!114 &1569536242
 MonoBehaviour:
   m_ObjectHideFlags: 0

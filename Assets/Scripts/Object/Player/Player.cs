@@ -32,6 +32,7 @@ public class Player : MonoBehaviour, IActor
     private PlayerData _data { get { return _dataManager.GetPlayerData(); } set { _dataManager.SetPlayerData(value); } }
     private List<IActor> _actorList;
     private List<IBuff> _buffList;
+    
     private Dictionary<ItemType, SortedList<int,int>> _inventory { get { return _data.Inventory; } set { _data.Inventory = value; } }
     private Status OriginStatus { get { return _data.Status; } set { _data.Status = value; } }
     private Status _equipedStatus;
@@ -77,8 +78,6 @@ public class Player : MonoBehaviour, IActor
 
     private void Update()
     {
-        Debug.Log(OriginStatus.Shield);
-
         currActionState = currActionState.Update();
 
         _fieldStatusUI.SetStatusPanel(GetHpPercent(), 1);
@@ -106,7 +105,7 @@ public class Player : MonoBehaviour, IActor
 
     public void MovePlayerByPad()
     {
-        transform.position += transform.forward * speed * Time.deltaTime;
+        transform.position += speed * Time.deltaTime * transform.forward;
     }
 
     public bool OnClickAttackButton()
@@ -660,19 +659,23 @@ public class Player : MonoBehaviour, IActor
     #region SKILL
     public void ExecuteBarrier()
     {
-        BarrierSkill skill = new BarrierSkill(_dataManager.GetBuffInfo(1));
-        skill.TakeActor(this);
+        var effect = _objectPool.MakeObject(ObjectType.Effect, "Barrier").GetComponent<BaseEffect>();
+        BarrierSkill skill = new BarrierSkill(_dataManager.GetBuffInfo(1), effect);
         skill.StartBuff(this);
+        effect.SetParent(transform);
     }
 
     public void ExecuteBerserk()
     {
-
+        var effect = _objectPool.MakeObject(ObjectType.Effect, "BerserkBuff").GetComponent<BaseEffect>();
+        BaseBuff buff = new BaseBuff(_dataManager.GetBuffInfo(0), effect);
+        buff.StartBuff(this);
+        effect.SetParent(transform);
     }
 
     public void ExecuteShockWave()
     {
-
+        
     }
 
     public void ExecuteLightningShield()

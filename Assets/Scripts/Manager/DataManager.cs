@@ -12,7 +12,7 @@ public class DataManager : Singleton<DataManager>
     private Dictionary<int, MapInfo> _mapInfoList;
     private Dictionary<int, BuffInfo> _buffInfoList;
     private Dictionary<int, ItemInfo> _itemInfoList;
-    
+    private Dictionary<int, EffectInfo> _effectInfoList;
 
     private void Awake()
     {
@@ -22,6 +22,7 @@ public class DataManager : Singleton<DataManager>
         _mapInfoList = new Dictionary<int, MapInfo>();
         _buffInfoList = new Dictionary<int, BuffInfo>();
         _itemInfoList = new Dictionary<int, ItemInfo>();
+        _effectInfoList = new Dictionary<int, EffectInfo>();
     }
 
     public async UniTask<bool> LoadPlayerActionList()
@@ -139,16 +140,31 @@ public class DataManager : Singleton<DataManager>
 
         if (null != _itemInfoList)
         {
-            Debug.Log("버프 정보 읽기 성공");
+            Debug.Log("아이템 정보 읽기 성공");
             return true;
         }
         else
         {
-            Debug.Log("버프 정보 읽기 실패");
+            Debug.Log("아이템 정보 읽기 실패");
             return false;
         }
     }
 
+    public async UniTask<bool> LoadEffectList()
+    {
+        _effectInfoList = await JsonConverter<EffectInfo>.GetJsonToDictionaryKeyId();
+
+        if(null != _effectInfoList)
+        {
+            Debug.Log("이펙트 정보 읽기 성공");
+            return true;
+        }
+        else
+        {
+            Debug.Log("이펙트 정보 읽기 실패");
+            return false;
+        }
+    }
     public void MakeNewPlayerData()
     {
         _playerData = PlayerData.MakeNewPlayerData();
@@ -213,5 +229,15 @@ public class DataManager : Singleton<DataManager>
         }
 
         return _itemInfoList[id];
+    }
+
+    public Dictionary<int, EffectInfo> GetEffectInfoList()
+    {
+        return _effectInfoList;
+    }
+
+    public EffectInfo GetEffectInfo(int id)
+    {
+        return _effectInfoList[id];
     }
 }

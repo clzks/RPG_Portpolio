@@ -1,0 +1,24 @@
+{
+    "Description": {
+    	"Id" : "정보를 구분짓기 위한 값",
+        "Name": "이펙트 오브젝트 이름",
+        "Life" : "지속시간 seconds"
+    },
+    "EffectInfo": [
+        {
+        	"Id" : 0,
+            "Name": "BerserkBuff",
+            "Life" : 3
+        },
+        {
+        	"Id" : 1,
+            "Name": "ShockWave",
+            "Life" : 3
+        },
+        {
+        	"Id" : 2,
+            "Name": "Barrier",
+            "Life" : 10
+        }
+    ]
+}

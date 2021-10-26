@@ -59,7 +59,7 @@ public enum CalculateType
 
 public enum BuffType
 { 
-    Damage,
+    Attack,
     AttackSpeed,
     Speed,
     Dot,
