@@ -7,8 +7,8 @@
     "EffectInfo": [
         {
         	"Id" : 0,
-            "Name": "BerserkBuff",
-            "Life" : 3
+            "Name": "Berserk",
+            "Life" : 6
         },
         {
         	"Id" : 1,

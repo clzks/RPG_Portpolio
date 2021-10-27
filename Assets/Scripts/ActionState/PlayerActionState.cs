@@ -40,6 +40,11 @@ public abstract class PlayerActionState : IActionState
         _player.PlayAnimation(actionName);
     }
 
+    protected void PlayAnimation(float startTime)
+    {
+        _player.PlayAnimation(actionName, startTime);
+    }
+
 
     public virtual ActionInfo GetActionInfo()
     {
@@ -433,7 +438,14 @@ public class PlayerSkillState : PlayerAttackState
     {
         base.Enter();
         info = _player.GetActionInfo(actionName);
-        PlayAnimation();
+        if(info.AnimationStartTime > 0f)
+        {
+            PlayAnimation(info.AnimationStartTime);
+        }
+        else
+        {
+            PlayAnimation();
+        }
     }
 
     public override IActionState Update()

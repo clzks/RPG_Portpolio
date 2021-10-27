@@ -7,6 +7,6 @@ public interface IBuff
     int GetId();
     void Update(float tick, IActor actor);
     void TakeActor(IActor actor);
-    void Renew();
-    void SetActiveEffect(IActor actor, bool enabled);
+    void Renew(IActor actor);
+    //void SetActiveEffect(IActor actor, bool enabled);
 }

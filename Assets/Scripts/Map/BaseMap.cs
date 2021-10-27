@@ -86,6 +86,11 @@ public class BaseMap : MonoBehaviour, IPoolObject
         _name = info.Name;
     }
 
+    public void SetName(string name)
+    {
+        _name = name;
+    }
+
     public void SetPlayer(Player player)
     {
         _player = player;

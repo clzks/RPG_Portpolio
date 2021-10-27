@@ -9,26 +9,28 @@ public class BaseBuff : IBuff
     protected float _value;
     protected BaseEffect _effect;
     private float _tick;
-    private float _timer;
 
-    public BaseBuff(BuffInfo info, BaseEffect effect = null)
+    public BaseBuff(BuffInfo info)
     {
         _id = info.Id;
         _lifeValue = info.Life;
         _life = _lifeValue;
         _tick = info.Tick;
         _value = info.Value;
-        _timer = 0;
+    }
+
+    public virtual void SetEffect(BaseEffect effect)
+    {
         _effect = effect;
     }
 
-    public virtual void StartBuff(IActor actor)
-    {
-        if (true == actor.AddBuff(this))
-        {
-            SetActiveEffect(actor, true);
-        }
-    }
+    //public virtual void StartBuff(IActor actor)
+    //{
+    //    if (true == actor.AddBuff(this))
+    //    {
+    //        SetActiveEffect(actor, true);
+    //    }
+    //}
 
     public virtual void TakeActor(IActor actor)
     {
@@ -54,7 +56,7 @@ public class BaseBuff : IBuff
                 break;
 
             case BuffType.Shield:
-                status.Shield += _value;
+                actor.GetOriginStatus().Shield = _value;
                 break;
 
             case BuffType.Count:
@@ -77,28 +79,29 @@ public class BaseBuff : IBuff
         }
     }
 
-    public virtual void SetActiveEffect(IActor actor, bool enabled)
-    {
-        if (false == enabled)
-        {
-            actor.RemoveBuff(this);
-            _effect.ReturnObject();
-        }
-    }
+    //public virtual void SetActiveEffect(IActor actor, bool enabled)
+    //{
+    //    if (false == enabled)
+    //    {
+    //        actor.RemoveBuff(this);
+    //        _effect.ReturnObject();
+    //    }
+    //}
 
     public int GetId()
     {
         return _id;
     }
 
-    public void Renew()
+    public virtual void Renew(IActor actor = null)
     {
         _life = _lifeValue;
     }
 
     public virtual void ResetBuff(IActor actor)
     {
-        SetActiveEffect(actor, false);
+        actor.RemoveBuff(this);
+        _effect.ReturnObject();
         actor.RemoveBuff(this);
     }
 }

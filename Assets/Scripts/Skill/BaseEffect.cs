@@ -14,6 +14,18 @@ public class BaseEffect : MonoBehaviour, IPoolObject
         _objectPool = ObjectPoolManager.Get();
     }
 
+    public void ExecuteCountDown(float life)
+    {
+        StartCoroutine(CountDown(life));
+    }
+
+    private IEnumerator CountDown(float life)
+    {
+        yield return new WaitForSeconds(life);
+
+        ReturnObject();
+    }
+
     private void Update()
     {
         if(null != _targetObject)
@@ -27,6 +39,11 @@ public class BaseEffect : MonoBehaviour, IPoolObject
         transform.position = pos;
     }
 
+    public void SetRotateAround(Vector3 point, Vector3 axis, float angle)
+    {
+        transform.RotateAround(point, axis, angle);
+    }
+
     public void SetParent(Transform tr)
     {
         transform.SetParent(tr);
@@ -35,6 +52,11 @@ public class BaseEffect : MonoBehaviour, IPoolObject
     public string GetName()
     {
         return _name;
+    }
+
+    public void SetName(string name)
+    {
+        _name = name;
     }
 
     public GameObject GetObject()
@@ -54,6 +76,7 @@ public class BaseEffect : MonoBehaviour, IPoolObject
 
     public void ReturnObject()
     {
+        transform.rotation = new Quaternion();
         _objectPool.ReturnObject(this);
     }
 

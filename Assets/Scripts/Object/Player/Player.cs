@@ -90,7 +90,12 @@ public class Player : MonoBehaviour, IActor
 
     public void PlayAnimation(string anim)
     {
-        _animController.CrossFade(anim, 0.2f, 0, 0f, 0.2f);
+        _animController.CrossFade(anim, 0f, 0, 0f, 0.2f);
+    }
+
+    public void PlayAnimation(string anim, float startTime)
+    {
+        _animController.CrossFade(anim, startTime, 0, 0f, 0.2f);
     }
 
     public void SetForward(Vector2 dir)
@@ -463,13 +468,13 @@ public class Player : MonoBehaviour, IActor
         var Buff = _buffList.Find(x => x.GetId() == buff.GetId());
 
         if (null == Buff)
-        { 
+        {
             _buffList.Add(buff);
             return true;
         }
         else
         {
-            Buff.Renew();
+            Buff.Renew(this);
             return false;
         }
     }
@@ -659,25 +664,43 @@ public class Player : MonoBehaviour, IActor
     #region SKILL
     public void ExecuteBarrier()
     {
-        var effect = _objectPool.MakeObject(ObjectType.Effect, "Barrier").GetComponent<BaseEffect>();
-        effect.SetTargetObject(gameObject);
-        effect.SetTargetPos(new Vector3(0, 1.5f, -0.7f));
-        BarrierSkill skill = new BarrierSkill(_dataManager.GetBuffInfo(1), effect);
-        skill.StartBuff(this);
+        var buffInfo = _dataManager.GetBuffInfo(1);
+        BarrierSkill skill = new BarrierSkill(buffInfo);
+        if (true == AddBuff(skill))
+        {
+            var effect = _objectPool.MakeObject(ObjectType.Effect, buffInfo.Name).GetComponent<BaseEffect>();
+            effect.SetName(buffInfo.Name);
+            effect.SetTargetObject(gameObject);
+            effect.SetTargetPos(new Vector3(0, 1.5f, -0.7f));
+            skill.SetEffect(effect);
+        }
+        skill.TakeActor(this);
     }
 
     public void ExecuteBerserk()
     {
-        var effect = _objectPool.MakeObject(ObjectType.Effect, "BerserkBuff").GetComponent<BaseEffect>();
-        BaseBuff buff = new BaseBuff(_dataManager.GetBuffInfo(0), effect);
-        buff.StartBuff(this);
-        effect.SetPosition(Position);
-        effect.SetParent(transform);
+        var buffInfo = _dataManager.GetBuffInfo(0);
+        BaseBuff buff = new BaseBuff(buffInfo);
+        if (true == AddBuff(buff))
+        {
+            var effect = _objectPool.MakeObject(ObjectType.Effect, buffInfo.Name).GetComponent<BaseEffect>();
+            effect.SetName(buffInfo.Name);
+            effect.SetPosition(Position);
+            effect.SetParent(transform);
+            buff.SetEffect(effect);
+        }
+        //buff.TakeActor(this);
     }
 
     public void ExecuteShockWave()
     {
-        
+        var life = _dataManager.GetEffectInfo("ShockWave").Life;
+        var effect = _objectPool.MakeObject(ObjectType.Effect, "ShockWave").GetComponent<BaseEffect>();
+        effect.SetName("ShockWave");
+        transform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
+        effect.SetPosition(Position);
+        effect.SetRotateAround(transform.position, axis, angle);
+        effect.ExecuteCountDown(life);
     }
 
     public void ExecuteLightningShield()
@@ -690,4 +713,6 @@ public class Player : MonoBehaviour, IActor
 
     }
     #endregion
+
+   
 }

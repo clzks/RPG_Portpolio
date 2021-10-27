@@ -2,23 +2,27 @@ using UnityEngine;
 
 public class BarrierSkill : BaseBuff
 {
-    public BarrierSkill(BuffInfo info, BaseEffect effect = null) : base(info, effect)
+    public BarrierSkill(BuffInfo info) : base(info)
     {
 
     }
 
-    public override void StartBuff(IActor actor)
-    {
-        TakeActor(actor);
-
-        base.StartBuff(actor);
-    }
+    //public override void StartBuff(IActor actor)
+    //{
+    //    TakeActor(actor);
+    //
+    //    base.StartBuff(actor);
+    //}
 
     public override void TakeActor(IActor actor)
     {
-        // actor에 이펙트 붙여주는 코드
-        var status = actor.GetOriginStatus();
-        status.Shield += _value;
+        base.TakeActor(actor);
+    }
+
+    public override void Renew(IActor actor)
+    {
+        base.TakeActor(actor);
+        base.Renew();
     }
 
     public override void Update(float tick, IActor actor)

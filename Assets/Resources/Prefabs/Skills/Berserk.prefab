@@ -14643,7 +14643,7 @@ GameObject:
   - component: {fileID: 114132424652719980}
   - component: {fileID: -4294520807132312022}
   m_Layer: 0
-  m_Name: BerserkBuff
+  m_Name: Berserk
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

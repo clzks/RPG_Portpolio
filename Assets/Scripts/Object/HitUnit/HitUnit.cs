@@ -7,6 +7,7 @@ using System.Threading;
 public class HitUnit : MonoBehaviour, IPoolObject
 {
     // UniTask 사용하므로 토큰 만들어줘야함
+    private string _name;
     private IActor _actor;
     private ObjectPoolManager _objectPool;
     private CancellationTokenSource _disableCancellation = new CancellationTokenSource();

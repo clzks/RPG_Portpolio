@@ -390,7 +390,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         }
         else
         {
-            Buff.Renew();
+            Buff.Renew(this);
             return false;
         }
     }

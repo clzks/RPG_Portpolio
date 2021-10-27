@@ -31,6 +31,9 @@ public class EGA_EffectSound : MonoBehaviour
 
     void RepeatSound()
     {
-        soundComponent.PlayOneShot(clip);
+        if (true == gameObject.activeSelf)
+        {
+            soundComponent.PlayOneShot(clip);
+        }
     }
 }

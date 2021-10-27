@@ -21,6 +21,7 @@ public class ActionInfo : IData
     public float MoveStartTime { get; set; }
     public float MoveTime { get; set; }
     public float MoveDistance { get; set; }
+    public float AnimationStartTime { get; set; }
     public float AnimationEndTime { get; set; }
     public List<HitUnitInfo> HitUnitList { get; set; }
 

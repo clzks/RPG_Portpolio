@@ -12,7 +12,7 @@ public class DataManager : Singleton<DataManager>
     private Dictionary<int, MapInfo> _mapInfoList;
     private Dictionary<int, BuffInfo> _buffInfoList;
     private Dictionary<int, ItemInfo> _itemInfoList;
-    private Dictionary<int, EffectInfo> _effectInfoList;
+    private Dictionary<string, EffectInfo> _effectInfoList;
 
     private void Awake()
     {
@@ -22,7 +22,7 @@ public class DataManager : Singleton<DataManager>
         _mapInfoList = new Dictionary<int, MapInfo>();
         _buffInfoList = new Dictionary<int, BuffInfo>();
         _itemInfoList = new Dictionary<int, ItemInfo>();
-        _effectInfoList = new Dictionary<int, EffectInfo>();
+        _effectInfoList = new Dictionary<string, EffectInfo>();
     }
 
     public async UniTask<bool> LoadPlayerActionList()
@@ -152,7 +152,7 @@ public class DataManager : Singleton<DataManager>
 
     public async UniTask<bool> LoadEffectList()
     {
-        _effectInfoList = await JsonConverter<EffectInfo>.GetJsonToDictionaryKeyId();
+        _effectInfoList = await JsonConverter<EffectInfo>.GetJsonToDictionaryKeyName();
 
         if(null != _effectInfoList)
         {
@@ -231,13 +231,13 @@ public class DataManager : Singleton<DataManager>
         return _itemInfoList[id];
     }
 
-    public Dictionary<int, EffectInfo> GetEffectInfoList()
+    public Dictionary<string, EffectInfo> GetEffectInfoList()
     {
         return _effectInfoList;
     }
 
-    public EffectInfo GetEffectInfo(int id)
+    public EffectInfo GetEffectInfo(string key)
     {
-        return _effectInfoList[id];
+        return _effectInfoList[key];
     }
 }

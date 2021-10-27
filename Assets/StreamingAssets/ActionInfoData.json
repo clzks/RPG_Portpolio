@@ -17,6 +17,7 @@
         "MoveStartTime" : "이동하는 동작이 있을 시 딜레이",
         "MoveTime" : "이동시간",
         "MoveDistance" : "이동거리(일단 방향은 코드에서 설정해준다)",
+        "AnimationStartTime" : "애니메이션을 시작하는 시간(NormalizedTime)",
         "AnimationEndTime" : "애니메이션을 강제로 종료하는 시간(NormalizedTime)"
     },
     "ActionInfo": [
@@ -167,7 +168,7 @@
             "IsLearn" : true,
             "Type" : "Skill",
             "ComboAvailableTime" : 0.0,
-            "AnimationEndTime" : 0.4
+            "AnimationEndTime" : 0.35
         },
         {
         	"Id" : 10020,
@@ -181,7 +182,7 @@
             "IsLearn" : true,
             "Type" : "Skill",
             "ComboAvailableTime" : 0.0,
-            "AnimationEndTime" : 0.4
+            "AnimationEndTime" : 0.35
         },
         {
         	"Id" : 10030,
@@ -209,6 +210,7 @@
             "IsLearn" : true,
             "Type" : "Skill",
             "ComboAvailableTime" : 0.0,
+            "AnimationStartTime" : 0.5,
             "AnimationEndTime" : 0.8
         }
     ]

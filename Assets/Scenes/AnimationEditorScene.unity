@@ -1695,6 +1695,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1178f0dfce6043e469b5fe858a9ca9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _actionName: 
 --- !u!114 &1631872671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2411,6 +2412,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _agent: {fileID: 0}
   animator: {fileID: 1765211196}
+  _exp: 0
+  _gold: 0
+  _itemList: 
 --- !u!1 &1869804833
 GameObject:
   m_ObjectHideFlags: 0
@@ -4424,7 +4428,7 @@ MonoBehaviour:
   _camera: {fileID: 963194229}
   _animController: {fileID: 2066896391788560199}
   _movePad: {fileID: 0}
-  _attackButton: {fileID: 0}
+  _actionPad: {fileID: 0}
   _targetPanel: {fileID: 0}
   _fieldStatusUI: {fileID: 0}
   _miniMap: {fileID: 0}

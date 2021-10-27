@@ -1,4 +1,4 @@
-#if !UNITY_ANDROID
+#if UNITY_EDITOR
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +9,8 @@ using UnityEditor.Animations;
 
 public class ActionCreator : MonoBehaviour
 {
-    public GameObject hitUnitPrefab;
+    private ObjectPoolManager _objectPool;
+    //public GameObject hitUnitPrefab;
     public Animator mator;
     public AnimatorController _animController;
     private Text currSelectClipName;
@@ -34,6 +35,7 @@ public class ActionCreator : MonoBehaviour
 
     private void Awake()
     {
+        _objectPool = ObjectPoolManager.Get();
         _animController = mator.runtimeAnimatorController as AnimatorController;
         //_clipInfoList = _animController.animationClips.ToList();
         //_currAnimatorClip = _clipInfoList[currIndex];
@@ -129,7 +131,7 @@ public class ActionCreator : MonoBehaviour
         {
             for (int i = 0; i < hitUnitList.Count; ++i)
             {
-                //MakeSampleHitUnit(i);
+                MakeSampleHitUnit(i);
             }
         }
     }
@@ -176,7 +178,7 @@ public class ActionCreator : MonoBehaviour
         {
             return;
         }
-        HitUnit hitUnit = Instantiate(hitUnitPrefab).GetComponent<HitUnit>();
+        HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
         HitUnitInfo info = hitUnitList[index];
         hitUnit.SetSampleHitUnit(info, transform);
     }
@@ -187,7 +189,7 @@ public class ActionCreator : MonoBehaviour
         {
             return;
         }
-        HitUnit hitUnit = Instantiate(hitUnitPrefab).GetComponent<HitUnit>();
+        HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
         HitUnitInfo info = hitUnitList[index];
         hitUnit.SetSampleHitUnit(info, transform);
     }
