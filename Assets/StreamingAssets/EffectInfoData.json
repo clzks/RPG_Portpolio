@@ -19,6 +19,11 @@
         	"Id" : 2,
             "Name": "Barrier",
             "Life" : 10
+        },
+        {
+        	"Id" : 3,
+            "Name": "SummonSword",
+            "Life" : 1.5
         }
     ]
 }

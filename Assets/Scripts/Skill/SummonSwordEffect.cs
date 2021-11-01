@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class ParticleCollisionInstance : MonoBehaviour
+public class SummonSwordEffect : BaseEffect
 {
     public GameObject[] EffectsOnCollision;
     public float DestroyTimeDelay = 5;
@@ -12,10 +12,15 @@ public class ParticleCollisionInstance : MonoBehaviour
     public Vector3 rotationOffset = new Vector3(0,0,0);
     public bool useOnlyRotationOffset = true;
     public bool UseFirePointRotation;
-    public bool DestoyMainEffect = true;
+    //public bool DestoyMainEffect = true;
     private ParticleSystem part;
     private List<ParticleCollisionEvent> collisionEvents = new List<ParticleCollisionEvent>();
     private ParticleSystem ps;
+
+    private void OnEnable()
+    {
+        transform.eulerAngles = new Vector3(90, 0, 0);
+    }
 
     void Start()
     {
@@ -39,10 +44,6 @@ public class ParticleCollisionInstance : MonoBehaviour
                 }
                 Destroy(instance, DestroyTimeDelay);
             }
-        }
-        if (DestoyMainEffect == true)
-        {
-            Destroy(gameObject, DestroyTimeDelay + 0.5f);
         }
     }
 }

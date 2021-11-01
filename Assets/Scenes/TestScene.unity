@@ -311,12 +311,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2303f4633cc6b8840bdfd7e031391cff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewPort: {fileID: 0}
-  baseMap: {fileID: 0}
   _camera: {fileID: 0}
   meshRenderer: {fileID: 0}
-  screenWidth: 17.77
-  screenHeight: 10
+  ScreenWidth: 17.77
+  ScreenHeight: 12.20776
 --- !u!1 &759851581
 GameObject:
   m_ObjectHideFlags: 0
@@ -747,9 +745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2303f4633cc6b8840bdfd7e031391cff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewPort: {fileID: 0}
-  baseMap: {fileID: 0}
   _camera: {fileID: 1700222734}
   meshRenderer: {fileID: 2146699565}
-  screenWidth: 17.77
-  screenHeight: 10
+  ScreenWidth: 17.77
+  ScreenHeight: 12.20776

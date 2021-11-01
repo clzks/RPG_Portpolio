@@ -145,16 +145,23 @@ public class BaseEnemy : MonoBehaviour, IActor
         }
         HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
         HitUnitInfo info = actionInfo.HitUnitList[index];
-        hitUnit.SetHitUnit(this, info, transform);
+        hitUnit.SetHitUnit(this, false, info, transform);
     }
     public void TakeActor(IActor actor, HitUnitStatus hitUnit)
     {
         bool isKill = false;
 
-        if (false == _actorList.Contains(actor))
+        if (true == hitUnit.DuplicatedHit)
         {
             actor.TakeDamage(hitUnit, ref isKill);
-            _actorList.Add(actor);
+        }
+        else
+        {
+            if (false == _actorList.Contains(actor))
+            {
+                actor.TakeDamage(hitUnit, ref isKill);
+                _actorList.Add(actor);
+            }
         }
     }
 

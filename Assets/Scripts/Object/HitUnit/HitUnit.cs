@@ -14,8 +14,10 @@ public class HitUnit : MonoBehaviour, IPoolObject
     private ObjectType _type = ObjectType.HitUnit;
     public Vector3 Position { get { return transform.position; } }
     public SphereCollider sphereCollider;
-    public float lifeTime = 0.5f;
-    public HitUnitStatus status;
+    //public float lifeTime = 0.5f;
+    private HitUnitStatus status;
+    private HitUnitInfo _info;
+    private float _timer = 0f;
     private void OnEnable()
     {
         if (_disableCancellation != null)
@@ -28,13 +30,21 @@ public class HitUnit : MonoBehaviour, IPoolObject
         {
             _objectPool = ObjectPoolManager.Get();
         }
-
-        Execute().Forget();
     }
 
     private void Start()
     {
         
+    }
+
+    private void Update()
+    {
+        _timer += Time.deltaTime;
+
+        if (_info.Life <= _timer)
+        {
+            ReturnObject();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -44,15 +54,16 @@ public class HitUnit : MonoBehaviour, IPoolObject
         _actor.TakeActor(actor, status);
     }
 
-    public void SetHitUnit(IActor actor, HitUnitInfo info, Transform actorTransform)
+    public void SetHitUnit(IActor actor, bool duplicatedHit, HitUnitInfo info, Transform actorTransform)
     {
         _actor = actor;
         gameObject.layer = info.Layer;
-        lifeTime = info.Life;
+        _info = info;
         sphereCollider.radius = info.ColliderRadius;
         status.ActorPosition = actorTransform.position;
         status.Damage = info.DamageFactor * _actor.GetAttackValue();
         status.Strength = info.StrengthFactor;
+        status.DuplicatedHit = duplicatedHit;
         actorTransform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
         transform.position = actorTransform.position + new Vector3(info.SidePos, 0f, info.FrontPos);
         transform.RotateAround(actorTransform.position, axis, angle);
@@ -60,7 +71,7 @@ public class HitUnit : MonoBehaviour, IPoolObject
 #if UNITY_EDITOR
     public void SetSampleHitUnit(HitUnitInfo info, Transform actorTransform)
     {
-        lifeTime = info.Life;
+        _info = info;
         sphereCollider.radius = info.ColliderRadius;
         //status.Damage = info.DamageFactor * _actor.GetDamage();
         //status.Strength = info.StrengthFactor;
@@ -70,18 +81,19 @@ public class HitUnit : MonoBehaviour, IPoolObject
     }
 #endif
 
-    private async UniTaskVoid Execute()
-    {
-        float timer = 0f;
+    //private async UniTaskVoid Execute()
+    //{
+    //    float timer = 0f;
+    //
+    //    while(timer <= _info.Life)
+    //    {
+    //        timer += Time.deltaTime;
+    //        await UniTask.Yield(_disableCancellation.Token);
+    //    }
+    //
+    //    ReturnObject();
+    //}
 
-        while(timer <= lifeTime)
-        {
-            timer += Time.deltaTime;
-            await UniTask.Yield(_disableCancellation.Token);
-        }
-
-        ReturnObject();
-    }
 
     public GameObject GetObject()
     {
@@ -95,6 +107,7 @@ public class HitUnit : MonoBehaviour, IPoolObject
 
     public void ReturnObject()
     {
+        _timer = 0f;
         _objectPool.ReturnObject(this);
     }
     private void OnDrawGizmos()
@@ -119,4 +132,5 @@ public struct HitUnitStatus
     public Vector3 ActorPosition;
     public float Damage;
     public float Strength;
+    public bool DuplicatedHit;
 }

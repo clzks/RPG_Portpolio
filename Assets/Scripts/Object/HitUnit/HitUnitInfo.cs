@@ -13,4 +13,5 @@ public class HitUnitInfo
     public float DamageFactor;
     public float StrengthFactor;
     public int Layer;
+    public float StartTimer;
 }

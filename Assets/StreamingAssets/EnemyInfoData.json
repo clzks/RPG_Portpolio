@@ -33,7 +33,7 @@
             	"AttackRange" : 1.4,
             	"AttackTerm" : 1,
             	"DetectionDistance" : 6,
-            	"ChaseDistance" : 8,
+            	"ChaseDistance" : 16,
             	"PatrolCycle" : 3
         	},
         	"DropItemList" : [

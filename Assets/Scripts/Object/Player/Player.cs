@@ -120,12 +120,6 @@ public class Player : MonoBehaviour, IActor
 
     public void SummonHitUnit(int index)
     {
-#if UNITY_EDITOR
-        if (SceneManager.GetActiveScene().name == "AnimationEditorScene")
-        {
-            return;
-        }
-#endif
         var state = currActionState as PlayerActionState;
         var actionInfo = state.GetActionInfo();
 
@@ -140,16 +134,24 @@ public class Player : MonoBehaviour, IActor
         }
         HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
         HitUnitInfo info = actionInfo.HitUnitList[index];
-        hitUnit.SetHitUnit(this, info, transform);
+        hitUnit.SetHitUnit(this, actionInfo.DuplicatedHit, info, transform);
     }
 
     public void TakeActor(IActor actor, HitUnitStatus hitUnit)
     {
         bool isKill = false;
-        if (false == _actorList.Contains(actor))
+
+        if (true == hitUnit.DuplicatedHit)
         {
             actor.TakeDamage(hitUnit, ref isKill);
-            _actorList.Add(actor);
+        }
+        else
+        {
+            if (false == _actorList.Contains(actor))
+            {
+                actor.TakeDamage(hitUnit, ref isKill);
+                _actorList.Add(actor);
+            }
         }
 
         _targetPanel.SetTargetInfo(actor, isKill);
@@ -669,7 +671,7 @@ public class Player : MonoBehaviour, IActor
         if (true == AddBuff(skill))
         {
             var effect = _objectPool.MakeObject(ObjectType.Effect, buffInfo.Name).GetComponent<BaseEffect>();
-            effect.SetName(buffInfo.Name);
+            effect.SetEffect(buffInfo.Name);
             effect.SetTargetObject(gameObject);
             effect.SetTargetPos(new Vector3(0, 1.5f, -0.7f));
             skill.SetEffect(effect);
@@ -684,7 +686,7 @@ public class Player : MonoBehaviour, IActor
         if (true == AddBuff(buff))
         {
             var effect = _objectPool.MakeObject(ObjectType.Effect, buffInfo.Name).GetComponent<BaseEffect>();
-            effect.SetName(buffInfo.Name);
+            effect.SetEffect(buffInfo.Name);
             effect.SetPosition(Position);
             effect.SetParent(transform);
             buff.SetEffect(effect);
@@ -696,11 +698,11 @@ public class Player : MonoBehaviour, IActor
     {
         var life = _dataManager.GetEffectInfo("ShockWave").Life;
         var effect = _objectPool.MakeObject(ObjectType.Effect, "ShockWave").GetComponent<BaseEffect>();
-        effect.SetName("ShockWave");
+        effect.SetEffect("ShockWave", this);
         transform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
         effect.SetPosition(Position);
         effect.SetRotateAround(transform.position, axis, angle);
-        effect.ExecuteCountDown(life);
+        effect.ExecuteEffect(life);
     }
 
     public void ExecuteLightningShield()
@@ -710,7 +712,11 @@ public class Player : MonoBehaviour, IActor
 
     public void ExecuteSummonSword()
     {
-
+        var life = _dataManager.GetEffectInfo("SummonSword").Life;
+        var effect = _objectPool.MakeObject(ObjectType.Effect, "SummonSword").GetComponent<BaseEffect>();
+        effect.SetEffect("SummonSword", this);
+        effect.SetPosition(Position + new Vector3(0, 10, 0));
+        effect.ExecuteEffect(life);
     }
     #endregion
 

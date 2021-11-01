@@ -4,25 +4,58 @@ using UnityEngine;
 
 public class BaseEffect : MonoBehaviour, IPoolObject
 {
-    private int _id;
-    private string _name;
-    private ObjectPoolManager _objectPool;
-    private GameObject _targetObject = null;
-    private Vector3 _targetPos;
+    protected ObjectPoolManager _objectPool;
+    protected DataManager _dataManager;
+    protected int _id;
+    protected string _name;
+    protected GameObject _targetObject = null;
+    protected Vector3 _targetPos;
+    protected ActionInfo _action;
+    protected IActor _actor;
+    private List<HitUnitInfo> HitUnitList { get { return _action.HitUnitList; } }
     private void Awake()
     {
+        _dataManager = DataManager.Get();
         _objectPool = ObjectPoolManager.Get();
     }
 
-    public void ExecuteCountDown(float life)
+    public void ExecuteEffect(float life)
     {
-        StartCoroutine(CountDown(life));
+        if (null != _actor)
+        {
+            StartCoroutine(ExecuteHitUnit(life));
+        }
+        else
+        {
+            StartCoroutine(Execute(life));
+        }
     }
 
-    private IEnumerator CountDown(float life)
+    private IEnumerator ExecuteHitUnit(float life)
+    {
+        float timer = 0f;
+        int hitUnitCount = HitUnitList.Count;
+        int index = 0;
+
+        while (timer <= life)
+        {
+            if(index < hitUnitCount && timer >= HitUnitList[index].StartTimer)
+            {
+                HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
+                HitUnitInfo info = HitUnitList[index];
+                hitUnit.SetHitUnit(_actor, _action.DuplicatedHit, info, _actor.GetObject().transform);
+                index++;
+            }
+            yield return null;
+            timer += Time.deltaTime;
+        }
+
+        ReturnObject();
+    }
+
+    private IEnumerator Execute(float life)
     {
         yield return new WaitForSeconds(life);
-
         ReturnObject();
     }
 
@@ -54,8 +87,13 @@ public class BaseEffect : MonoBehaviour, IPoolObject
         return _name;
     }
 
-    public void SetName(string name)
+    public void SetEffect(string name, IActor actor = null)
     {
+        _actor = actor;
+        if (null != actor)
+        {
+            _action = _dataManager.GetActionInfo(name);
+        }
         _name = name;
     }
 

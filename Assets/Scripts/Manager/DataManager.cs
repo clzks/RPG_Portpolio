@@ -181,6 +181,11 @@ public class DataManager : Singleton<DataManager>
         return _actionInfoList;
     }
 
+    public ActionInfo GetActionInfo(string name)
+    {
+        return _actionInfoList[name];
+    }
+
     public EnemyAction GetEnemyActionInfo(string enemyName, string actionName)
     {
         return _enemyActionList[enemyName][actionName];
