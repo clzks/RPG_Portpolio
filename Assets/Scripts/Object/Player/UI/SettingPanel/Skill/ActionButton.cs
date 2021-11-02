@@ -6,16 +6,17 @@ using UnityEngine.UI;
 
 public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
-    private bool _isClick = false;
+    [SerializeField] private int buttonListIndex;
+    protected bool _isClick = false;
     private bool _isReady = true;
     private float _timer = 0f;
     private float _cooltime;
-    //private ActionInfo _info;
-    private ActionType _type;
-    [SerializeField] private string _actionName;
+    private ActionInfo _info;
+    [SerializeField]protected ActionType _type;
+    //[SerializeField] private string _actionName;
     [SerializeField] private Image _skillImage;
     [SerializeField] private SkillCooltimePanel _cooltimePanel;
-    public void OnPointerDown(PointerEventData eventData)
+    public virtual void OnPointerDown(PointerEventData eventData)
     {
         // 쿨타임이나 소모값 등을 계산해야한다 
         if (true == _isReady)
@@ -42,10 +43,10 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public string GetActionName()
     {
-        return _actionName;
+        return _info.Name;
     }
 
-    private void Update()
+    public virtual void Update()
     {
         if (false == _isReady)
         {
@@ -57,5 +58,21 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
                 _isReady = true;
             }
         }
+    }
+
+    public void SetAction(ActionInfo info, Sprite image)
+    {
+        _info = info;
+        if (info.Type == ActionType.Skill)
+        {
+            _skillImage.sprite = image;
+        }
+        _cooltime = _info.CoolTime;
+    }
+
+    public void ResetAction()
+    {
+        _info = null;
+        _skillImage.sprite = null;
     }
 }

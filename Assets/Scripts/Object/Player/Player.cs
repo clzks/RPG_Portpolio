@@ -61,6 +61,7 @@ public class Player : MonoBehaviour, IActor
         _damageInfo = null;
         _tick = _gameManager.tick;
         _buffYield = new WaitForSeconds(_tick);
+        SetActionList();
         EquipStatusUpdate();
         StartCoroutine(BuffUpdate());
     }
@@ -88,6 +89,7 @@ public class Player : MonoBehaviour, IActor
         }
     }
 
+    
     public void PlayAnimation(string anim)
     {
         _animController.CrossFade(anim, 0f, 0, 0f, 0.2f);
@@ -262,6 +264,18 @@ public class Player : MonoBehaviour, IActor
         return OriginStatus.Shield;
     }
     #endregion
+    public void SetActionList()
+    {
+        var action0 = _dataManager.GetActionInfo("Attack01");
+        _actionPad.SetActionButton(0, action0);
+        var action1 = _dataManager.GetActionInfo("SummonSword");
+        _actionPad.SetActionButton(1, action1);
+        var action2 = _dataManager.GetActionInfo("Berserk");
+        _actionPad.SetActionButton(2, action2);
+        var action3 = _dataManager.GetActionInfo("ShockWave");
+        _actionPad.SetActionButton(3, action3);
+    }
+
     public void Init()
     {
         

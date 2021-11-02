@@ -919,7 +919,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 06724604bdf3cb14a9e9c55db3abe795, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2065,7 +2065,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f9818c6145c1d045baeea73e1b3ffd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooltimeImage: {fileID: 0}
+  cooltimeImage: {fileID: 575615733}
 --- !u!114 &575615733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2660,85 +2660,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 633304355}
   m_CullTransparentMesh: 1
---- !u!1 &688627190
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 688627191}
-  - component: {fileID: 688627193}
-  - component: {fileID: 688627192}
-  m_Layer: 5
-  m_Name: Text
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &688627191
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 688627190}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1631872669}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &688627192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 688627190}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
-    m_Alignment: 4
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 
---- !u!222 &688627193
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 688627190}
-  m_CullTransparentMesh: 1
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -2920,7 +2841,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f9818c6145c1d045baeea73e1b3ffd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooltimeImage: {fileID: 0}
+  cooltimeImage: {fileID: 712269990}
 --- !u!1 &756901256
 GameObject:
   m_ObjectHideFlags: 0
@@ -4262,8 +4183,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1178f0dfce6043e469b5fe858a9ca9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionName: ShockWave
-  _skillImage: {fileID: 0}
+  buttonListIndex: 3
+  _type: 1
+  _skillImage: {fileID: 1298720803}
+  _cooltimePanel: {fileID: 575615732}
 --- !u!114 &983390681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5540,7 +5463,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b1f92bdf6dd82cf4997300cb8f2a6404, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5718,8 +5641,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1178f0dfce6043e469b5fe858a9ca9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionName: SummonSword
-  _skillImage: {fileID: 0}
+  buttonListIndex: 1
+  _type: 1
+  _skillImage: {fileID: 278075342}
+  _cooltimePanel: {fileID: 712269992}
 --- !u!114 &1388422065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6368,8 +6293,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1178f0dfce6043e469b5fe858a9ca9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionName: Berserk
-  _skillImage: {fileID: 0}
+  buttonListIndex: 2
+  _type: 1
+  _skillImage: {fileID: 2109580616}
+  _cooltimePanel: {fileID: 1777806807}
 --- !u!114 &1569536242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6577,8 +6504,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 688627191}
+  m_Children: []
   m_Father: {fileID: 586149427}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6596,11 +6522,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1631872668}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1178f0dfce6043e469b5fe858a9ca9aa, type: 3}
+  m_Script: {fileID: 11500000, guid: 7c9e300f9e56828438a0fc3a6ba17e12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionName: Attack0
+  buttonListIndex: 0
+  _type: 0
   _skillImage: {fileID: 0}
+  _cooltimePanel: {fileID: 0}
 --- !u!114 &1631872671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7298,7 +7226,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f9818c6145c1d045baeea73e1b3ffd5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cooltimeImage: {fileID: 0}
+  cooltimeImage: {fileID: 1777806808}
 --- !u!114 &1777806808
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8220,7 +8148,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 466ecc2fe94ef914286c5764dcaf1544, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -8601,7 +8529,7 @@ PrefabInstance:
     - target: {fileID: 8668181761616151595, guid: 077fa0a073eb1ec43ad78fded9313a8f, type: 3}
       propertyPath: _attackButton
       value: 
-      objectReference: {fileID: 1631872670}
+      objectReference: {fileID: 0}
     - target: {fileID: 8668181761616151595, guid: 077fa0a073eb1ec43ad78fded9313a8f, type: 3}
       propertyPath: _fieldStatusUI
       value: 

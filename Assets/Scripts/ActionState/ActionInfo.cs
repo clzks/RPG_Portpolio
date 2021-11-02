@@ -11,6 +11,7 @@ public class ActionInfo : IData
     public int MaxLevel { get; set; }
     public float Cost { get; set; }
     public int Exp { get; set; }
+    public float CoolTime { get; set; }
     public int LevelPerExp { get; set; }
     public float Factor { get; set; }
     public int BuffId { get; set; }
