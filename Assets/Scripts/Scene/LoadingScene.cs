@@ -23,6 +23,7 @@ public class LoadingScene : MonoBehaviour
         loadComplete &= await _dataManager.LoadBuffInfoList();
         loadComplete &= await _dataManager.LoadItemList();
         loadComplete &= await _dataManager.LoadEffectList();
+        loadComplete &= _dataManager.LoadSkillImageList();
         if (true == loadComplete)
         {
             _poolManager.InitPool();

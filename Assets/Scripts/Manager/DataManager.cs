@@ -13,6 +13,7 @@ public class DataManager : Singleton<DataManager>
     private Dictionary<int, BuffInfo> _buffInfoList;
     private Dictionary<int, ItemInfo> _itemInfoList;
     private Dictionary<string, EffectInfo> _effectInfoList;
+    private Dictionary<string, Sprite> _skillImageList;
 
     private void Awake()
     {
@@ -23,6 +24,7 @@ public class DataManager : Singleton<DataManager>
         _buffInfoList = new Dictionary<int, BuffInfo>();
         _itemInfoList = new Dictionary<int, ItemInfo>();
         _effectInfoList = new Dictionary<string, EffectInfo>();
+        _skillImageList = new Dictionary<string, Sprite>();
     }
 
     public async UniTask<bool> LoadPlayerActionList()
@@ -165,6 +167,27 @@ public class DataManager : Singleton<DataManager>
             return false;
         }
     }
+
+    public bool LoadSkillImageList()
+    {
+        foreach (var item in _actionInfoList.Values)
+        {
+            if(ActionType.Skill == item.Type)
+            {
+                var image = Resources.Load<Sprite>("Png/Skills/" + item.Name);
+                if(null == image)
+                {
+                    Debug.Log("스킬 이미지 불러오기 실패");
+                    return false;
+                }
+                _skillImageList.Add(item.Name, image);
+            }
+        }
+
+        Debug.Log("스킬 이미지 불러오기 성공");
+        return true;
+    }
+
     public void MakeNewPlayerData()
     {
         _playerData = PlayerData.MakeNewPlayerData();
@@ -244,5 +267,10 @@ public class DataManager : Singleton<DataManager>
     public EffectInfo GetEffectInfo(string key)
     {
         return _effectInfoList[key];
+    }
+
+    public Sprite GetSkillImage(string key)
+    {
+        return _skillImageList[key];
     }
 }
