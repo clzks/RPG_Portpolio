@@ -31,6 +31,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         LoadGroundItem();
         LoadInventroyIcon();
         LoadSkillEffects();
+        LoadSkillSettingClickIcon();
     }
     
     public void LoadSprite()
@@ -65,6 +66,11 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         var sprite = Resources.Load<Sprite>("Sprites/" + name);
 
         _spriteList.Add(name, sprite);
+    }
+
+    public GameObject GetObject(string key)
+    {
+        return prefabList[key];
     }
 
     /// <summary>
@@ -334,6 +340,12 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
             var obj = Resources.Load<GameObject>("Prefabs/Skills/" + info.Name);
             prefabList.Add(info.Name, obj);
         }
+    }
+
+    private void LoadSkillSettingClickIcon()
+    {
+        var obj = Resources.Load<GameObject>("Prefabs/Skills/UI/SkillSettingClickIcon");
+        prefabList.Add("SkillSettingClickIcon", obj);
     }
     #endregion
     public void InitPool()

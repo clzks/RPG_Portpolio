@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Linq;
 public class DataManager : Singleton<DataManager>
 {
     private PlayerData _playerData;
@@ -191,6 +191,7 @@ public class DataManager : Singleton<DataManager>
     public void MakeNewPlayerData()
     {
         _playerData = PlayerData.MakeNewPlayerData();
+        SetPlayerSkillList(_playerData);
         SavePlayerData();
     }
 
@@ -202,6 +203,24 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<string, ActionInfo> GetActionInfoList()
     {
         return _actionInfoList;
+    }
+
+    public void SetPlayerSkillList(PlayerData data)
+    {
+        data.SkillSlots.Add(-1);
+        data.SkillSlots.Add(-1);
+        data.SkillSlots.Add(-1);
+        //data.SkillList 
+
+        foreach (var info in _actionInfoList.Values)
+        {
+            if(info.Type == ActionType.Skill)
+            {
+                data.SkillList.Add(info.ConvertSkillInfo());
+            }
+        }
+
+        data.SkillList = data.SkillList.OrderBy(x => x.id).ToList();
     }
 
     public ActionInfo GetActionInfo(string name)

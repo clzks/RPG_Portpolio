@@ -15,7 +15,6 @@ public class LoadingScene : MonoBehaviour
         _dataManager = DataManager.Get();
         _poolManager = ObjectPoolManager.Get();
 
-        await _dataManager.LoadPlayerData();
         var loadComplete = await _dataManager.LoadPlayerActionList();
         loadComplete &= await _dataManager.LoadEnemyActionList();
         loadComplete &= await _dataManager.LoadEnemyInfoList();
@@ -24,6 +23,7 @@ public class LoadingScene : MonoBehaviour
         loadComplete &= await _dataManager.LoadItemList();
         loadComplete &= await _dataManager.LoadEffectList();
         loadComplete &= _dataManager.LoadSkillImageList();
+        await _dataManager.LoadPlayerData();
         if (true == loadComplete)
         {
             _poolManager.InitPool();

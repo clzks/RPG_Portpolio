@@ -1,12 +1,39 @@
 {
   "EquipmentList": [
-    10000,
-    20000,
+    -1,
+    -1,
+    -1
+  ],
+  "SkillList": [
+    {
+      "name": "Barrier",
+      "id": 10010,
+      "level": 0
+    },
+    {
+      "name": "Berserk",
+      "id": 10020,
+      "level": 0
+    },
+    {
+      "name": "SummonSword",
+      "id": 10030,
+      "level": 0
+    },
+    {
+      "name": "ShockWave",
+      "id": 10040,
+      "level": 0
+    }
+  ],
+  "SkillSlots": [
+    -1,
+    -1,
     -1
   ],
   "Level": 1,
   "Status": {
-    "CurrHp": 60.0,
+    "CurrHp": 100.0,
     "MaxHp": 100.0,
     "Speed": 5.0,
     "AttackSpeed": 1.0,
@@ -14,35 +41,23 @@
     "Strength": 1.0,
     "Defence": 0.0,
     "Attack": 0.0,
+    "Shield": 0.0,
     "ChaseSpeed": 0.0,
     "PatrolSpeed": 0.0,
     "AttackRange": 0.0,
     "AttackTerm": 0.0,
     "DetectionDistance": 0.0,
     "ChaseDistance": 0.0,
-    "PatrolCycle": 0.0,
-    "IsInvincible": false
+    "PatrolCycle": 0.0
   },
-  "Gold": 404,
+  "Gold": 0,
   "Exp": 0,
+  "SkillPoint": 0,
   "Inventory": {
-    "Weapon": {
-      "10000": 1,
-      "10001": 2
-    },
-    "Armor": {
-      "20000": 2,
-      "20001": 2
-    },
-    "Accessory": {
-      "30000": 1
-    },
-    "Consumable": {
-      "40000": 2,
-      "40100": 1
-    },
-    "Quest": {
-      "50000": 6
-    }
+    "Weapon": {},
+    "Armor": {},
+    "Accessory": {},
+    "Consumable": {},
+    "Quest": {}
   }
 }

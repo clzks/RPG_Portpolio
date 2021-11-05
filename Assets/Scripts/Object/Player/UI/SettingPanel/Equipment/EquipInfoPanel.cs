@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class EquipInfoPanel : MonoBehaviour
 {
     public Text itemName;
-    public List<ValueText> valueList;
+    public List<TextValuePanel> valueList;
 
     public void SetEquipMentInfo(int itemId)
     {
