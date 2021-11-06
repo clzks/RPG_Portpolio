@@ -41,7 +41,7 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     }
 
 
-    public string GetActionName()
+    public virtual string GetActionName()
     {
         return _info.Name;
     }

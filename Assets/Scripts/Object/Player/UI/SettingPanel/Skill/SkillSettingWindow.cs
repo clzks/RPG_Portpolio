@@ -15,6 +15,13 @@ public class SkillSettingWindow : MonoBehaviour
     public TextValuePanel cooltimePanel;
     public TextValuePanel requiredManaPanel;
     public Text descriptionText;
+    public Button exitButton;
+    private SkillSettingClickIcon _clickIcon;
+    [SerializeField]private GameObject _duplicateObject;
+    private void Awake()
+    {
+        exitButton.onClick.AddListener(() => OnClickExitButton());
+    }
 
     public void Init(PlayerData data)
     {
@@ -28,11 +35,20 @@ public class SkillSettingWindow : MonoBehaviour
             var obj = Instantiate(_objectPool.GetObject("SkillSettingClickIcon"));
             obj.transform.SetParent(contentPanel);
             var icon = obj.GetComponent<SkillSettingClickIcon>();
-            icon.SetClickAction(() => SetSkillInfo(_dataManager.GetActionInfo(skill.name), skill.level, data.SkillPoint));
+            icon.SetClickAction(() => SetSkillInfo(_dataManager.GetActionInfo(skill.name), skill.level, data.SkillPoint, icon));
+            icon.SetIcon(_dataManager.GetSkillImage(skill.name), skill.level);
+            icon.SetDuplicateObject(_duplicateObject);
+
+            if (0 == i)
+            {
+                _clickIcon = icon;
+                _clickIcon.SetClickBorder(true);
+                SetSkillInfo(_dataManager.GetActionInfo(skill.name), skill.level, data.SkillPoint, icon);
+            }
         }
     }
 
-    public void SetSkillInfo(ActionInfo info, int currSkillLevel, int currPoint)
+    public void SetSkillInfo(ActionInfo info, int currSkillLevel, int currPoint, SkillSettingClickIcon icon)
     {
         nameText.text = info.Name;
         currSkillLevelPanel.SetText(currSkillLevel.ToString());
@@ -51,5 +67,15 @@ public class SkillSettingWindow : MonoBehaviour
         cooltimePanel.SetText(info.CoolTime.ToString() + "√ ");
         requiredManaPanel.SetText(info.Cost.ToString());
         descriptionText.text = "";
+        if (_clickIcon != icon)
+        {
+            _clickIcon.SetClickBorder(false);
+            _clickIcon = icon;
+        }
+    }
+
+    private void OnClickExitButton()
+    {
+        gameObject.SetActive(false);
     }
 }
