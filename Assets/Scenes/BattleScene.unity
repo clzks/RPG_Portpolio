@@ -249,6 +249,7 @@ GameObject:
   - component: {fileID: 101561886}
   - component: {fileID: 101561888}
   - component: {fileID: 101561887}
+  - component: {fileID: 101561889}
   m_Layer: 5
   m_Name: Border0
   m_TagString: Untagged
@@ -314,6 +315,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 101561885}
   m_CullTransparentMesh: 1
+--- !u!114 &101561889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101561885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c8a96f757101714c9f24cf570f9653d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  borderImage: {fileID: 101561887}
+  skillImage: {fileID: 1560854909}
 --- !u!1 &115245860
 GameObject:
   m_ObjectHideFlags: 0
@@ -2934,6 +2949,7 @@ GameObject:
   - component: {fileID: 613893785}
   - component: {fileID: 613893787}
   - component: {fileID: 613893786}
+  - component: {fileID: 613893788}
   m_Layer: 5
   m_Name: Border1
   m_TagString: Untagged
@@ -2999,6 +3015,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 613893784}
   m_CullTransparentMesh: 1
+--- !u!114 &613893788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 613893784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c8a96f757101714c9f24cf570f9653d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  borderImage: {fileID: 613893786}
+  skillImage: {fileID: 1538219504}
 --- !u!1 &618762052
 GameObject:
   m_ObjectHideFlags: 0
@@ -6275,6 +6305,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5d4183019fb96046b25579c69ab60ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 7270083254653290712}
   contentPanel: {fileID: 1239446867}
   nameText: {fileID: 431838807}
   currSkillLevelPanel: {fileID: 1142532555}
@@ -6285,6 +6316,10 @@ MonoBehaviour:
   descriptionText: {fileID: 1097798740}
   exitButton: {fileID: 1107130290}
   _duplicateObject: {fileID: 1423425780}
+  skillTargetList:
+  - {fileID: 101561889}
+  - {fileID: 613893788}
+  - {fileID: 2119728051}
 --- !u!1 &1180736921
 GameObject:
   m_ObjectHideFlags: 0
@@ -11048,6 +11083,7 @@ GameObject:
   - component: {fileID: 2119728048}
   - component: {fileID: 2119728050}
   - component: {fileID: 2119728049}
+  - component: {fileID: 2119728051}
   m_Layer: 5
   m_Name: Border2
   m_TagString: Untagged
@@ -11113,6 +11149,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2119728047}
   m_CullTransparentMesh: 1
+--- !u!114 &2119728051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2119728047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c8a96f757101714c9f24cf570f9653d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  borderImage: {fileID: 2119728049}
+  skillImage: {fileID: 1457076879}
 --- !u!1 &2136750282
 GameObject:
   m_ObjectHideFlags: 0

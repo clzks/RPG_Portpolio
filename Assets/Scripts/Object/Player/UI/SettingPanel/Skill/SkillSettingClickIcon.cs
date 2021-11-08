@@ -5,31 +5,47 @@ using UnityEngine.UI;
 
 public class SkillSettingClickIcon : MonoBehaviour, IPointerClickHandler, IDragHandler, IEndDragHandler
 {
+    private string _skill;
     public Image borderImage;
     public Image image;
     public Text levelText;
-    public UnityAction clickAction;
+    private UnityAction _clickAction;
+    private UnityAction _onDragAction;
+    private UnityAction _endDragAction;
     private Color _selectBorderColor = new Color(1f, 1f, 0f, 1f);
     private Color _defaultBorderColor = new Color(0.82f, 0.82f, 0.82f, 1f);
     private GameObject _duplicatedObject;
     private bool _isDragStart;
     private DragSkillImage _dragImage;
+    private int _level;
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        clickAction.Invoke();
+        _clickAction.Invoke();
         SetClickBorder(true);
     }
 
-    public void SetIcon(Sprite img, int level)
+    public void SetIcon(Sprite img, int level, string skill)
     {
+        _skill = skill;
         image.sprite = img;
         levelText.text = "Lv." + level.ToString();
+        _level = level;
     }
 
     public void SetClickAction(UnityAction action)
     {
-        clickAction = action;
+        _clickAction = action;
+    }
+
+    public void SetOnDragAction(UnityAction action)
+    {
+        _onDragAction = action;
+    }
+
+    public void SetEndDragAction(UnityAction action)
+    {
+        _endDragAction = action;
     }
 
     public void SetClickBorder(bool enabled)
@@ -46,9 +62,15 @@ public class SkillSettingClickIcon : MonoBehaviour, IPointerClickHandler, IDragH
 
     public void OnDrag(PointerEventData eventData)
     {
+        if(_level <= 0)
+        {
+            return;
+        }
+
         if (false == _isDragStart)
         {
             _isDragStart = true;
+            _onDragAction.Invoke();
             _duplicatedObject.transform.position = eventData.position;
             _dragImage.SetImage(image.sprite);
             _duplicatedObject.SetActive(true);
@@ -62,6 +84,7 @@ public class SkillSettingClickIcon : MonoBehaviour, IPointerClickHandler, IDragH
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        _endDragAction.Invoke();
         _isDragStart = false;
         _duplicatedObject.SetActive(false);
     }
@@ -70,5 +93,10 @@ public class SkillSettingClickIcon : MonoBehaviour, IPointerClickHandler, IDragH
     {
         _duplicatedObject = obj;
         _dragImage = _duplicatedObject.GetComponentInChildren<DragSkillImage>();
+    }
+
+    public string GetSkill()
+    {
+        return _skill;
     }
 }

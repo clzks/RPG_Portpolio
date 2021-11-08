@@ -6,12 +6,17 @@
   ],
   "SkillList": [
     {
-      "name": "Barrier",
+      "name": "ShockWave",
+      "id": 10000,
+      "level": 1
+    },
+    {
+      "name": "Berserk",
       "id": 10010,
       "level": 0
     },
     {
-      "name": "Berserk",
+      "name": "Barrier",
       "id": 10020,
       "level": 0
     },
@@ -19,21 +24,16 @@
       "name": "SummonSword",
       "id": 10030,
       "level": 0
-    },
-    {
-      "name": "ShockWave",
-      "id": 10040,
-      "level": 0
     }
   ],
   "SkillSlots": [
-    -1,
-    -1,
-    -1
+    "",
+    "",
+    ""
   ],
   "Level": 1,
   "Status": {
-    "CurrHp": 100.0,
+    "CurrHp": 70.0,
     "MaxHp": 100.0,
     "Speed": 5.0,
     "AttackSpeed": 1.0,

@@ -37,8 +37,15 @@ public class ActionPad : MonoBehaviour
         }
         else
         {
-            sprite = _dataManager.GetSkillImage(info.Name);
+            if(null == info)
+            {
+                actionButtonList[index].ResetAction();
+            }
+            else
+            { 
+                sprite = _dataManager.GetSkillImage(info.Name);
+                actionButtonList[index].SetAction(info, sprite);
+            }
         }
-        actionButtonList[index].SetAction(info, sprite);
     }
 }

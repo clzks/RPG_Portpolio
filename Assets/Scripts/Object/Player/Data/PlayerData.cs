@@ -6,7 +6,7 @@ public class PlayerData : IData
 {
     public List<int> EquipmentList { get; set; }
     public List<SkillInfo> SkillList { get; set; }
-    public List<int> SkillSlots { get; set; }
+    public List<string> SkillSlots { get; set; }
     public int Level { get; set; }
     public Status Status { get; set; }
     public int Gold { get; set; }
@@ -22,7 +22,7 @@ public class PlayerData : IData
         data.EquipmentList.Add(-1);
         data.EquipmentList.Add(-1);
         data.SkillList = new List<SkillInfo>();
-        data.SkillSlots = new List<int>();
+        data.SkillSlots = new List<string>();
         //data.SkillSlots.Add(-1);
         //data.SkillSlots.Add(-1);
         //data.SkillSlots.Add(-1);

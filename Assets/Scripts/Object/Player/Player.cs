@@ -61,6 +61,7 @@ public class Player : MonoBehaviour, IActor
         _damageInfo = null;
         _tick = _gameManager.tick;
         _buffYield = new WaitForSeconds(_tick);
+        SetAttackButton();
         SetActionList();
         EquipStatusUpdate();
         StartCoroutine(BuffUpdate());
@@ -264,17 +265,40 @@ public class Player : MonoBehaviour, IActor
         return OriginStatus.Shield;
     }
     #endregion
-    public void SetActionList()
+    public void SetAttackButton()
     {
         var action0 = _dataManager.GetActionInfo("Attack01");
         _actionPad.SetActionButton(0, action0);
-        var action1 = _dataManager.GetActionInfo("SummonSword");
-        _actionPad.SetActionButton(1, action1);
-        var action2 = _dataManager.GetActionInfo("Berserk");
-        _actionPad.SetActionButton(2, action2);
-        var action3 = _dataManager.GetActionInfo("ShockWave");
-        _actionPad.SetActionButton(3, action3);
     }
+
+    public void SetActionList()
+    {
+        var slots = _data.SkillSlots;
+        for (int i = 0; i < slots.Count; ++i)
+        {
+            var action = _dataManager.GetActionInfo(slots[i]);
+            _actionPad.SetActionButton(i + 1, action);
+            //if(slots[i] == string.Empty)
+            //{
+            //    continue;
+            //}
+            //else
+            //{
+            //    var action = _dataManager.GetActionInfo(slots[i]);
+            //    _actionPad.SetActionButton(i + 1, action);
+            //}
+        }
+    }
+
+    public void SetAction(int index)
+    {
+        var str = _data.SkillSlots[index];
+
+        var action = _dataManager.GetActionInfo(str);
+        _actionPad.SetActionButton(index + 1, action);
+    }
+
+    
 
     public void Init()
     {

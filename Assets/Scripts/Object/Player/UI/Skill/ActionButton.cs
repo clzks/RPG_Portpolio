@@ -43,7 +43,14 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public virtual string GetActionName()
     {
-        return _info.Name;
+        if (null == _info)
+        {
+            return string.Empty;
+        }
+        else
+        {
+            return _info.Name;
+        }
     }
 
     public virtual void Update()
@@ -74,5 +81,8 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         _info = null;
         _skillImage.sprite = null;
+        _isReady = true;
+        _cooltime = 0f;
+        _cooltimePanel.SetCooltime(0);
     }
 }

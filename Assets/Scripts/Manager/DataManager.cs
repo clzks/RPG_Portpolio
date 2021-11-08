@@ -207,10 +207,9 @@ public class DataManager : Singleton<DataManager>
 
     public void SetPlayerSkillList(PlayerData data)
     {
-        data.SkillSlots.Add(-1);
-        data.SkillSlots.Add(-1);
-        data.SkillSlots.Add(-1);
-        //data.SkillList 
+        data.SkillSlots.Add("ShockWave");
+        data.SkillSlots.Add(string.Empty);
+        data.SkillSlots.Add(string.Empty);
 
         foreach (var info in _actionInfoList.Values)
         {
@@ -225,6 +224,11 @@ public class DataManager : Singleton<DataManager>
 
     public ActionInfo GetActionInfo(string name)
     {
+        if (name == string.Empty)
+        {
+            return null;
+        }
+
         return _actionInfoList[name];
     }
 
@@ -268,6 +272,50 @@ public class DataManager : Singleton<DataManager>
         _playerData = data;
     }
 
+    public void SetPlayerSkillSlot(int i, string action)
+    {
+        var skillSlots = _playerData.SkillSlots;
+        
+        if(string.Empty == action)
+        {
+            skillSlots[i] = action;
+        }
+
+        var index = skillSlots.FindIndex(x => x == action);
+        
+        if(-1 == index)
+        {
+            skillSlots[i] = action;
+        }
+        else
+        {
+            if(i == index)
+            {
+                return;
+            }
+            else
+            {
+                ChangeSkillSlot(i, index);
+            }
+        }
+    }
+
+    private void ChangeSkillSlot(int start, int end)
+    {
+        var skillSlots = _playerData.SkillSlots;
+        var startSlot = skillSlots[start];
+        var endSlot = skillSlots[end];
+
+        var tempSlot = endSlot;
+        skillSlots[end] = startSlot;
+        skillSlots[start] = tempSlot;
+    }
+
+    public string GetSkillSlot(int index)
+    {
+        return _playerData.SkillSlots[index];
+    }
+
     public ItemInfo GetItemInfo(int id)
     {
         if(-1 == id)
@@ -290,6 +338,11 @@ public class DataManager : Singleton<DataManager>
 
     public Sprite GetSkillImage(string key)
     {
+        if(key == string.Empty)
+        {
+            return null;
+        }
+
         return _skillImageList[key];
     }
 }
