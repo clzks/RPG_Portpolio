@@ -22,8 +22,6 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         if (true == _isReady)
         {
             _isClick = true;
-            _isReady = false;
-            _timer = _cooltime;
         }
         else
         {
@@ -84,5 +82,12 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         _isReady = true;
         _cooltime = 0f;
         _cooltimePanel.SetCooltime(0);
+    }
+
+    public virtual void ExecuteButton()
+    {
+        _isReady = false;
+        _timer = _cooltime;
+        _isClick = false;
     }
 }

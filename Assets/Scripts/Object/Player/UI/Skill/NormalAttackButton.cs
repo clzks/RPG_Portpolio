@@ -18,4 +18,9 @@ public class NormalAttackButton : ActionButton
     {
         return _actionName;
     }
+
+    public override void ExecuteButton()
+    {
+        _isClick = false;
+    }
 }

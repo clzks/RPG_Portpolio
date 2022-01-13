@@ -5,26 +5,25 @@ using System.Linq;
 public class ActionPad : MonoBehaviour
 {
     private DataManager _dataManager;
-    public List<ActionButton> actionButtonList;
+    [SerializeField]private List<ActionButton> actionButtonList;
 
     private void Awake()
     {
         _dataManager = DataManager.Get();
     }
     
-    public bool GetButtonDown(out string actionName)
+    public ActionButton GetClickedButton()
     {
         var ActionButton = actionButtonList.FirstOrDefault(x => x.GetButtonDown() == true);
         
-        if(null != ActionButton)
+        if(null != ActionButton && string.Empty != ActionButton.GetActionName())
         {
-            actionName = ActionButton.GetActionName();
-            return true;
+            //actionName = ActionButton.GetActionName();
+            return ActionButton;
         }
         else
         {
-            actionName = string.Empty;
-            return false;
+            return null;
         }
     }
 
@@ -46,6 +45,18 @@ public class ActionPad : MonoBehaviour
                 sprite = _dataManager.GetSkillImage(info.Name);
                 actionButtonList[index].SetAction(info, sprite);
             }
+        }
+    }
+
+    public ActionButton GetActionButton(int index)
+    {
+        if(index < actionButtonList.Count)
+        {
+            return actionButtonList[index];
+        }
+        else
+        {
+            return null;
         }
     }
 }

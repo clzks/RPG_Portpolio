@@ -152,9 +152,13 @@ public abstract class PlayerAttackState : PlayerActionState
         {
             if (_player.GetCurrNormalAttackCount() < _maxNormalAttackCount)
             {
-                bool takeNextState = _actionPad.GetButtonDown(out string name);
-                actionName = name;
-                return takeNextState;
+                var actionButton = _actionPad.GetClickedButton();
+
+                if (null != actionButton)
+                {
+                    actionName = actionButton.GetActionName();
+                    return true;
+                }
             }
         }
 
@@ -194,22 +198,28 @@ public class PlayerIdleState : PlayerActionState
             return ChangeState(new PlayerDamageState(_player));
         }
 
-        if(true == _actionPad.GetButtonDown(out string name))
+        var actionButton = _actionPad.GetClickedButton();
+      
+
+        if (null != _actionPad.GetClickedButton())
         {
+            string name = actionButton.GetActionName();
+
             if (string.Equals(name, "Attack0"))
             {
                 return ChangeState(new PlayerNormalAttackState(_player));
             }
             else
             {
-                if (true == string.Equals(name, string.Empty))
-                {
-
-                }
-                else
-                {
-                    return ChangeState(new PlayerSkillState(_player, name));
-                }
+                //if (true == string.Equals(name, string.Empty))
+                //{
+                //
+                //}
+                //else
+                //{
+                actionButton.ExecuteButton();
+                return ChangeState(new PlayerSkillState(_player, name));
+                //}
             }
         }
 
@@ -257,22 +267,20 @@ public class PlayerRunState : PlayerActionState
             return ChangeState(new PlayerDamageState(_player));
         }
 
-        if (true == _actionPad.GetButtonDown(out string name))
+        var actionButton = _actionPad.GetClickedButton();
+      
+        if (null != actionButton)
         {
+            string name = actionButton.GetActionName();
+
             if (string.Equals(name, "Attack0"))
             {
                 return ChangeState(new PlayerNormalAttackState(_player));
             }
             else
             {
-                if (true == string.Equals(name, string.Empty))
-                {
-
-                }
-                else
-                {
-                    return ChangeState(new PlayerSkillState(_player, name));
-                }
+                actionButton.ExecuteButton();
+                return ChangeState(new PlayerSkillState(_player, name));
             }
         }
 
@@ -396,6 +404,9 @@ public class PlayerDamageState : PlayerActionState
 
     public override void Enter()
     {
+        // 피격시 공격버튼 초기화 시켜줌
+        _actionPad.GetActionButton(0).ExecuteButton();
+
         _player.ResetNormalAttackCount();
         _player.SetInBattle(true);
         SetAvoidancePriority(60);

@@ -78,8 +78,7 @@ public class MovePad : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragH
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        stick.position = stickOriginPos;
-        _isDrag = false;
+        ExecuteResetMovePad();
     }
 
     public Vector3 GetStickDirection()
@@ -90,5 +89,11 @@ public class MovePad : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragH
     public bool IsDrag()
     {
         return _isDrag;
+    }
+
+    public void ExecuteResetMovePad()
+    {
+        stick.position = stickOriginPos;
+        _isDrag = false;
     }
 }

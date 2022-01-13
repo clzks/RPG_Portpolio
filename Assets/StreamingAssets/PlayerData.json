@@ -13,17 +13,17 @@
     {
       "name": "Berserk",
       "id": 10010,
-      "level": 0
+      "level": 1
     },
     {
       "name": "Barrier",
       "id": 10020,
-      "level": 0
+      "level": 1
     },
     {
       "name": "SummonSword",
       "id": 10030,
-      "level": 0
+      "level": 1
     }
   ],
   "SkillSlots": [
