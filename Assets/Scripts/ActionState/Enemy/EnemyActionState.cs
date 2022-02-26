@@ -11,11 +11,11 @@ public abstract class EnemyActionState : IActionState
     protected Animator _animator;
     protected Vector3 _targetPos;
     protected Status _status { get { return _enemy.GetValidStatus(); } }
-    public EnemyActionState(BaseEnemy enemy)
+    public EnemyActionState(IActor enemy)
     {
         _dataManager = DataManager.Get();
-        _enemy = enemy;
-        _animator = enemy.animator;
+        _enemy = (BaseEnemy)enemy;
+        _animator = _enemy.animator;
         Enter();
     }
 
@@ -49,6 +49,7 @@ public abstract class EnemyActionState : IActionState
     {
         _enemy.PlayAnimation(anim);
     }
+
     public DamageInfo GetDamageInfo()
     {
         return _enemy.GetDamageInfo();
@@ -453,9 +454,8 @@ public class EnemyStunState : EnemyActionState
 
     public override void Exit()
     {
-
+         
     }
-
 }
 
 public class EnemyDieState : EnemyActionState
@@ -479,6 +479,6 @@ public class EnemyDieState : EnemyActionState
 
     public override void Exit()
     {
-
+    
     }
 }

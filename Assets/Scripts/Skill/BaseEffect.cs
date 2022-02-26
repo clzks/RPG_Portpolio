@@ -43,7 +43,7 @@ public class BaseEffect : MonoBehaviour, IPoolObject
             {
                 HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
                 HitUnitInfo info = HitUnitList[index];
-                hitUnit.SetHitUnit(_actor, _action.DuplicatedHit, info, _actor.GetObject().transform);
+                hitUnit.SetHitUnit(_actor, _action.DuplicatedHit, info, _actor.GetObject().transform, _actor.GetPosition());
                 index++;
             }
             yield return null;

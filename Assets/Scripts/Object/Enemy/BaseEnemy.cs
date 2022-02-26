@@ -13,6 +13,8 @@ public class BaseEnemy : MonoBehaviour, IActor
     private DataManager _dataManager;
     public Vector3 Position { get { return transform.position; } }
     [SerializeField]private NavMeshAgent _agent;
+    [SerializeField] private Transform _rootTransform;
+    public Vector3 RootPosition { get { return _rootTransform.position; } }
     public Animator animator;
     private string _name;
     private IActionState currActionState;
@@ -52,7 +54,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         _buffList = new List<IBuff>();
     }
 
-    public void SetEnemy(EnemyInfo info)
+    public void SetEnemy(EnemyInfo info, IActionState actionState)
     {
         _name = info.Name;
         _originStatus = new Status();
@@ -75,7 +77,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         _exp = info.Exp;
 
         StartCoroutine(StatusUpdate());
-        currActionState = new EnemyIdleState(this);
+        currActionState = actionState;
     }
 
     public void SetFoward(Vector2 dir)
@@ -145,7 +147,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         }
         HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
         HitUnitInfo info = actionInfo.HitUnitList[index];
-        hitUnit.SetHitUnit(this, false, info, transform);
+        hitUnit.SetHitUnit(this, false, info, transform, RootPosition);
     }
     public void TakeActor(IActor actor, HitUnitStatus hitUnit)
     {
@@ -202,7 +204,7 @@ public class BaseEnemy : MonoBehaviour, IActor
 
         // TODO 데미지 이펙트 추가할 곳
         var damageText = _objectPool.MakeObject(ObjectType.DamageText).GetComponent<DamageText>();
-        damageText.SetText(DamageTextType.Enemy, (int)hitUnit.Damage, Position);
+        damageText.SetText(DamageTextType.Enemy, (int)hitUnit.Damage, RootPosition);
         damageText.ExecuteFloat();
         // 넉백 및 경직이 없다는 뜻
         if (0f >= hitUnit.Strength)
@@ -444,5 +446,41 @@ public class BaseEnemy : MonoBehaviour, IActor
     public void ResetShield()
     {
         _originStatus.Shield = 0;
+    }
+
+    public void ExecuteDragonEvent()
+    {
+        StartCoroutine(DragonEvent());
+    }
+
+    private IEnumerator DragonEvent()
+    {
+        InGameCamera camera = Camera.main.GetComponent<InGameCamera>();
+
+        camera.SetActiveUI(false);
+        _player.SetFollowCamera(false);
+        _player.ResetMovePad();
+        yield return camera.TurnOff(0.5f);
+        yield return new WaitForSeconds(1f);
+        // 용 위치로 카메라 이동
+        camera.SetCameraTransform(Position , new Vector3(0, 5.5f, 5.5f), new Vector3(30, 180, 0));
+
+        yield return camera.TurnOn(0.5f);
+        yield return new WaitForSeconds(1f);
+        PlayAnimation("Scream");
+        yield return new WaitForSeconds(2.5f);
+        // 크아아아앙 
+
+        yield return camera.TurnOff(0.5f);
+        yield return new WaitForSeconds(1f);
+
+        currActionState = new DragonChaseState(this);
+        // 카메라 원상복구
+        camera.ResetRotation();
+        _player.SetFollowCamera(true);
+        yield return camera.TurnOn(0.5f);
+        yield return new WaitForSeconds(1f);
+
+        camera.SetActiveUI(true);
     }
 }

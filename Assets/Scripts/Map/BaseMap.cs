@@ -70,6 +70,13 @@ public class BaseMap : MonoBehaviour, IPoolObject
                     }
                 }
             }
+            else if (point.EventType == MapEventType.UniqueMonster)
+            {
+                foreach (var info in point.SummonList)
+                {
+                    SummonDragon(info.id, point.transform.position);
+                }
+            }
             else
             {
                 continue;
@@ -85,7 +92,7 @@ public class BaseMap : MonoBehaviour, IPoolObject
         _id = info.Id;
         _name = info.Name;
     }
-
+        
     public void SetName(string name)
     {
         _name = name;
@@ -109,11 +116,21 @@ public class BaseMap : MonoBehaviour, IPoolObject
     public void SummonNormalEnemy(int id, Vector3 summonPos, Transform baseCamp)
     {
         var enemy = _objectPool.MakeObject(ObjectType.Enemy, id).GetComponent<BaseEnemy>();
-        enemy.SetEnemy(_dataManager.GetEnemyInfo(id));
+        enemy.SetEnemy(_dataManager.GetEnemyInfo(id), new EnemyIdleState(enemy));
         enemy.SetPlayer(_player);
         enemy.SetBaseCamp(baseCamp);
         enemy.transform.position = summonPos;
         enemy.SetActiveNavMeshAgent(true);
+    }
+
+    public void SummonDragon(int id, Vector3 summonPos)
+    {
+        var boss = _objectPool.MakeObject(ObjectType.Enemy, id).GetComponent<BaseEnemy>();
+        boss.SetEnemy(_dataManager.GetEnemyInfo(id), new DragonReadyState(boss));
+        boss.SetPlayer(_player);
+        //enemy.SetBaseCamp(baseCamp);
+        boss.transform.position = summonPos;
+        boss.SetActiveNavMeshAgent(true);
     }
 
     public Vector3 GetPosition()

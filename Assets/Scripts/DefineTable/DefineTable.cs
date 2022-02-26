@@ -120,6 +120,8 @@ public static class Formula
         Vector3 randomPoint = startPos + Random.insideUnitSphere * range;
         randomPoint.y = startPos.y;
         var result = Vector3.zero;
+        
+        // 
         while(count <= 200)
         {
             count++;

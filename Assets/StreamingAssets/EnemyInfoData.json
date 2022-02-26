@@ -69,6 +69,31 @@
         	"MaxGold" : 60,
         	"DropGoldPercentage" : 0.1,
         	"Exp" : "10"
+        },
+        {
+        	"Id" : 30010,
+            "Name": "Dragon",
+            "Status" :
+            {
+            	"MaxHp" : 250,
+            	"ChaseSpeed" : 4,
+            	"PatrolSpeed" : 0,
+            	"Attack" : 10,
+            	"Defence" : 0,
+            	"AttackRange" : 0,
+            	"AttackTerm" : 0,
+            	"DetectionDistance" : 100,
+            	"ChaseDistance" : 100,
+            	"PatrolCycle" : 0
+        	},
+        	"DropItemList" : [
+        		
+        	],
+        	"DropItemPercentage" : 0,
+        	"MinGold" : 0,
+        	"MaxGold" : 0,
+        	"DropGoldPercentage" : 0,
+        	"Exp" : "100"
         }
     ]
 }

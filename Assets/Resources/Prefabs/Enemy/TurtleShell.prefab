@@ -793,7 +793,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _agent: {fileID: 1645444629989098321}
+  _rootTransform: {fileID: 1640531675023503719}
   animator: {fileID: 1695228941462301711}
+  _exp: 0
+  _gold: 0
+  _itemList: 
 --- !u!1 &1644812755078204071
 GameObject:
   m_ObjectHideFlags: 0

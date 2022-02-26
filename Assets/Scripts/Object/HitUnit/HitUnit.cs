@@ -54,30 +54,30 @@ public class HitUnit : MonoBehaviour, IPoolObject
         _actor.TakeActor(actor, status);
     }
 
-    public void SetHitUnit(IActor actor, bool duplicatedHit, HitUnitInfo info, Transform actorTransform)
+    public void SetHitUnit(IActor actor, bool duplicatedHit, HitUnitInfo info, Transform actorTransform, Vector3 rootPosition)
     {
         _actor = actor;
         gameObject.layer = info.Layer;
         _info = info;
         sphereCollider.radius = info.ColliderRadius;
-        status.ActorPosition = actorTransform.position;
+        status.ActorPosition = rootPosition;
         status.Damage = info.DamageFactor * _actor.GetAttackValue();
         status.Strength = info.StrengthFactor;
         status.DuplicatedHit = duplicatedHit;
         actorTransform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
-        transform.position = actorTransform.position + new Vector3(info.SidePos, 0f, info.FrontPos);
-        transform.RotateAround(actorTransform.position, axis, angle);
+        transform.position = rootPosition + new Vector3(info.SidePos, 0f, info.FrontPos);
+        transform.RotateAround(rootPosition, axis, angle);
     }
 #if UNITY_EDITOR
-    public void SetSampleHitUnit(HitUnitInfo info, Transform actorTransform)
+    public void SetSampleHitUnit(HitUnitInfo info, Transform actorTransform, Vector3 rootPosition)
     {
         _info = info;
         sphereCollider.radius = info.ColliderRadius;
         //status.Damage = info.DamageFactor * _actor.GetDamage();
         //status.Strength = info.StrengthFactor;
         actorTransform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
-        transform.position = actorTransform.position + new Vector3(info.SidePos, 0f, info.FrontPos);
-        transform.RotateAround(actorTransform.position, axis, angle);
+        transform.position = rootPosition + new Vector3(info.SidePos, 0f, info.FrontPos);
+        transform.RotateAround(rootPosition, axis, angle);
     }
 #endif
 

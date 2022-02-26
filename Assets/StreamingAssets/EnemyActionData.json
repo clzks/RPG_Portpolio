@@ -94,6 +94,40 @@
                 	"Layer" : 9
                 }
             ]
+        },
+        {
+        	"Id" : 3,
+            "Name": "NormalAttack",
+            "CharacterName" : "Dragon",
+            "ComboAvailableTime" : 0.68,
+            "HitUnitList": [
+                {
+                	"ColliderRadius" : 0.7,
+                	"FrontPos" : 5.3,
+                	"SidePos" : 0,
+                	"Life" : 0.3,
+                	"DamageFactor" : 1.0,
+                	"StrengthFactor" : 1,
+                	"Layer" : 9
+                }
+            ]
+        },
+        {
+        	"Id" : 4,
+            "Name": "DashAttack",
+            "CharacterName" : "Dragon",
+            "ComboAvailableTime" : 0.68,
+            "HitUnitList": [
+                {
+                	"ColliderRadius" : 2.0,
+                	"FrontPos" : 4.0,
+                	"SidePos" : 0,
+                	"Life" : 0.3,
+                	"DamageFactor" : 2.0,
+                	"StrengthFactor" : 1,
+                	"Layer" : 9
+                }
+            ]
         }
     ]
 }

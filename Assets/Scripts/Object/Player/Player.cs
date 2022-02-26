@@ -73,7 +73,7 @@ public class Player : MonoBehaviour, IActor
 
         if (true == _followCamera)
         {
-            _camera.FollowPlayer(transform.position);
+            _camera.FollowPlayer(Position);
             _miniMap.MiniMapUpdate(array, new Vector4(Position.x, Position.z, 0, 0) / 100f);
         }
     }
@@ -84,10 +84,10 @@ public class Player : MonoBehaviour, IActor
 
         _fieldStatusUI.SetStatusPanel(GetHpPercent(), 1);
 
-        if(Input.GetKeyDown(KeyCode.C))
-        {
-            _followCamera = !_followCamera;
-        }
+        //if(Input.GetKeyDown(KeyCode.C))
+        //{
+        //    _followCamera = !_followCamera;
+        //}
     }
 
     
@@ -137,7 +137,7 @@ public class Player : MonoBehaviour, IActor
         }
         HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
         HitUnitInfo info = actionInfo.HitUnitList[index];
-        hitUnit.SetHitUnit(this, actionInfo.DuplicatedHit, info, transform);
+        hitUnit.SetHitUnit(this, actionInfo.DuplicatedHit, info, transform, Position);
     }
 
     public void TakeActor(IActor actor, HitUnitStatus hitUnit)
@@ -700,6 +700,15 @@ public class Player : MonoBehaviour, IActor
         OriginStatus.Shield = 0;
     }
 
+    public void SetFollowCamera(bool enabled)
+    {
+        _followCamera = enabled;
+    }
+
+    public void ResetMovePad()
+    {
+        _movePad.ExecuteResetMovePad();
+    }
 
     #region SKILL
     public void ExecuteBarrier()
@@ -745,7 +754,7 @@ public class Player : MonoBehaviour, IActor
 
     public void ExecuteLightningShield()
     {
-
+        
     }
 
     public void ExecuteSummonSword()

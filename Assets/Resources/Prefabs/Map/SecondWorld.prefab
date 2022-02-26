@@ -389,11 +389,11 @@ MonoBehaviour:
   TransInfo:
     mapId: 0
     mapPointId: 0
-  EventType: 3
+  EventType: 2
   SummonList:
-  - id: 10010
-    count: 16
-  SummonMaxRange: 11
+  - id: 30010
+    count: 1
+  SummonMaxRange: 1
 --- !u!1 &4583587248444105177
 GameObject:
   m_ObjectHideFlags: 0

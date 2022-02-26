@@ -10,6 +10,7 @@ using UnityEditor.Animations;
 public class ActionCreator : MonoBehaviour
 {
     private ObjectPoolManager _objectPool;
+    public Transform _rootTransform;
     //public GameObject hitUnitPrefab;
     public Animator mator;
     public AnimatorController _animController;
@@ -20,8 +21,8 @@ public class ActionCreator : MonoBehaviour
     private Button cameraChangeButton;
     private Vector3 isoCameraVector = new Vector3(0f, 7.7f, -7f);
     private Vector3 orthoCameraVector = new Vector3(0f, 7.7f, 0f);
-    //private List<AnimationClip> _clipInfoList;
-    //private AnimationClip _currAnimatorClip;
+    private List<AnimationClip> _clipInfoList;
+    private AnimationClip _currAnimatorClip;
     private List<string> _animationStateList;
     private string _currStateName;
     private int currIndex = 0;
@@ -37,7 +38,7 @@ public class ActionCreator : MonoBehaviour
     {
         _objectPool = ObjectPoolManager.Get();
         _animController = mator.runtimeAnimatorController as AnimatorController;
-        //_clipInfoList = _animController.animationClips.ToList();
+        _clipInfoList = _animController.animationClips.ToList();
         //_currAnimatorClip = _clipInfoList[currIndex];
         _animationStateList = GetAnimationStateList();
         _currStateName = _animationStateList[currIndex];
@@ -51,6 +52,17 @@ public class ActionCreator : MonoBehaviour
         selectNextClip.onClick.AddListener(OnClickSelectNextClipButton);
         clipPlayButton.onClick.AddListener(OnClickPlayClipButton);
         cameraChangeButton.onClick.AddListener(OnClickChangeCameraButton);
+
+        // 액션 테스트 중 이벤트 제거. (오류 방지용)
+        for (int i = 0; i < _clipInfoList.Count; ++i)
+        {
+            int count = _clipInfoList[i].events.Length;
+
+            for (int j = 0; j < count; ++j)
+            {
+                _clipInfoList[i].events = new AnimationEvent[0];
+            }
+        }
     }
 
     void Update()
@@ -97,7 +109,7 @@ public class ActionCreator : MonoBehaviour
         {
             currIndex--;
         }
-
+        //_currAnimatorClip = _clipInfoList[currIndex];
         _currStateName = _animationStateList[currIndex];
         UpdateSelectClipName();
     }
@@ -108,11 +120,11 @@ public class ActionCreator : MonoBehaviour
         {
             currIndex = 0;
         }
-        else
+        else 
         {
             currIndex++;
         }
-
+        //_currAnimatorClip = _clipInfoList[currIndex];
         _currStateName = _animationStateList[currIndex];
         UpdateSelectClipName();
     }
@@ -124,9 +136,8 @@ public class ActionCreator : MonoBehaviour
 
     private void OnClickPlayClipButton()
     {
-        //mator.Play(_currStateName, )
-
         mator.CrossFade(_currStateName, normalizeTransitionDuration, 0, 0f);
+        
         if (true == isCreate)
         {
             for (int i = 0; i < hitUnitList.Count; ++i)
@@ -180,18 +191,35 @@ public class ActionCreator : MonoBehaviour
         }
         HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
         HitUnitInfo info = hitUnitList[index];
-        hitUnit.SetSampleHitUnit(info, transform);
+        hitUnit.SetSampleHitUnit(info, transform, _rootTransform.position);
     }
 
     public void MakeSampleHitUnit(int index)
     {
+        if(_rootTransform == null)
+        {
+            _rootTransform = transform;
+        }
+
         if (hitUnitList.Count <= index)
         {
             return;
         }
-        HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
+
+        StartCoroutine(HitUnitCoroutine(index));
+    }
+
+    private IEnumerator HitUnitCoroutine(int index)
+    {
         HitUnitInfo info = hitUnitList[index];
-        hitUnit.SetSampleHitUnit(info, transform);
+        float time = info.StartTimer;
+        if (time > 0f)
+        {
+            yield return new WaitForSeconds(time);
+        }
+        HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
+        hitUnit.SetSampleHitUnit(info, transform, _rootTransform.position);
+        yield return null;
     }
 }
 #endif
