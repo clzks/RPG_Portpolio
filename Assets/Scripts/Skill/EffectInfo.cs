@@ -7,6 +7,7 @@ public class EffectInfo : IData
     public int Id { get; set; }
     public string Name { get; set; }
     public float Life { get; set; }
+    public bool IsRotate { get; set; }
 
     public int GetId()
     {

@@ -24,7 +24,15 @@ public class BattleScene : MonoBehaviour
         _skillWindowPopUp.Init(_dataManager.GetPlayerData());
         EnterNewWorld(10010, 0);
     }
-    
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            EnterNewWorld(10020, 4);
+        }
+    }
+
     public void EnterNewWorld(int worldId, int SummonIndex)
     {
         _objectPool.ReturnAllObject();

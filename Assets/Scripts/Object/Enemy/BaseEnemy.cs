@@ -8,33 +8,37 @@ using UnityEngine.SceneManagement;
 #endif
 public class BaseEnemy : MonoBehaviour, IActor
 {
-    private GameManager _gameManager;
-    private ObjectPoolManager _objectPool;
-    private DataManager _dataManager;
+    protected GameManager _gameManager;
+    protected ObjectPoolManager _objectPool;
+    protected DataManager _dataManager;
     public Vector3 Position { get { return transform.position; } }
     [SerializeField]private NavMeshAgent _agent;
     [SerializeField] private Transform _rootTransform;
     public Vector3 RootPosition { get { return _rootTransform.position; } }
     public Animator animator;
-    private string _name;
-    private IActionState currActionState;
-    private Transform _baseCamp;
-    private Player _player;
+    protected string _name;
+    protected IActionState currActionState;
+    protected Transform _baseCamp;
+    protected Player _player;
     //public GameObject hitUnitPrefab;
-    private List<IActor> _actorList;
-    private List<IBuff> _buffList;
-    private Status _originStatus;
-    private Status _validStatus;
-    private DamageInfo _damageInfo;
-    private float _currStareTimer;
-    private IEnumerator _moveCoroutine = null;
-    private WaitForSeconds _buffYield;
-    private float _tick;
+    
+    protected DamageInfo _damageInfo;
+    protected float _currStareTimer;
+    protected IEnumerator _moveCoroutine = null;
+    protected WaitForSeconds _buffYield;
+    protected float _tick;
+
+    [Header("Status")]
+    protected List<IActor> _actorList;
+    protected List<IBuff> _buffList;
+    protected Status _originStatus;
+    protected Status _validStatus;
+    protected bool _isInvincible = false;
 
     [Header("Drop")]
-    [SerializeField] private int _exp;
-    [SerializeField] private int _gold;
-    [SerializeField] private List<int> _itemList;
+    [SerializeField] protected int _exp;
+    [SerializeField] protected int _gold;
+    [SerializeField] protected List<int> _itemList;
     public void MakeSampleStatus()
     {
         _name = "TurtleShell";
@@ -54,7 +58,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         _buffList = new List<IBuff>();
     }
 
-    public void SetEnemy(EnemyInfo info, IActionState actionState)
+    public virtual void SetEnemy(EnemyInfo info, IActionState actionState)
     {
         _name = info.Name;
         _originStatus = new Status();
@@ -84,15 +88,30 @@ public class BaseEnemy : MonoBehaviour, IActor
     {
         transform.forward = new Vector3(dir.x, 0, dir.y);
     }
-    
-    public void LookPlayer()
+
+    /// <summary>
+    /// 특정 상태에서 플레이어를 바라보게 하는 함수
+    /// </summary>
+    /// <param name="isImmediate">true : 곧바로 바라봄, false : 보간의 형태로 바라봄</param>
+    /// <param name="speed">보간이 일어나는 속도 (true일 경우 사용안함)</param>
+    public virtual void LookPlayer(bool isImmediate = true, float speed = 0.3f)
     {
         var Pos = new Vector3(Position.x, 0, Position.z);
         var PlayerPos = new Vector3(_player.Position.x, 0, _player.Position.z);
         var dir = (PlayerPos - Pos).normalized;
-        transform.forward = dir;
+        var currDir = transform.forward;
+        
+        if (true == isImmediate)
+        {
+            transform.forward = dir;
+        }
+        else
+        {
+            Vector3 interpolation = Vector3.Lerp(currDir, dir, speed);
+            transform.forward = interpolation;
+        }
     }
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         if(null ==_gameManager)
         {
@@ -115,17 +134,25 @@ public class BaseEnemy : MonoBehaviour, IActor
             _objectPool = ObjectPoolManager.Get();
         }
     }
-    private void Update()
+    protected virtual void Update()
     {
         currActionState = currActionState.Update();
     }
 
-    public void PlayAnimation(string anim)
+    public virtual void PlayAnimation(string anim, bool isCrossFade = true)
     {
-        animator.CrossFade(anim, 0.2f, 0, 0f, 0.2f);
+        if (true == isCrossFade)
+        {
+            animator.CrossFade(anim, 0.2f, 0, 0f, 0.2f);
+        }
+        else
+        {
+            animator.Play(anim);
+        }
     }
 
-    public void SummonHitUnit(int index)
+    // ActionInfo 파일에 있는 정보를 토대로 시전자의 위치와 방향에 기반한 히트유닛 생성방법
+    public virtual void SummonHitUnit(int index)
     {
 #if UNITY_EDITOR
         if (SceneManager.GetActiveScene().name == "AnimationEditorScene")
@@ -149,7 +176,26 @@ public class BaseEnemy : MonoBehaviour, IActor
         HitUnitInfo info = actionInfo.HitUnitList[index];
         hitUnit.SetHitUnit(this, false, info, transform, RootPosition);
     }
-    public void TakeActor(IActor actor, HitUnitStatus hitUnit)
+
+    // 시전자의 위치 및 방향에게서 자유롭게 히트유닛을 생성하기 위한 함수
+    public virtual HitUnit MakeHitUnit()
+    {
+        var state = currActionState as EnemyActionState;
+        var actionInfo = state.GetActionInfo();
+
+        if (null == actionInfo)
+        {
+            return null;
+        }
+
+        HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
+        HitUnitInfo info = actionInfo.HitUnitList[0];
+        hitUnit.SetHitUnit(this, true, info);
+
+        return hitUnit;
+    }
+
+    public virtual void TakeActor(IActor actor, HitUnitStatus hitUnit)
     {
         bool isKill = false;
 
@@ -177,23 +223,23 @@ public class BaseEnemy : MonoBehaviour, IActor
         return ObjectType.Enemy;
     }
 
-    public void Init()
+    public virtual void Init()
     {
         //MakeSampleStatus();
     }
 
-    public void ReturnObject()
+    public virtual void ReturnObject()
     {
         _agent.enabled = false;
         _objectPool.ReturnObject(this);
     }
 
-    public void SetActiveNavMeshAgent(bool enabled)
+    public virtual void SetActiveNavMeshAgent(bool enabled)
     {
         _agent.enabled = enabled;
     }
 
-    public void TakeDamage(HitUnitStatus hitUnit, ref bool isDead)
+    public virtual void TakeDamage(HitUnitStatus hitUnit, ref bool isDead)
     {
         //Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼 입음");
         _originStatus.CurrHp -= hitUnit.Damage;
@@ -448,39 +494,14 @@ public class BaseEnemy : MonoBehaviour, IActor
         _originStatus.Shield = 0;
     }
 
-    public void ExecuteDragonEvent()
+
+    public bool IsInvincible()
     {
-        StartCoroutine(DragonEvent());
+        return _isInvincible;
     }
 
-    private IEnumerator DragonEvent()
+    public void SetInvincible(bool enabled)
     {
-        InGameCamera camera = Camera.main.GetComponent<InGameCamera>();
-
-        camera.SetActiveUI(false);
-        _player.SetFollowCamera(false);
-        _player.ResetMovePad();
-        yield return camera.TurnOff(0.5f);
-        yield return new WaitForSeconds(1f);
-        // 용 위치로 카메라 이동
-        camera.SetCameraTransform(Position , new Vector3(0, 5.5f, 5.5f), new Vector3(30, 180, 0));
-
-        yield return camera.TurnOn(0.5f);
-        yield return new WaitForSeconds(1f);
-        PlayAnimation("Scream");
-        yield return new WaitForSeconds(2.5f);
-        // 크아아아앙 
-
-        yield return camera.TurnOff(0.5f);
-        yield return new WaitForSeconds(1f);
-
-        currActionState = new DragonChaseState(this);
-        // 카메라 원상복구
-        camera.ResetRotation();
-        _player.SetFollowCamera(true);
-        yield return camera.TurnOn(0.5f);
-        yield return new WaitForSeconds(1f);
-
-        camera.SetActiveUI(true);
+        _isInvincible = enabled;
     }
 }

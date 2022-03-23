@@ -42,6 +42,8 @@ public class Player : MonoBehaviour, IActor
     private bool _followCamera = true;
     private bool _isInBattle = false;
     private int _currNormalAttackCount = 0;
+    private bool _isInvincible;
+
     public Vector3 Position { get { return transform.position; } }
     private WaitForSeconds _buffYield;
     private float _tick;
@@ -720,7 +722,7 @@ public class Player : MonoBehaviour, IActor
             var effect = _objectPool.MakeObject(ObjectType.Effect, buffInfo.Name).GetComponent<BaseEffect>();
             effect.SetEffect(buffInfo.Name);
             effect.SetTargetObject(gameObject);
-            effect.SetTargetPos(new Vector3(0, 1.5f, -0.7f));
+            effect.SetTargetPos(Position + new Vector3(0, 1.5f, -0.7f));
             skill.SetEffect(effect);
         }
         skill.TakeActor(this);
@@ -743,12 +745,14 @@ public class Player : MonoBehaviour, IActor
 
     public void ExecuteShockWave()
     {
-        var life = _dataManager.GetEffectInfo("ShockWave").Life;
+        var info = _dataManager.GetEffectInfo("ShockWave");
+        var life = info.Life;
         var effect = _objectPool.MakeObject(ObjectType.Effect, "ShockWave").GetComponent<BaseEffect>();
         effect.SetEffect("ShockWave", this);
         transform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
         effect.SetPosition(Position);
         effect.SetRotateAround(transform.position, axis, angle);
+        effect.SetInitRotation(info.IsRotate);
         effect.ExecuteEffect(life);
     }
 
@@ -765,7 +769,17 @@ public class Player : MonoBehaviour, IActor
         effect.SetPosition(Position + new Vector3(0, 10, 0));
         effect.ExecuteEffect(life);
     }
+
+    public void SetInvincible(bool enabled)
+    {
+        _isInvincible = enabled;
+    }
+
+    public bool IsInvincible()
+    {
+        return _isInvincible;
+    }
     #endregion
 
-   
+
 }

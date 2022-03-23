@@ -102,12 +102,12 @@
             "ComboAvailableTime" : 0.68,
             "HitUnitList": [
                 {
-                	"ColliderRadius" : 0.7,
+                	"ColliderRadius" : 1.5,
                 	"FrontPos" : 5.3,
                 	"SidePos" : 0,
                 	"Life" : 0.3,
                 	"DamageFactor" : 1.0,
-                	"StrengthFactor" : 1,
+                	"StrengthFactor" : 1.4,
                 	"Layer" : 9
                 }
             ]
@@ -124,10 +124,66 @@
                 	"SidePos" : 0,
                 	"Life" : 0.3,
                 	"DamageFactor" : 2.0,
-                	"StrengthFactor" : 1,
+                	"StrengthFactor" : 2,
                 	"Layer" : 9
                 }
             ]
+        },
+        {
+        	"Id" : 5,
+            "Name": "DragonMeteor",
+            "CharacterName" : "Dragon",
+            "ComboAvailableTime" : 0.68,
+            "HitUnitList": [
+                {
+                	"ColliderRadius" : 2.0,
+                	"FrontPos" : 0.0,
+                	"SidePos" : 0,
+                	"Life" : 0.5,
+                	"StartTimer" : 2.5,
+                	"DamageFactor" : 2.0,
+                	"StrengthFactor" : 1,
+                	"Layer" : 9
+                }
+            ],
+             "DuplicatedHit" : true
+        },
+        {
+        	"Id" : 6,
+            "Name": "DragonBurst",
+            "CharacterName" : "Dragon",
+            "ComboAvailableTime" : 0.68,
+            "HitUnitList": [
+                {
+                	"ColliderRadius" : 5.0,
+                	"FrontPos" : 0.0,
+                	"SidePos" : 0,
+                	"Life" : 0.5,
+                	"StartTimer" : 1,
+                	"DamageFactor" : 1.0,
+                	"StrengthFactor" : 2,
+                	"Layer" : 9
+                }
+            ]
+        },
+        {
+        	"Id" : 7,
+            "Name": "DragonFlame",
+            "CharacterName" : "Dragon",
+            "ComboAvailableTime" : 0.68,
+            "HitUnitList": [
+                {
+                	"ColliderRadius" : 1.0,
+                	"FrontPos" : 0.0,
+                	"SidePos" : 0,
+                	"Life" : 0.3,
+                	"StartTimer" : 0,
+                	"DamageFactor" : 0.3,
+                	"StrengthFactor" : 1,
+                	"Layer" : 9
+                }
+            ],
+             "DuplicatedHit" : true
         }
     ]
 }

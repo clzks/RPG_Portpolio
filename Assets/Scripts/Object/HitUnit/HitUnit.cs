@@ -51,9 +51,21 @@ public class HitUnit : MonoBehaviour, IPoolObject
     {
         var actor = other.GetComponent<IActor>();
 
-        _actor.TakeActor(actor, status);
+        // 무적이 아닌 경우 피격
+        if (false == actor.IsInvincible())
+        {
+            _actor.TakeActor(actor, status);
+        }
     }
 
+    /// <summary>
+    /// HitUnit을 설정하는 함수
+    /// </summary>
+    /// <param name="actor">시전 객체</param>
+    /// <param name="duplicatedHit">중복 타격이 가능한가</param>
+    /// <param name="info">HitUnit 정보</param>
+    /// <param name="actorTransform">시전 객체 Transform</param>
+    /// <param name="rootPosition">HitUnit 소환 위치</param>
     public void SetHitUnit(IActor actor, bool duplicatedHit, HitUnitInfo info, Transform actorTransform, Vector3 rootPosition)
     {
         _actor = actor;
@@ -66,7 +78,26 @@ public class HitUnit : MonoBehaviour, IPoolObject
         status.DuplicatedHit = duplicatedHit;
         actorTransform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
         transform.position = rootPosition + new Vector3(info.SidePos, 0f, info.FrontPos);
+        transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
         transform.RotateAround(rootPosition, axis, angle);
+    }
+
+    public void SetHitUnit(IActor actor, bool duplicatedHit, HitUnitInfo info)
+    {
+        _actor = actor;
+        gameObject.layer = info.Layer;
+        _info = info;
+        sphereCollider.radius = info.ColliderRadius;
+        status.ActorPosition = actor.GetPosition();
+        status.Damage = info.DamageFactor * _actor.GetAttackValue();
+        status.Strength = info.StrengthFactor;
+        status.DuplicatedHit = duplicatedHit;
+        transform.position = status.ActorPosition;
+    }
+
+    public void SetPosition(Vector3 pos)
+    {
+        transform.position = pos;
     }
 #if UNITY_EDITOR
     public void SetSampleHitUnit(HitUnitInfo info, Transform actorTransform, Vector3 rootPosition)

@@ -12,6 +12,7 @@ public class BaseEffect : MonoBehaviour, IPoolObject
     protected Vector3 _targetPos;
     protected ActionInfo _action;
     protected IActor _actor;
+    protected bool _isInitRotation = false;
     private List<HitUnitInfo> HitUnitList { get { return _action.HitUnitList; } }
     private void Awake()
     {
@@ -87,12 +88,19 @@ public class BaseEffect : MonoBehaviour, IPoolObject
         return _name;
     }
 
-    public void SetEffect(string name, IActor actor = null)
+    public void SetEffect(string name, IActor actor = null, bool isEnemy = false)
     {
         _actor = actor;
         if (null != actor)
         {
-            _action = _dataManager.GetActionInfo(name);
+            if (false == isEnemy)
+            {
+                _action = _dataManager.GetActionInfo(name);
+            }
+            else
+            {
+                _action = _dataManager.GetEnemyActionInfo("Dragon", name);
+            }
         }
         _name = name;
     }
@@ -114,17 +122,28 @@ public class BaseEffect : MonoBehaviour, IPoolObject
 
     public void ReturnObject()
     {
-        transform.rotation = new Quaternion();
+        if(true == _isInitRotation)
+        {
+            transform.rotation = new Quaternion();
+        }
+
         _objectPool.ReturnObject(this);
     }
 
+    // 대상을 따라다닐 수 있게끔 세팅하는 함수(2D 이펙트일 경우에 사용)
     public void SetTargetObject(GameObject obj)
     {
         _targetObject = obj;
     }
 
+    // 타깃을 기반으로 위치할 곳을 세팅하는 함수(2D 이펙트일 경우 사용)
     public void SetTargetPos(Vector3 targetPos)
     {
         _targetPos = targetPos;
+    }
+
+    public void SetInitRotation(bool enabled)
+    {
+        _isInitRotation = enabled;
     }
 }

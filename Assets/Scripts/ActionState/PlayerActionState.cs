@@ -17,14 +17,14 @@ public abstract class PlayerActionState : IActionState
         _animator = player.GetAnimator();
         _gameManager = GameManager.Get();
         actionName = action;
-        Enter();
+        //Enter();
     }
 
     public abstract void Enter();
     public abstract IActionState Update();
     public abstract void Exit();
 
-    protected IActionState ChangeState(IActionState state)
+    public IActionState ChangeState(IActionState state)
     {
         Exit();
         return state;
@@ -119,7 +119,7 @@ public abstract class PlayerAttackState : PlayerActionState
     private int _maxNormalAttackCount = 3;
     public PlayerAttackState(Player player, string action) : base(player, action)
     {
-
+        //Enter();
     }
 
     public override void Enter()
@@ -172,7 +172,7 @@ public class PlayerIdleState : PlayerActionState
 {
     public PlayerIdleState(Player player, string action = "Idle") : base(player, action)
     {
-        
+        Enter();
     }
 
     public override void Enter()
@@ -241,7 +241,7 @@ public class PlayerRunState : PlayerActionState
 {
     public PlayerRunState(Player player , string action = "Run") : base(player, action)
     {
-        
+        Enter();
     }
 
     public override void Enter()
@@ -313,7 +313,7 @@ public class PlayerNormalAttackState : PlayerAttackState
 
     public PlayerNormalAttackState(Player player, string action = "Attack0") : base(player, action)
     {
-        
+        Enter();
     }
 
     public override void Enter()
@@ -396,10 +396,11 @@ public class PlayerDamageState : PlayerActionState
     float timer;
     float distance;
     Vector3 knockBackDir;
+    bool isStun = false;
 
     public PlayerDamageState(Player player, string action = "Damage") : base(player, action)
     {
-
+        Enter();
     }
 
     public override void Enter()
@@ -411,6 +412,10 @@ public class PlayerDamageState : PlayerActionState
         _player.SetInBattle(true);
         SetAvoidancePriority(60);
         DamageInfo info = GetDamageInfo();
+        if(info.distance > 1.5f)
+        {
+            isStun = true;
+        }
         knockBackTime = info.stiffNessTime;
         distance = info.distance;
         knockBackDir = (_player.Position - info.actorPos).normalized;
@@ -426,7 +431,14 @@ public class PlayerDamageState : PlayerActionState
 
         if(timer >= knockBackTime)
         {
-            return ChangeState(new PlayerIdleState(_player));
+            if (false == isStun)
+            {
+                return ChangeState(new PlayerIdleState(_player));
+            }
+            else
+            {
+                return ChangeState(new PlayerStunState(_player));
+            }
         }
 
         return this;
@@ -442,7 +454,7 @@ public class PlayerSkillState : PlayerAttackState
 {
     public PlayerSkillState(Player player, string action) : base(player, action)
     {
-
+        Enter();
     }
 
     public override void Enter()
@@ -457,6 +469,7 @@ public class PlayerSkillState : PlayerAttackState
         {
             PlayAnimation();
         }
+        _player.SetInvincible(true);
     }
 
     public override IActionState Update()
@@ -465,12 +478,45 @@ public class PlayerSkillState : PlayerAttackState
 
         if (null == _player.GetActionInfo(actionName))
         {
-            return new PlayerIdleState(_player);
+            return ChangeState(new PlayerIdleState(_player));
         }
 
         if (currAnimTime >= info.AnimationEndTime)
         {
-            return new PlayerIdleState(_player);
+            return ChangeState(new PlayerIdleState(_player));
+        }
+
+        return this;
+    }
+
+    public override void Exit()
+    {
+        _player.SetInvincible(false);
+    }
+}
+
+public class PlayerStunState : PlayerActionState
+{
+    float stunTime = 2f;
+    float timer = 0f;
+
+    public PlayerStunState(Player player, string action = "Dizzy") : base(player, action)
+    {
+        Enter();
+    }
+
+    public override void Enter()
+    {
+        _player.ResetNormalAttackCount();
+        PlayAnimation("Dizzy");
+    }
+    public override IActionState Update()
+    {
+        timer += Time.deltaTime;
+
+        if(timer >= stunTime)
+        {
+            return ChangeState(new PlayerIdleState(_player));
         }
 
         return this;
@@ -486,7 +532,7 @@ public class PlayerDieState : PlayerActionState
 {
     public PlayerDieState(Player player, string action = "Die") : base(player, action)
     {
-
+        Enter();
     }
 
     public override void Enter()

@@ -76,7 +76,7 @@
             "Status" :
             {
             	"MaxHp" : 250,
-            	"ChaseSpeed" : 4,
+            	"ChaseSpeed" : 5,
             	"PatrolSpeed" : 0,
             	"Attack" : 10,
             	"Defence" : 0,

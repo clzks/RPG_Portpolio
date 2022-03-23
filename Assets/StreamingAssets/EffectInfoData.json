@@ -1,29 +1,52 @@
 {
     "Description": {
     	"Id" : "정보를 구분짓기 위한 값",
-        "Name": "이펙트 오브젝트 이름",
-        "Life" : "지속시간 seconds"
+        "Name": "이펙트 오브젝트 이름(스킬명과 동일하게)",
+        "Life" : "지속시간 seconds",
+        "IsRotate" : "방향이 변하는 이펙트 인가?"
     },
     "EffectInfo": [
         {
         	"Id" : 0,
             "Name": "Berserk",
-            "Life" : 6
+            "Life" : 6,
+            "IsRotate" : false
         },
         {
         	"Id" : 1,
             "Name": "ShockWave",
-            "Life" : 3
+            "Life" : 3,
+            "IsRotate" : true
         },
         {
         	"Id" : 2,
             "Name": "Barrier",
-            "Life" : 10
+            "Life" : 10,
+            "IsRotate" : false
         },
         {
         	"Id" : 3,
             "Name": "SummonSword",
-            "Life" : 1.5
+            "Life" : 1.5,
+            "IsRotate" : false
+        },
+        {
+        	"Id" : 30001,
+            "Name": "DragonMeteor",
+            "Life" : 3,
+            "IsRotate" : false
+        },
+        {
+        	"Id" : 30002,
+            "Name": "DragonBurst",
+            "Life" : 2,
+            "IsRotate" : false
+        },
+        {
+        	"Id" : 30003,
+            "Name": "DragonFlame",
+            "Life" : 1.47,
+            "IsRotate" : false
         }
     ]
 }

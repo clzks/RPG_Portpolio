@@ -16,7 +16,6 @@ public abstract class EnemyActionState : IActionState
         _dataManager = DataManager.Get();
         _enemy = (BaseEnemy)enemy;
         _animator = _enemy.animator;
-        Enter();
     }
 
     public abstract void Enter();
@@ -45,9 +44,9 @@ public abstract class EnemyActionState : IActionState
         return (_enemy.Position - _enemy.GetPlayer().Position).magnitude;
     }
 
-    public void PlayAnimation(string anim)
+    public void PlayAnimation(string anim, bool isCrossFade = true)
     {
-        _enemy.PlayAnimation(anim);
+        _enemy.PlayAnimation(anim, isCrossFade);
     }
 
     public DamageInfo GetDamageInfo()
@@ -109,7 +108,7 @@ public class EnemyIdleState : EnemyActionState
 
     public EnemyIdleState(BaseEnemy enemy) : base(enemy)
     {
-        
+        Enter();
     }
 
     public override void Enter()
@@ -156,7 +155,7 @@ public class EnemyPatrolState : EnemyActionState
 
     public EnemyPatrolState(BaseEnemy enemy) : base(enemy)
     {
-
+        Enter();
     }
 
     public override void Enter()
@@ -217,7 +216,7 @@ public class EnemyChaseState : EnemyActionState
     int chaseTerm = 3;
     public EnemyChaseState(BaseEnemy enemy) : base(enemy)
     {
-
+        Enter();
     }
 
     public override void Enter()
@@ -270,7 +269,9 @@ public class EnemyChaseState : EnemyActionState
             Agent.SetDestination(_targetPos);
         }
 
+        // 매 프레임마다 SetDestination을 호출하는게 신경쓰여서 3프레임에 한번씩 호출되도록 함
         chaseCount++;
+
         if (chaseCount > chaseTerm - 1)
         {
             chaseCount = 0;
@@ -291,6 +292,8 @@ public class EnemyAttackState : EnemyActionState
         {
 
         }
+
+        Enter();
     }
 
     public override void Enter()
@@ -300,7 +303,7 @@ public class EnemyAttackState : EnemyActionState
         Agent.ResetPath();
         // 공격 시작 시 플레이어의 위치를 바라보며 공격 모션 재생
         _enemy.LookPlayer();
-        PlayAnimation("Attack01");
+        PlayAnimation(actionName);
     }
     public override IActionState Update()
     {
@@ -339,7 +342,7 @@ public class EnemyStareState : EnemyActionState
     
     public EnemyStareState(BaseEnemy enemy) : base(enemy)
     {
-
+        Enter();
     }
 
     public override void Enter()
@@ -392,7 +395,7 @@ public class EnemyDamageState : EnemyActionState
 
     public EnemyDamageState(BaseEnemy enemy) : base(enemy)
     {
-
+        Enter();
     }
 
     public override void Enter()
@@ -436,7 +439,7 @@ public class EnemyStunState : EnemyActionState
 {
     public EnemyStunState(BaseEnemy enemy) : base(enemy)
     {
-
+        Enter();
     }
 
     public override void Enter()
@@ -462,7 +465,7 @@ public class EnemyDieState : EnemyActionState
 {
     public EnemyDieState(BaseEnemy enemy) : base(enemy)
     {
-
+        Enter();
     }
 
     public override void Enter()

@@ -125,7 +125,7 @@ public class BaseMap : MonoBehaviour, IPoolObject
 
     public void SummonDragon(int id, Vector3 summonPos)
     {
-        var boss = _objectPool.MakeObject(ObjectType.Enemy, id).GetComponent<BaseEnemy>();
+        var boss = _objectPool.MakeObject(ObjectType.Enemy, id).GetComponent<Dragon>();
         boss.SetEnemy(_dataManager.GetEnemyInfo(id), new DragonReadyState(boss));
         boss.SetPlayer(_player);
         //enemy.SetBaseCamp(baseCamp);

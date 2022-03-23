@@ -17,4 +17,5 @@ public interface IActor : IPoolObject
     Status GetOriginStatus();
     float GetShield();
     void ResetShield();
+    bool IsInvincible();
 }

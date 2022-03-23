@@ -137,6 +137,28 @@ public static class Formula
         return result;
     }
 
+    /// <summary>
+    /// 시야각 안에 타겟이 존재하는가? (거리 제외)
+    /// </summary>
+    /// <param name="actorDir">주체가 바라보는 방향</param>
+    /// <param name="viewingAngle">시야각</param>
+    /// <param name="actorPosition">주체의 위치</param>
+    /// <param name="targetPosition">대상위치</param>
+    /// <returns></returns>
+    public static bool IsTargetInSight(Vector3 actorDir, float viewingAngle, Vector3 actorPosition, Vector3 targetPosition)
+    {
+        Vector3 dir = (targetPosition - actorPosition).normalized;
+        float dot = Vector3.Dot(actorDir, dir);
+        float angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
+        
+        if(angle <= viewingAngle)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public static EquipType ConvertItemTypeToEquipType(ItemType iType)
     {
         switch (iType)
