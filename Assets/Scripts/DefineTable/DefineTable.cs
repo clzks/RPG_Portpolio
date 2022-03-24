@@ -37,6 +37,7 @@ public enum ActionType
 {
     NormalAttack,
     Skill,
+    Roll,
     Count
 }
 

@@ -157,6 +157,7 @@ public abstract class PlayerAttackState : PlayerActionState
                 if (null != actionButton)
                 {
                     actionName = actionButton.GetActionName();
+                    actionButton.ExecuteButton();
                     return true;
                 }
             }
@@ -199,7 +200,6 @@ public class PlayerIdleState : PlayerActionState
         }
 
         var actionButton = _actionPad.GetClickedButton();
-      
 
         if (null != _actionPad.GetClickedButton())
         {
@@ -209,18 +209,20 @@ public class PlayerIdleState : PlayerActionState
             {
                 return ChangeState(new PlayerNormalAttackState(_player));
             }
+            else if (string.Equals(name, "Roll"))
+            {
+                return ChangeState(new PlayerRollState(_player));
+            }
             else
             {
-                //if (true == string.Equals(name, string.Empty))
-                //{
-                //
-                //}
-                //else
-                //{
                 actionButton.ExecuteButton();
                 return ChangeState(new PlayerSkillState(_player, name));
-                //}
             }
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            return ChangeState(new PlayerRollState(_player));
         }
 
         if (true == _movePad.IsDrag())
@@ -277,11 +279,20 @@ public class PlayerRunState : PlayerActionState
             {
                 return ChangeState(new PlayerNormalAttackState(_player));
             }
+            else if(string.Equals(name, "Roll"))
+            {
+                return ChangeState(new PlayerRollState(_player));
+            }
             else
             {
                 actionButton.ExecuteButton();
                 return ChangeState(new PlayerSkillState(_player, name));
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            return ChangeState(new PlayerRollState(_player));
         }
 
         if (true == _movePad.IsDrag())
@@ -309,7 +320,6 @@ public class PlayerNormalAttackState : PlayerAttackState
     float moveDistance;
     float moveDelay;
     float moveTime;
-    
 
     public PlayerNormalAttackState(Player player, string action = "Attack0") : base(player, action)
     {
@@ -362,6 +372,10 @@ public class PlayerNormalAttackState : PlayerAttackState
             if (string.Equals(name, "Attack0"))
             {
                 return ChangeState(new PlayerNormalAttackState(_player));
+            }
+            else if(string.Equals(name, "Roll"))
+            {
+                return ChangeState(new PlayerRollState(_player));
             }
             else
             {
@@ -495,6 +509,48 @@ public class PlayerSkillState : PlayerAttackState
     }
 }
 
+public class PlayerRollState : PlayerActionState
+{
+    float timer;
+    float speed;
+    float currAnimTime;
+
+    public PlayerRollState(Player player, string action = "Roll") : base(player, action)
+    {
+        Enter();
+    }
+
+    public override void Enter()
+    {
+        timer = 0f;
+        speed = 6f;
+        currAnimTime = 0f;
+
+        _player.ResetNormalAttackCount();
+        PlayAnimation(actionName);
+
+        _player.SetInvincible(true);
+        _player.MoveCharacter(0.05f, 0.25f, 3.5f, _player.transform.forward);
+    }
+
+    public override IActionState Update()
+    {
+        currAnimTime = GetAnimNormalTime(actionName);
+        
+        if (currAnimTime >= 0.99f)
+        {
+            return ChangeState(new PlayerIdleState(_player));
+        }
+
+        return this;
+    }
+
+    public override void Exit()
+    {
+        _player.SetInvincible(false);
+    }
+}
+
 public class PlayerStunState : PlayerActionState
 {
     float stunTime = 2f;
@@ -508,7 +564,7 @@ public class PlayerStunState : PlayerActionState
     public override void Enter()
     {
         _player.ResetNormalAttackCount();
-        PlayAnimation("Dizzy");
+        PlayAnimation(actionName);
     }
     public override IActionState Update()
     {

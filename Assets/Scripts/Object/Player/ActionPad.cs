@@ -30,7 +30,7 @@ public class ActionPad : MonoBehaviour
     public void SetActionButton(int index, ActionInfo info)
     {
         Sprite sprite = null;
-        if(0 == index)
+        if(0 == index || 4 == index)
         {
         
         }

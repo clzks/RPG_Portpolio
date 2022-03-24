@@ -10,7 +10,7 @@ public class HitUnit : MonoBehaviour, IPoolObject
     private string _name;
     private IActor _actor;
     private ObjectPoolManager _objectPool;
-    private CancellationTokenSource _disableCancellation = new CancellationTokenSource();
+    //private CancellationTokenSource _disableCancellation = new CancellationTokenSource();
     private ObjectType _type = ObjectType.HitUnit;
     public Vector3 Position { get { return transform.position; } }
     public SphereCollider sphereCollider;
@@ -20,11 +20,11 @@ public class HitUnit : MonoBehaviour, IPoolObject
     private float _timer = 0f;
     private void OnEnable()
     {
-        if (_disableCancellation != null)
-        {
-            _disableCancellation.Dispose();
-        }
-        _disableCancellation = new CancellationTokenSource();
+        //if (_disableCancellation != null)
+        //{
+        //    _disableCancellation.Dispose();
+        //}
+        //_disableCancellation = new CancellationTokenSource();
 
         if (null ==  _objectPool)
         {
@@ -97,7 +97,7 @@ public class HitUnit : MonoBehaviour, IPoolObject
 
     public void SetPosition(Vector3 pos)
     {
-        transform.position = pos;
+        transform.position = new Vector3(pos.x, 0f, pos.z);
     }
 #if UNITY_EDITOR
     public void SetSampleHitUnit(HitUnitInfo info, Transform actorTransform, Vector3 rootPosition)

@@ -168,15 +168,12 @@ public class Dragon : BaseEnemy
         if (effect.transform.parent != _dragonMouth.transform)
         {
             effect.SetPosition(_dragonMouth.position);
-            //transform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
-            //effect.SetRotateAround(_dragonMouth.position, axis, angle);
             effect.SetParent(_dragonMouth);
             effect.transform.localEulerAngles = new Vector3(22f, -90f, 4f);
-            //effect.SetInitRotation(info.IsRotate);
         }
         
         effect.ExecuteEffect(life);
-        //StartCoroutine(UpdateDragonFlameHitUnit(life, effect));
+        StartCoroutine(UpdateDragonFlameHitUnit(life, effect));
     }
 
     private IEnumerator UpdateDragonFlameHitUnit(float life, BaseEffect effect)
@@ -185,22 +182,31 @@ public class Dragon : BaseEnemy
 
         while (timer <= life)
         {
-            timer += Time.deltaTime;
-
-            for (int i = 0; i < 5; ++i)
+            for (int i = 0; i < 10; ++i)
             {
+                //if (timer < 0.2f && i > 5) 
+                //{
+                //    continue;
+                //}
+                //
+                //if (timer < 0.4f && i > 7) 
+                //{
+                //    continue;
+                //}
+
                 var hitUnit = MakeHitUnit();
 
                 if (null != hitUnit && null != effect)
                 {
-                    hitUnit.SetPosition(effect.GetPosition() + effect.transform.forward * i);
+                    hitUnit.SetPosition(effect.GetPosition() + effect.transform.forward * i * 1.5f);
                 }
-
-                yield return null;
             }
-            yield return new WaitForSeconds(0.3f);
+
+            yield return new WaitForSeconds(0.15f);
+            timer += 0.15f;
         }
     }
+
 
     private IEnumerator DragonEvent()
     {
@@ -291,5 +297,10 @@ public class Dragon : BaseEnemy
     public void ResetBurstTimer()
     {
         _burstTimer = 10f;
+    }
+
+    public override HitUnit MakeHitUnit()
+    {
+        return base.MakeHitUnit();
     }
 }

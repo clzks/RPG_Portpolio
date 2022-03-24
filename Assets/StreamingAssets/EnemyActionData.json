@@ -176,7 +176,7 @@
                 	"ColliderRadius" : 1.0,
                 	"FrontPos" : 0.0,
                 	"SidePos" : 0,
-                	"Life" : 0.3,
+                	"Life" : 0.2,
                 	"StartTimer" : 0,
                 	"DamageFactor" : 0.3,
                 	"StrengthFactor" : 1,

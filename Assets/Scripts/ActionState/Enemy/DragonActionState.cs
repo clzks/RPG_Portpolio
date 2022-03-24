@@ -85,7 +85,7 @@ public abstract class DragonActionState : EnemyActionState
         //}
 
         _animator.speed = 1f;
-        _dragon.GetNavMeshAgent().speed = 6f;
+        _dragon.GetNavMeshAgent().speed = 10f;
     }
 }
 
@@ -179,14 +179,15 @@ public class DragonChaseState : DragonActionState
 
     public override void Enter()
     {
-        if (false == _dragon.IsFrenzy())
-        {
-            PlayAnimation("Walk");
-        }
-        else
-        {
-            PlayAnimation("Run");
-        }
+        PlayAnimation("Run");
+        //if (false == _dragon.IsFrenzy())
+        //{
+        //    PlayAnimation("Walk");
+        //}
+        //else
+        //{
+        //    PlayAnimation("Run");
+        //}
     }
 
     public override void Exit()
@@ -455,9 +456,9 @@ public class DragonFlameAttackState : DragonActionState
     public override void Enter()
     {
         _triggerTime = 0.25f;
-        // 대쉬공격 타이머 초기화
-        _dragon.ResetDashTimer();
-
+        // 기본공격 타이머 초기화
+        _dragon.ResetNormalTimer();
+        _dragon.LookPlayer();
         _info = _dataManager.GetEnemyActionInfo(_enemy.GetName(), _actionName);
 
         Agent.avoidancePriority = 30;
