@@ -6,18 +6,25 @@ public class Dragon : BaseEnemy
 {
     private bool _isFrenzy = false;
     protected float _frenzyTimer;
-    protected float _normalAttackTimer = 1f;
+    //protected float _normalAttackTimer = 1f;
     protected float _dashTimer = 7f;
     protected float _fireTimer = 30f;
     protected float _burstTimer = 10f;
-    private List<Vector3> _fireHitUnitList = new List<Vector3>();
-    //[SerializeField] private Transform _root;
+    protected float _meteorTimer = 20f;
     [SerializeField] private Transform _dragonMouth;
+
+    private List<Vector3> _metoerSpotList = new List<Vector3>();
+    private int _difficulty;
+    private void Awake()
+    {
+        Init();
+    }
+
     public override void Init()
     {
         base.Init();
 
-        float interval = 1f;
+        float interval = 3f;
 
         int x;
         int z;
@@ -26,10 +33,9 @@ public class Dragon : BaseEnemy
         {
             x = i % 3;
             z = 1 - i / 3;
-            Vector3 v = new Vector3(-interval + x, 0, interval + z);
-            _fireHitUnitList.Add(v);
+            Vector3 v = new Vector3((-1 + x ) * interval, 0,  z * interval);
+            _metoerSpotList.Add(v);
         }
-
     }
 
     public override void LookPlayer(bool isImmediate = true, float speed = 0.3f)
@@ -85,64 +91,137 @@ public class Dragon : BaseEnemy
     {
         StartCoroutine(DragonEvent());
     }
-
-    public bool IsFrenzyHp()
+    
+    public int GetDragonProDiff()
     {
-        if(_validStatus.CurrHp / _validStatus.MaxHp <= 0.3f)
+        float per = GetHpPercent();
+
+        if(per >= 0.7f)
         {
-            return true;
+            return 1;
+        }
+        else if(per >= 0.35f)
+        {
+            return 2;
         }
         else
         {
-            return false;
+            return 3;
         }
     }
 
-    public bool IsFrenzy()
+    public int GetDragonCurrDiff()
     {
-        return _isFrenzy;
+        return _difficulty;
     }
 
-    public void SetFrenzy(bool enabled)
+    public void ChangeDifficulty()
     {
-        _isFrenzy = enabled;
+        _difficulty = GetDragonProDiff();
     }
 
-    public void ExecuteDragonFire(Vector3 position, int level)
+    public void ExecuteMeteorAttack(int level)
     {
-        StartCoroutine(DragonFireCoroutine(position, level));
+        StartCoroutine(UpdateDragonMeteor(level));
     }
 
-    private IEnumerator DragonFireCoroutine(Vector3 position, int level)
+    
+    private IEnumerator UpdateDragonMeteor(int level)
     {
+        // 드래곤의 공중공격시간은 대략 2초정도로 계산하고 여유있게 착륙시킨다. 
+        var life = _dataManager.GetEffectInfo("DragonMeteor").Life;
+
+        int r = Random.Range(0, 100);
+
+        Vector3 playerPos = GetPlayer().Position;
+
         switch (level)
         {
             case 1:
+                // 대충 1초대
+                if (r % 2 == 0)
+                {
+                    for (int i = 3; i < 6; ++i)
+                    {
+                        MakeDragonMeteorByIndex(playerPos, i, life);
+                        yield return new WaitForSeconds(0.3f);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < 2; ++i)
+                    {
+                        MakeDragonMeteorByIndex(playerPos, 4, life);
+                        yield return new WaitForSeconds(0.4f);
+                    }
+                }
+
                 break;
 
             case 2:
+                // 대충 2초?
+                if (r % 2 == 0)
+                {
+                    for (int i = 3; i < 6; ++i)
+                    {
+                        MakeDragonMeteorByIndex(playerPos, i, life);
+                        yield return new WaitForSeconds(0.2f);
+                    }
 
+                    yield return new WaitForSeconds(0.4f);
+                    playerPos = GetPlayer().Position;
+
+                    for (int i = 3; i < 6; ++i)
+                    {
+                        MakeDragonMeteorByIndex(playerPos, i, life);
+                        yield return new WaitForSeconds(0.2f);
+                    }
+                }
+                else
+                {
+                    for(int i = 0; i < 4; ++i)
+                    {
+                        MakeDragonMeteorByIndex(playerPos, i * 2 + 1, life);
+                        yield return new WaitForSeconds(0.15f);
+                    }
+
+                    MakeDragonMeteorByIndex(playerPos, 4, life);
+                }
                 break;
 
             case 3:
-
+                // 대충 2초
+                MakeDragonMeteorByIndex(playerPos, 0, life);
+                yield return new WaitForSeconds(0.2f);
+                MakeDragonMeteorByIndex(playerPos, 1, life);
+                MakeDragonMeteorByIndex(playerPos, 3, life);
+                yield return new WaitForSeconds(0.2f);
+                MakeDragonMeteorByIndex(playerPos, 2, life);
+                MakeDragonMeteorByIndex(playerPos, 4, life);
+                MakeDragonMeteorByIndex(playerPos, 6, life);
+                yield return new WaitForSeconds(0.2f);
+                MakeDragonMeteorByIndex(playerPos, 5, life);
+                MakeDragonMeteorByIndex(playerPos, 7, life);
+                yield return new WaitForSeconds(0.2f);
+                MakeDragonMeteorByIndex(playerPos, 8, life);
                 break;
         }
-        var life = _dataManager.GetEffectInfo("DragonMeteor").Life;
+    }
+
+    private void MakeDragonMeteorByIndex(Vector3 playerPos, int index, float life)
+    {
         var effect = _objectPool.MakeObject(ObjectType.Effect, "DragonMeteor").GetComponent<BaseEffect>();
         effect.SetEffect("DragonMeteor", this, true);
-        effect.SetPosition(Position);
+        effect.SetPosition(playerPos + _metoerSpotList[index]);
         effect.ExecuteEffect(life);
-
-        yield return null;
+        StartCoroutine(MakeCustomHitUnit(0.7f, effect.GetPosition()));
     }
 
     private IEnumerator MakeCustomHitUnit(float startTime, Vector3 position)
     {
         yield return new WaitForSeconds(startTime);
 
-        var hitUnit = MakeHitUnit();
-
+        var hitUnit = MakeHitUnit(_dataManager.GetEnemyActionInfo("Dragon", "DragonMeteor"));
         hitUnit.SetPosition(position);
     }
 
@@ -184,17 +263,7 @@ public class Dragon : BaseEnemy
         {
             for (int i = 0; i < 10; ++i)
             {
-                //if (timer < 0.2f && i > 5) 
-                //{
-                //    continue;
-                //}
-                //
-                //if (timer < 0.4f && i > 7) 
-                //{
-                //    continue;
-                //}
-
-                var hitUnit = MakeHitUnit();
+                var hitUnit = MakeHitUnit(null);
 
                 if (null != hitUnit && null != effect)
                 {
@@ -207,7 +276,14 @@ public class Dragon : BaseEnemy
         }
     }
 
-
+    public void ExecuteDustEffect()
+    {
+        var info = _dataManager.GetEffectInfo("DragonDust");
+        var life = info.Life;
+        var effect = _objectPool.MakeObject(ObjectType.Effect, "DragonDust").GetComponent<BaseEffect>();
+        effect.SetPosition(Position + new Vector3(0, 3f, 0));
+        effect.ExecuteEffect(life);
+    }
     private IEnumerator DragonEvent()
     {
         yield return null;
@@ -242,13 +318,13 @@ public class Dragon : BaseEnemy
 
     public void UpdateAttackTimer()
     {
-        _normalAttackTimer -= Time.deltaTime;
+        //_normalAttackTimer -= Time.deltaTime;
         _dashTimer -= Time.deltaTime;
         _fireTimer -= Time.deltaTime;
 
         if (true == _isFrenzy)
         {
-            _normalAttackTimer -= Time.deltaTime;
+            //_normalAttackTimer -= Time.deltaTime;
             _dashTimer -= Time.deltaTime;
         }
     }
@@ -281,7 +357,7 @@ public class Dragon : BaseEnemy
 
     public void ResetNormalTimer()
     {
-        _normalAttackTimer = 1f;
+        //_normalAttackTimer = 1f;
     }
 
     public void ResetDashTimer()
@@ -299,8 +375,8 @@ public class Dragon : BaseEnemy
         _burstTimer = 10f;
     }
 
-    public override HitUnit MakeHitUnit()
+    public override HitUnit MakeHitUnit(EnemyAction action)
     {
-        return base.MakeHitUnit();
+        return base.MakeHitUnit(action);
     }
 }

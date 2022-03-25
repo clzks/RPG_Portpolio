@@ -44,6 +44,11 @@ public abstract class EnemyActionState : IActionState
         return (_enemy.Position - _enemy.GetPlayer().Position).magnitude;
     }
 
+    public Vector3 GetPlayerDir()
+    {
+        return (_enemy.GetPlayer().Position - _enemy.Position).normalized;
+    }
+
     public void PlayAnimation(string anim, bool isCrossFade = true)
     {
         _enemy.PlayAnimation(anim, isCrossFade);

@@ -115,7 +115,7 @@ public class Player : MonoBehaviour, IActor
 
     public void MovePlayerByPad()
     {
-        transform.position += speed * Time.deltaTime * transform.forward;
+        transform.position += _validStatus.Speed * Time.deltaTime * transform.forward;
     }
 
     public bool OnClickAttackButton()

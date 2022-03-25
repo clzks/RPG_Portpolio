@@ -178,14 +178,13 @@ public class BaseEnemy : MonoBehaviour, IActor
     }
 
     // 시전자의 위치 및 방향에게서 자유롭게 히트유닛을 생성하기 위한 함수
-    public virtual HitUnit MakeHitUnit()
+    public virtual HitUnit MakeHitUnit(EnemyAction actionInfo = null)
     {
         var state = currActionState as EnemyActionState;
-        var actionInfo = state.GetActionInfo();
 
         if (null == actionInfo)
         {
-            return null;
+            actionInfo = state.GetActionInfo();
         }
 
         HitUnit hitUnit = _objectPool.MakeObject(ObjectType.HitUnit, "NormalHitUnit").GetComponent<HitUnit>();
@@ -373,6 +372,8 @@ public class BaseEnemy : MonoBehaviour, IActor
     {
         return _originStatus.CurrHp / _validStatus.MaxHp;
     }
+
+    
 
     public Status GetValidStatus()
     {

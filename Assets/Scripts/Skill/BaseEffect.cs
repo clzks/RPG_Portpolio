@@ -22,7 +22,7 @@ public class BaseEffect : MonoBehaviour, IPoolObject
 
     public void ExecuteEffect(float life)
     {
-        if (null != _actor)
+        if (null != _actor && false == _action.IsCustomPositon)
         {
             StartCoroutine(ExecuteHitUnit(life));
         }

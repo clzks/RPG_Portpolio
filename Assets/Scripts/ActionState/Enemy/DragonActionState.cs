@@ -87,6 +87,21 @@ public abstract class DragonActionState : EnemyActionState
         _animator.speed = 1f;
         _dragon.GetNavMeshAgent().speed = 10f;
     }
+
+    protected bool CheckDifficultyChance()
+    {
+        int diff = _dragon.GetDragonProDiff();
+        int curr = _dragon.GetDragonCurrDiff();
+        
+        if(curr < diff)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
 
 
@@ -123,17 +138,19 @@ public class DragonGazeState : DragonActionState
 
         float distance = GetPlayerDistance();
 
+        if(true == CheckDifficultyChance())
+        {
+            _dragon.ChangeDifficulty();
+            
+        }
+
         // 시야에 플레이어가 존재할 경우
         if (true == Formula.IsTargetInSight(_dragon.transform.forward, 30f, _dragon.GetPosition(), _dragon.GetPlayer().Position))
         {
             // 매우 가까이 있을 경우
             if(distance < minNormalAttackRange)
             {
-                return ChangeState(new DragonFlameAttackState(_dragon));
-                //if (_dragon.GetNormalTimer() <= 0f)
-                //{
-                //    return ChangeState(new DragonNormalAttackState(_dragon));
-                //}
+                return ChangeState(new DragonTakeOffState(_dragon));
             }
             // 일반공격 사거리 내에 위치할 때
             else if (distance >= minNormalAttackRange && distance <= maxNormalAttackRange)
@@ -479,6 +496,7 @@ public class DragonFlameAttackState : DragonActionState
         if(true == OnTrigger(currAnimTime))
         {
             _dragon.ExecuteFlameAttack();
+            //_dragon.ExecuteMeteorAttack(2);
         }
 
         if (currAnimTime >= 0.99f)
@@ -508,6 +526,7 @@ public class DragonTakeOffState : DragonActionState
     {
         PlayAnimation(_actionName);
         _dragon.SetInvincible(true);
+        _dragon.ExecuteDustEffect();
     }
 
     public override void Exit()
@@ -518,6 +537,16 @@ public class DragonTakeOffState : DragonActionState
     public override IActionState Update()
     {
         var currAnimTime = GetAnimNormalTime(_actionName);
+
+        float addScale = currAnimTime / 2f + 0.6f;
+
+        _dragon.transform.localScale = new Vector3(addScale, addScale, addScale);
+
+        if(currAnimTime >= 0.12f && GetPlayerDistance() <= 12f)
+        {
+            // 플레이어 뒤로 밀기
+            _dragon.GetPlayer().transform.position += GetPlayerDir() * (12f - GetPlayerDistance() + 2f) * Time.deltaTime;
+        }
 
         if (currAnimTime >= 0.99f)
         {
@@ -530,10 +559,11 @@ public class DragonTakeOffState : DragonActionState
 
 public class DragonFlightAttackState : DragonActionState
 {
-    string _actionName = "FlyFlameAttack";
+    string _actionName = "DragonMeteor";
     EnemyAction _info;
     float _attackTime = 6f;
-    float _timer = 0f;
+    float _totalTimer = 0f;
+    float _attackTimer = 0f;
     int _attackCount = 1;
     int _count = 0;
 
@@ -546,11 +576,11 @@ public class DragonFlightAttackState : DragonActionState
     {
         _info = _dataManager.GetEnemyActionInfo(_enemy.GetName(), _actionName);
 
-        if (true == _dragon.IsFrenzy())
-        {
-            _attackTime *= 2f;
-            _attackCount *= 2;
-        }
+        //if (3 <= _dragon.GetDragonCurrDiff())
+        //{
+        //    _attackTime *= 2f;
+        //    _attackCount *= 2;
+        //}
 
         PlayAnimation(_actionName);
     }
@@ -562,36 +592,23 @@ public class DragonFlightAttackState : DragonActionState
 
     public override IActionState Update()
     {
-        _timer += Time.deltaTime;
-        
-        if(_timer >= _attackTime)
+        _totalTimer += Time.deltaTime;
+        _attackTimer += Time.deltaTime;
+
+        if (_totalTimer >= _attackTime)
         {
             return ChangeState(new DragonLandState(_dragon));
         }
         else
         {
-            float hpPer = _dragon.GetHpPercent();
-
-            if (_count < _attackCount)
+            if (_attackTimer >= 1f)
             {
-                int level = 0;
-                if (hpPer >= 0.7f)
+                if (_count < _attackCount)
                 {
-                    // 1단계 메테오 공격
-                    level = 1;
+                    _count++;
+                    _dragon.ExecuteMeteorAttack(_dragon.GetDragonCurrDiff());
+                    _attackTimer -= 3f;
                 }
-                else if (hpPer >= 0.3f)
-                {
-                    // 2단계 메테오 공격
-                    level = 2;
-                }
-                else
-                {
-                    // 3단계 메테오 공격
-                    level = 3;
-                }
-
-                
             }
         }
 
@@ -616,10 +633,12 @@ public class DragonLandState : DragonActionState
     public override void Enter()
     {
         PlayAnimation(_actionName);
+        _dragon.ExecuteDustEffect();
     }
 
     public override void Exit()
     {
+        _dragon.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
         _dragon.ResetActorList();
         _dragon.SetInvincible(false);
     }
@@ -628,9 +647,19 @@ public class DragonLandState : DragonActionState
     {
         var currAnimTime = GetAnimNormalTime(_actionName);
 
+        float addScale = (0.5f - currAnimTime / 2f) + 0.6f;
+
+        _dragon.transform.localScale = new Vector3(addScale, addScale, addScale);
+
+        if (currAnimTime >= 0.12f && GetPlayerDistance() <= 12f)
+        {
+            // 플레이어 뒤로 밀기
+            _dragon.GetPlayer().transform.position += GetPlayerDir() * (12f - GetPlayerDistance() + 2f) * Time.deltaTime;
+        }
+
         if (currAnimTime >= 0.99f)
         {
-            return new DragonGazeState(_dragon);
+            return ChangeState(new DragonGazeState(_dragon));
         }
 
         return this;
@@ -657,6 +686,47 @@ public class DragonDamageState : DragonActionState
     public override IActionState Update()
     {
         return this;
+    }
+}
+
+public class DragonScreamState : DragonActionState
+{
+    string _actionName = "Scream";
+
+    public DragonScreamState(IActor enemy) : base(enemy)
+    {
+        Enter();
+    }
+
+    public override void Enter()
+    {
+        _dragon.SetInvincible(true);
+        _triggerTime = 0.3f;
+    }
+
+    public override IActionState Update()
+    {
+        var currAnimTime = GetAnimNormalTime(_actionName);
+
+        if(_dragon.GetDragonCurrDiff() >= 3)
+        {
+            if(true == OnTrigger(currAnimTime))
+            {
+                // 광폭 이펙트 생성
+            }
+        }
+
+        if (currAnimTime >= 0.99f)
+        {
+            return new DragonGazeState(_dragon);
+        }
+
+        return this;
+    }
+
+    public override void Exit()
+    {
+        _dragon.SetInvincible(false);
     }
 }
 

@@ -27,7 +27,7 @@ public class ActionInfo : IData
     public float AnimationEndTime { get; set; }
     public List<HitUnitInfo> HitUnitList { get; set; }
     public bool DuplicatedHit { get; set; }
-
+    public bool IsCustomPositon { get; set; }
     public int GetId()
     {
         return Id;

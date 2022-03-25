@@ -21,7 +21,8 @@
         "MoveDistance" : "이동거리(일단 방향은 코드에서 설정해준다)",
         "AnimationStartTime" : "애니메이션을 시작하는 시간(NormalizedTime)",
         "AnimationEndTime" : "애니메이션을 강제로 종료하는 시간(NormalizedTime)",
-        "DuplicatedHit" : "중복 타격(bool)"
+        "DuplicatedHit" : "중복 타격(bool)",
+        "IsCustomPosition" : "HitUnit 생성 위치를 수동으로 할 것인가?"
     },
     "ActionInfo": [
         {
@@ -68,7 +69,8 @@
                 	"Layer" : 8
                 }
             ],
-            "DuplicatedHit" : false
+            "DuplicatedHit" : false,
+            "IsCustomPositon" : false
         },
         {
         	"Id" : 1,
@@ -113,7 +115,8 @@
                 	"Layer" : 8
                 }
             ],
-            "DuplicatedHit" : false
+            "DuplicatedHit" : false,
+            "IsCustomPositon" : false
         },
         {
         	"Id" : 2,
@@ -158,7 +161,8 @@
                 	"Layer" : 8
                 }
             ],
-            "DuplicatedHit" : false
+            "DuplicatedHit" : false,
+            "IsCustomPositon" : false
         },
          {
         	"Id" : 10000,
@@ -228,7 +232,8 @@
                 	"Layer" : 8
                 }
             ],
-            "DuplicatedHit" : true
+            "DuplicatedHit" : true,
+            "IsCustomPositon" : false
         },
         {
         	"Id" : 10010,
@@ -300,7 +305,8 @@
                 	"Layer" : 8
                 }
             ],
-            "DuplicatedHit" : true
+            "DuplicatedHit" : true,
+            "IsCustomPositon" : false
         }
     ]
 }

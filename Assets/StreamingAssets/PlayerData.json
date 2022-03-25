@@ -35,7 +35,7 @@
   "Status": {
     "CurrHp": 70.0,
     "MaxHp": 100.0,
-    "Speed": 5.0,
+    "Speed": 6.5,
     "AttackSpeed": 1.0,
     "Stamina": 100.0,
     "Strength": 1.0,
