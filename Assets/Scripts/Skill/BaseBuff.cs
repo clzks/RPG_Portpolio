@@ -4,15 +4,18 @@ using UnityEngine;
 public class BaseBuff : IBuff
 {
     protected int _id;
+    protected string _name;
     protected float _life;
-    private float _lifeValue;
+    protected float _lifeValue;
     protected float _value;
     protected BaseEffect _effect;
     private float _tick;
+    protected BuffIcon _icon;
 
     public BaseBuff(BuffInfo info)
     {
         _id = info.Id;
+        _name = info.Name;
         _lifeValue = info.Life;
         _life = _lifeValue;
         _tick = info.Tick;
@@ -69,6 +72,11 @@ public class BaseBuff : IBuff
     {
         _life -= tick;
 
+        if(null != _icon)
+        {
+            _icon.SetFillAmount(_life / _lifeValue);
+        }
+
         if(_life <= 0f)
         {
             ResetBuff(actor);
@@ -79,27 +87,36 @@ public class BaseBuff : IBuff
         }
     }
 
-    //public virtual void SetActiveEffect(IActor actor, bool enabled)
-    //{
-    //    if (false == enabled)
-    //    {
-    //        actor.RemoveBuff(this);
-    //        _effect.ReturnObject();
-    //    }
-    //}
+    public virtual void SetBuffIcon(BuffIcon buffIcon, Sprite sprite)
+    {
+        _icon = buffIcon;
+        _icon.SetIconImage(sprite);
+    }
 
     public int GetId()
     {
         return _id;
     }
+    
+    public string GetName()
+    {
+        return _name;
+    }
 
     public virtual void Renew(IActor actor = null)
     {
-        _life = _lifeValue;
+        if (_life <= _lifeValue)
+        {
+            _life = _lifeValue;
+        }
     }
 
     public virtual void ResetBuff(IActor actor)
     {
+        if(null != _icon)
+        {
+            _icon.ReturnObject();
+        }
         actor.RemoveBuff(this);
         _effect.ReturnObject();
         actor.RemoveBuff(this);

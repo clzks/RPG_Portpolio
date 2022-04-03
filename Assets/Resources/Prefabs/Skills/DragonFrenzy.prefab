@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 114132424652719980}
   - component: {fileID: -4294520807132312022}
   m_Layer: 0
-  m_Name: Frenzy
+  m_Name: DragonFrenzy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 1207179939759570}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.8, z: 0.4}
+  m_LocalScale: {x: 0.3, y: 0.6, z: 0.3}
   m_Children:
   - {fileID: 4565747314983162}
   - {fileID: 4830738407981168}

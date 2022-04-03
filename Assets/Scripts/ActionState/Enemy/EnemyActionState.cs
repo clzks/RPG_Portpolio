@@ -39,6 +39,11 @@ public abstract class EnemyActionState : IActionState
         }
     }
 
+    public float GetBaseDistance()
+    {
+        return (_enemy.Position - _enemy.GetBaseCamp().position).magnitude;
+    }
+
     public float GetPlayerDistance()
     {
         return (_enemy.Position - _enemy.GetPlayer().Position).magnitude;
@@ -87,6 +92,19 @@ public abstract class EnemyActionState : IActionState
     public virtual EnemyAction GetActionInfo()
     {
         return null;
+    }
+
+    protected bool IsArriveToDest()
+    {
+        if (Agent.pathPending == false)
+        {
+            if (Agent.hasPath == false || Agent.remainingDistance < 0.1f)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     #region sealed methods
@@ -199,19 +217,6 @@ public class EnemyPatrolState : EnemyActionState
     public override void Exit()
     {
 
-    }
-
-    private bool IsArriveToDest()
-    {
-        if (Agent.pathPending == false)
-        {
-            if (Agent.hasPath == false || Agent.remainingDistance < 0.1f)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 }
 

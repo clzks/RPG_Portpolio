@@ -74,7 +74,7 @@ public class BaseMap : MonoBehaviour, IPoolObject
             {
                 foreach (var info in point.SummonList)
                 {
-                    SummonDragon(info.id, point.transform.position);
+                    SummonDragon(info.id, point.transform.position, point.transform);
                 }
             }
             else
@@ -123,12 +123,12 @@ public class BaseMap : MonoBehaviour, IPoolObject
         enemy.SetActiveNavMeshAgent(true);
     }
 
-    public void SummonDragon(int id, Vector3 summonPos)
+    public void SummonDragon(int id, Vector3 summonPos, Transform baseCamp)
     {
         var boss = _objectPool.MakeObject(ObjectType.Enemy, id).GetComponent<Dragon>();
         boss.SetEnemy(_dataManager.GetEnemyInfo(id), new DragonReadyState(boss));
         boss.SetPlayer(_player);
-        //enemy.SetBaseCamp(baseCamp);
+        boss.SetBaseCamp(baseCamp);
         boss.transform.position = summonPos;
         boss.SetActiveNavMeshAgent(true);
     }

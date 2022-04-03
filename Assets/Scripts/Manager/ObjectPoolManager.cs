@@ -32,6 +32,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         LoadInventroyIcon();
         LoadSkillEffects();
         LoadSkillSettingClickIcon();
+        LoadBuffIcon();
     }
     
     public void LoadSprite()
@@ -346,6 +347,12 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     {
         var obj = Resources.Load<GameObject>("Prefabs/Skills/UI/SkillSettingClickIcon");
         prefabList.Add("SkillSettingClickIcon", obj);
+    }
+
+    private void LoadBuffIcon()
+    {
+        var obj = Resources.Load<GameObject>("Prefabs/BuffIcon/BuffIcon");
+        prefabList.Add("BuffIcon", obj);
     }
     #endregion
     public void InitPool()

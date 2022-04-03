@@ -11,6 +11,7 @@ public enum ObjectType
     DamageText,
     GroundItem,
     InventoryIcon,
+    BuffIcon,
     Count
 }
 
@@ -65,6 +66,7 @@ public enum BuffType
     Speed,
     Dot,
     Shield,
+    Stun,
     Count
 }
 

@@ -433,8 +433,7 @@ public class PlayerDamageState : PlayerActionState
         knockBackTime = info.stiffNessTime;
         distance = info.distance;
         knockBackDir = (_player.Position - info.actorPos).normalized;
-        // ResetDamageInfo를 Exit으로 빼면 피격 모션동안 무적 상태 가능할듯
-        _player.ResetDamageInfo();
+
         timer = 0f;
         PlayAnimation();
         _player.MoveCharacter(0.2f, distance, knockBackDir);
@@ -443,16 +442,14 @@ public class PlayerDamageState : PlayerActionState
     {
         timer += Time.deltaTime;
 
+        if(true == isStun)
+        {
+            return ChangeState(new PlayerStunState(_player));
+        }
+
         if(timer >= knockBackTime)
         {
-            if (false == isStun)
-            {
-                return ChangeState(new PlayerIdleState(_player));
-            }
-            else
-            {
-                return ChangeState(new PlayerStunState(_player));
-            }
+            return ChangeState(new PlayerIdleState(_player));
         }
 
         return this;
@@ -460,7 +457,7 @@ public class PlayerDamageState : PlayerActionState
 
     public override void Exit()
     {
-       
+        _player.ResetDamageInfo();
     }
 }
 
@@ -580,7 +577,7 @@ public class PlayerStunState : PlayerActionState
 
     public override void Exit()
     {
-
+        _player.ResetDamageInfo();
     }
 }
 

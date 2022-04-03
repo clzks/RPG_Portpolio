@@ -505,4 +505,9 @@ public class BaseEnemy : MonoBehaviour, IActor
     {
         _isInvincible = enabled;
     }
+
+    public Transform GetRootTransform()
+    {
+        return _rootTransform;
+    }
 }

@@ -53,6 +53,12 @@
             "Name": "DragonDust",
             "Life" : 4,
             "IsRotate" : false
+        },
+        {
+        	"Id" : 30005,
+            "Name": "DragonFrenzy",
+            "Life" : 60000,
+            "IsRotate" : false
         }
     ]
 }

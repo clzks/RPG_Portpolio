@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class Dragon : BaseEnemy
 {
-    private bool _isFrenzy = false;
-    protected float _frenzyTimer;
-    //protected float _normalAttackTimer = 1f;
-    protected float _dashTimer = 7f;
-    protected float _fireTimer = 30f;
-    protected float _burstTimer = 10f;
-    protected float _meteorTimer = 20f;
+    protected float _dashTimer = 5f;
+    protected float _burstTimer = 4f;
+    protected float _meteorTimer = 15f;
+    protected float _flameTimer = 5f;
     [SerializeField] private Transform _dragonMouth;
-
+  
     private List<Vector3> _metoerSpotList = new List<Vector3>();
-    private int _difficulty;
+    private int _difficulty = 1;
+
     private void Awake()
     {
         Init();
@@ -284,6 +282,15 @@ public class Dragon : BaseEnemy
         effect.SetPosition(Position + new Vector3(0, 3f, 0));
         effect.ExecuteEffect(life);
     }
+
+    public void ExecuteFrenzyEffect()
+    {
+        var info = _dataManager.GetEffectInfo("DragonFrenzy");
+        var effect = _objectPool.MakeObject(ObjectType.Effect, "DragonFrenzy").GetComponent<BaseEffect>();
+        effect.SetPosition(RootPosition);
+        effect.SetParent(GetRootTransform());
+    }
+
     private IEnumerator DragonEvent()
     {
         yield return null;
@@ -318,26 +325,21 @@ public class Dragon : BaseEnemy
 
     public void UpdateAttackTimer()
     {
-        //_normalAttackTimer -= Time.deltaTime;
         _dashTimer -= Time.deltaTime;
-        _fireTimer -= Time.deltaTime;
+        _meteorTimer -= Time.deltaTime;
 
-        if (true == _isFrenzy)
+        if (2 == _difficulty)
         {
-            //_normalAttackTimer -= Time.deltaTime;
-            _dashTimer -= Time.deltaTime;
+            _flameTimer -= Time.deltaTime;
+            _meteorTimer -= Time.deltaTime;
         }
-    }
-
-    public void UpdateBurstTimer()
-    {
-        _burstTimer -= Time.deltaTime;
-    }
-
-    public float GetNormalTimer()
-    {
-        return -1;
-        //return _normalAttackTimer;
+        else if(3 == _difficulty)
+        {
+            _burstTimer -= Time.deltaTime;
+            _flameTimer -= Time.deltaTime;
+            _dashTimer -= Time.deltaTime;
+            _meteorTimer -= Time.deltaTime;
+        }
     }
 
     public float GetDashTimer()
@@ -345,9 +347,14 @@ public class Dragon : BaseEnemy
         return _dashTimer;
     }
 
-    public float GetFireTimer()
+    public float GetMeteorTimer()
     {
-        return _fireTimer;
+        return _meteorTimer;
+    }
+
+    public float GetFlameTimer()
+    {
+        return _flameTimer;
     }
 
     public float GetBurstTimer()
@@ -355,24 +362,39 @@ public class Dragon : BaseEnemy
         return _burstTimer;
     }
 
-    public void ResetNormalTimer()
-    {
-        //_normalAttackTimer = 1f;
-    }
-
     public void ResetDashTimer()
     {
-        _dashTimer = 7f;
-    }
-
-    public void ResetFireTimer()
-    {
-        _fireTimer = 25f;
+        _dashTimer = 5f;
     }
 
     public void ResetBurstTimer()
     {
-        _burstTimer = 10f;
+        _burstTimer = 4f;
+    }
+
+    public void ResetMeteorTimer()
+    {
+        _meteorTimer = 20f;
+    }
+
+    public void ResetFlameTimer()
+    {
+        _flameTimer = 5f;
+    }
+
+    public void AddMeteorTime(float time)
+    {
+        _meteorTimer += time;
+    }
+
+    public void AddFlameTime(float time)
+    {
+        _flameTimer += time;
+    }
+
+    public void AddBurstTime(float time)
+    {
+        _burstTimer += time;
     }
 
     public override HitUnit MakeHitUnit(EnemyAction action)

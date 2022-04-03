@@ -84,12 +84,7 @@ public class Player : MonoBehaviour, IActor
     {
         currActionState = currActionState.Update();
 
-        _fieldStatusUI.SetStatusPanel(GetHpPercent(), 1);
-
-        //if(Input.GetKeyDown(KeyCode.C))
-        //{
-        //    _followCamera = !_followCamera;
-        //}
+        _fieldStatusUI.UpdateStatusPanel(GetHpPercent(), 1);
     }
 
     
@@ -512,6 +507,7 @@ public class Player : MonoBehaviour, IActor
         if (null == Buff)
         {
             _buffList.Add(buff);
+            AddBuffIcon(buff);
             return true;
         }
         else
@@ -519,6 +515,14 @@ public class Player : MonoBehaviour, IActor
             Buff.Renew(this);
             return false;
         }
+    }
+
+    public void AddBuffIcon(IBuff buff)
+    {
+        var icon = _objectPool.MakeObject(ObjectType.BuffIcon).GetComponent<BuffIcon>();
+        Sprite iconImage = _dataManager.GetSkillImage(buff.GetName());
+        buff.SetBuffIcon(icon, iconImage);
+        _fieldStatusUI.AddBuffIcon(icon);
     }
 
     public bool AddItem(int id)
@@ -722,7 +726,7 @@ public class Player : MonoBehaviour, IActor
             var effect = _objectPool.MakeObject(ObjectType.Effect, buffInfo.Name).GetComponent<BaseEffect>();
             effect.SetEffect(buffInfo.Name);
             effect.SetTargetObject(gameObject);
-            effect.SetTargetPos(Position + new Vector3(0, 1.5f, -0.7f));
+            effect.SetTargetPos(new Vector3(0, 1.5f, -0.7f));
             skill.SetEffect(effect);
         }
         skill.TakeActor(this);

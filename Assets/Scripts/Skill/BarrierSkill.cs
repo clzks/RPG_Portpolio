@@ -2,17 +2,11 @@ using UnityEngine;
 
 public class BarrierSkill : BaseBuff
 {
+   
     public BarrierSkill(BuffInfo info) : base(info)
     {
 
     }
-
-    //public override void StartBuff(IActor actor)
-    //{
-    //    TakeActor(actor);
-    //
-    //    base.StartBuff(actor);
-    //}
 
     public override void TakeActor(IActor actor)
     {
@@ -25,9 +19,19 @@ public class BarrierSkill : BaseBuff
         base.Renew();
     }
 
+    public override void SetBuffIcon(BuffIcon buffIcon, Sprite sprite)
+    {
+        base.SetBuffIcon(buffIcon, sprite);
+    }
+
     public override void Update(float tick, IActor actor)
     {
         _life -= tick;
+
+        if (null != _icon)
+        {
+            _icon.SetFillAmount(_life / _lifeValue);
+        }
 
         if (actor.GetShield() <= 0f || _life <= 0f)
         {

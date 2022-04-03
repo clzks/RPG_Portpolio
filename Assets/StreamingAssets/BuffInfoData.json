@@ -34,11 +34,11 @@
         },
         {
         	"Id" : 3,
-            "Name": "Force1",
+            "Name": "Stun",
             "Type" : "Attack",
             "CalculateType" : "Add",
             "Value": 1,
-            "Life" : 30
+            "Life" : 2
         },
         {
         	"Id" : 4,

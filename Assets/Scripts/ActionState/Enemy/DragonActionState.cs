@@ -10,11 +10,15 @@ public abstract class DragonActionState : EnemyActionState
     protected float minNormalAttackRange = 3.5f;
     protected float maxNormalAttackRange = 5.5f;
 
-    protected float minDashAttackRange = 6.0f;
-    protected float maxDashAttackRange = 8.5f;
+    protected float minDashAttackRange = 5.5f;
+    protected float maxDashAttackRange = 8.0f;
+
+    protected float maxFlameRange = 12.0f;
 
     protected bool _isTriggerOn = false;
     protected float _triggerTime = -1f;
+    
+    protected float _animSpeed = 1f;
 
     public DragonActionState(IActor enemy) : base (enemy)
     {
@@ -49,19 +53,19 @@ public abstract class DragonActionState : EnemyActionState
         }
     }
 
-    protected void ResetNormalTimer()
-    {
-        _dragon.ResetNormalTimer();
-    }
-
     protected void ResetDashTimer()
     {
         _dragon.ResetDashTimer();
     }
 
-    protected void ResetFireTimer()
+    protected void ResetMeteorTimer()
     {
-        _dragon.ResetFireTimer();
+        _dragon.ResetMeteorTimer();
+    }
+
+    protected void ResetFlameTimer()
+    {
+        _dragon.ResetFlameTimer();
     }
 
     protected void UpdateAttackTimer()
@@ -73,19 +77,24 @@ public abstract class DragonActionState : EnemyActionState
     {
         _dragon.GetNavMeshAgent().angularSpeed = 120f;
 
-        //if (false == _dragon.IsFrenzy())
-        //{
-        //    _animator.speed = 1f;
-        //    _dragon.GetNavMeshAgent().speed = 6f;
-        //}
-        //else
-        //{
-        //    _animator.speed = 1.5f;
-        //    _dragon.GetNavMeshAgent().speed = 9f;
-        //}
+        int currDiff = _dragon.GetDragonCurrDiff();
+
+        switch (currDiff)
+        {
+            case 1:
+                _dragon.GetNavMeshAgent().speed = 6f;
+                break;
+
+            case 2:
+                _dragon.GetNavMeshAgent().speed = 8f;
+                break;
+
+            case 3:
+                _dragon.GetNavMeshAgent().speed = 10f;
+                break;
+        }
 
         _animator.speed = 1f;
-        _dragon.GetNavMeshAgent().speed = 10f;
     }
 
     protected bool CheckDifficultyChance()
@@ -108,7 +117,6 @@ public abstract class DragonActionState : EnemyActionState
 public class DragonGazeState : DragonActionState
 {
     float _timer = 0f;
-
     public DragonGazeState(IActor enemy) : base(enemy)
     {
         Enter();
@@ -129,7 +137,29 @@ public class DragonGazeState : DragonActionState
     {
         _timer += Time.deltaTime;
 
-        if(_timer <= 1f)
+        float changeTime = 0f;
+        int difficulty = _dragon.GetDragonCurrDiff();
+
+        switch (difficulty)
+        {
+            case 1:
+                changeTime = 1f;
+                break;
+
+            case 2:
+                changeTime = 1f;
+                break;
+
+            case 3:
+                changeTime = 0f;
+                break;
+
+            default:
+
+                break;
+        }
+
+        if (_timer <= changeTime)
         {
             return this;
         }
@@ -137,53 +167,22 @@ public class DragonGazeState : DragonActionState
         UpdateAttackTimer();
 
         float distance = GetPlayerDistance();
+        float baseDistance = GetBaseDistance();
 
         if(true == CheckDifficultyChance())
         {
             _dragon.ChangeDifficulty();
-            
+            return ChangeState(new DragonScreamState(_dragon));
         }
 
-        // 시야에 플레이어가 존재할 경우
-        if (true == Formula.IsTargetInSight(_dragon.transform.forward, 30f, _dragon.GetPosition(), _dragon.GetPlayer().Position))
+        // 베이스에서 20만큼 떨어진 상태에서 플레이어와 거리가 5만큼 차이나면 귀환
+        // 해당 부분은 추후 폐쇄된 맵으로 변경 시 삭제될 가능성 있음
+        if (distance >= 5f && baseDistance >= 20f)
         {
-            // 매우 가까이 있을 경우
-            if(distance < minNormalAttackRange)
-            {
-                return ChangeState(new DragonTakeOffState(_dragon));
-            }
-            // 일반공격 사거리 내에 위치할 때
-            else if (distance >= minNormalAttackRange && distance <= maxNormalAttackRange)
-            {
-                if (_dragon.GetNormalTimer() <= 0f)
-                {
-                    return ChangeState(new DragonNormalAttackState(_dragon));
-                }
-            }
-            // 더 멀리 있을때
-            else
-            {
-                // 대쉬 공격 쿨타임 돌았을 경우
-                if (_dragon.GetDashTimer() <= 0f)
-                {
-                    if (distance >= minDashAttackRange && distance <= maxDashAttackRange)
-                    {
-                        return ChangeState(new DragonDashAttackState(_dragon));
-                    }
-                }
-                else
-                {
-                    return ChangeState(new DragonChaseState(_dragon));
-                }
-            }
-        }
-        // 아닐경우
-        else
-        {
-            return ChangeState(new DragonChaseState(_dragon));
+            return ChangeState(new DragonReturnState(_dragon));
         }
 
-        return this;
+        return ChangeState(new DragonChaseState(_dragon));
     }
 }
 
@@ -196,15 +195,31 @@ public class DragonChaseState : DragonActionState
 
     public override void Enter()
     {
-        PlayAnimation("Run");
-        //if (false == _dragon.IsFrenzy())
-        //{
-        //    PlayAnimation("Walk");
-        //}
-        //else
-        //{
-        //    PlayAnimation("Run");
-        //}
+        if (_dragon.GetDragonCurrDiff() >= 3)
+        {
+            PlayAnimation("Run");
+        }
+        else
+        {
+            PlayAnimation("Walk");
+        }
+
+        int difficulty = _dragon.GetDragonCurrDiff();
+
+        switch (difficulty)
+        {
+            case 1:
+                _animator.speed = 1f;
+                break;
+
+            case 2:
+                _animator.speed = 1.2f;
+                break;
+
+            case 3:
+                _animator.speed = 1.4f;
+                break;
+        }
     }
 
     public override void Exit()
@@ -218,70 +233,149 @@ public class DragonChaseState : DragonActionState
 
         UpdateAttackTimer();
 
-        if (_dragon.GetFireTimer() <= 0f)
+        if (true == CheckDifficultyChance())
         {
-            //return ChangeState(new DragonTakeOffState(_dragon));
+            _dragon.ChangeDifficulty();
+            return ChangeState(new DragonScreamState(_dragon));
         }
 
-        // 용의 시야 30도 내에 플레이어가 위치했을 경우
-        if (true == Formula.IsTargetInSight(_dragon.transform.forward, 30f, _dragon.GetPosition(), _dragon.GetPlayer().Position))
-        {
-            SetDragonSpeed();
+        int difficulty = _dragon.GetDragonCurrDiff();
 
-            // 매우 가까이 있을 경우
-            if (distance < minNormalAttackRange)
-            {
-                if (_dragon.GetNormalTimer() <= 0f)
+        // 메테오 쿨타임이 돌았을 경우 메테오 패턴이 1순위
+        if (_dragon.GetMeteorTimer() <= 0f)
+        {
+            return ChangeState(new DragonTakeOffState(_dragon));
+        }
+
+        switch (difficulty)
+        {
+            case 1:
+                // 용의 시야 좌우 30도 내에 플레이어가 위치했을 경우
+                if (true == Formula.IsTargetInSight(_dragon.transform.forward, 30f, _dragon.GetPosition(), _dragon.GetPlayer().Position))
                 {
-                    return ChangeState(new DragonNormalAttackState(_dragon));
-                }
-                else
-                {
-                    return ChangeState(new DragonGazeState(_dragon));
-                }
-            }
-            // 일반공격 사거리 내에 위치할 때
-            else if (distance >= minNormalAttackRange && distance <= maxNormalAttackRange)
-            {
-                if (_dragon.GetNormalTimer() <= 0f)
-                {
-                    return ChangeState(new DragonNormalAttackState(_dragon));
-                }
-                else
-                {
-                    return ChangeState(new DragonGazeState(_dragon));
-                }
-            }
-            // 더 멀리 있을 경우
-            else
-            {
-                // 대쉬 공격 쿨타임 돌았을 경우
-                if (_dragon.GetDashTimer() <= 0f)
-                {
-                    if (distance >= minDashAttackRange && distance <= maxDashAttackRange)
+                    SetDragonSpeed();
+
+                    // 매우 가까이 있을 경우
+                    if (distance < minNormalAttackRange)
                     {
-                        return ChangeState(new DragonDashAttackState(_dragon));
+                        return ChangeState(new DragonNormalAttackState(_dragon));
+                    }
+                    // 일반공격 사거리 내에 위치할 때    
+                    else if (distance >= minNormalAttackRange && distance <= maxNormalAttackRange)
+                    {
+                        return ChangeState(new DragonNormalAttackState(_dragon));
+                    }
+
+                }
+                // 시야 내에 없을 경우
+                else
+                {
+                    _dragon.LookPlayer(false, 0.016f);
+                }
+                break;
+
+            case 2:
+                // 용의 시야 좌우 30도 내에 플레이어가 위치했을 경우
+                if (true == Formula.IsTargetInSight(_dragon.transform.forward, 30f, _dragon.GetPosition(), _dragon.GetPlayer().Position))
+                {
+                    SetDragonSpeed();
+
+                    // 매우 가까이 있을 경우
+                    if (distance < minNormalAttackRange)
+                    {
+                        return ChangeState(new DragonNormalAttackState(_dragon));
+                    }
+                    // 일반공격 사거리 내에 위치할 때    
+                    else if (distance >= minNormalAttackRange && distance <= maxNormalAttackRange)
+                    {
+                        return ChangeState(new DragonNormalAttackState(_dragon));
+                    }
+                    // 더 멀리 있을 경우
+                    else
+                    {
+                        // 대쉬 공격 쿨타임 돌았을 경우
+                        if (_dragon.GetDashTimer() <= 0f)
+                        {
+                            if (distance >= minDashAttackRange && distance <= maxDashAttackRange)
+                            {
+                                return ChangeState(new DragonDashAttackState(_dragon));
+                            }
+                        }
+                        else
+                        {
+                            if(_dragon.GetFlameTimer() <= 0f)
+                            {
+                                if(distance <= maxFlameRange)
+                                {
+                                    return ChangeState(new DragonFlameAttackState(_dragon));
+                                }
+                            }
+                        }
                     }
                 }
-            }
-        }
-        // 시야 내에 없을 경우
-        else
-        {
-            //_dragon.GetNavMeshAgent().speed = 0.2f;
-            //_dragon.GetNavMeshAgent().angularSpeed = 180f;
-            _dragon.LookPlayer(false, 0.016f);
+                // 시야 내에 없을 경우
+                else
+                {
+                    _dragon.LookPlayer(false, 0.016f);
+                }
+                break;
 
-            // Burst 쿨타임이 다 돌았고, Burst 사거리내에 있을 경우 Burst
-            if (_dragon.GetBurstTimer() <= 0f)
-            {
-                return ChangeState(new DragonBurstAttackState(_dragon));
-            }
-            // 쿨타임이 다 안돌았을 경우 쿨타임이 돈다. (Burst는 Chase 상태일 경우에만 쿨타임이 돌아간다.
-            else
-            {
-                _dragon.UpdateBurstTimer();
-            }
+            case 3:
+                if (true == Formula.IsTargetInSight(_dragon.transform.forward, 30f, _dragon.GetPosition(), _dragon.GetPlayer().Position))
+                {
+                    SetDragonSpeed();
+
+                    // 매우 가까이 있을 경우
+                    if (distance < minNormalAttackRange)
+                    {
+                        return ChangeState(new DragonNormalAttackState(_dragon));
+                    }
+                    // 일반공격 사거리 내에 위치할 때    
+                    else if (distance >= minNormalAttackRange && distance <= maxNormalAttackRange)
+                    {
+                        if (_dragon.GetBurstTimer() <= 0f)
+                        {
+                            return ChangeState(new DragonBurstAttackState(_dragon));
+                        }
+                        else
+                        {
+                            return ChangeState(new DragonNormalAttackState(_dragon));
+                        }
+                    }
+                    // 더 멀리 있을 경우
+                    else
+                    {
+                        // 대쉬 공격 쿨타임 돌았을 경우
+                        if (_dragon.GetDashTimer() <= 0f)
+                        {
+                            if (distance <= maxDashAttackRange)
+                            {
+                                return ChangeState(new DragonDashAttackState(_dragon));
+                            }
+                        }
+                        else
+                        {
+                            if (_dragon.GetFlameTimer() <= 0f)
+                            {
+                                if (distance <= maxFlameRange)
+                                {
+                                    return ChangeState(new DragonFlameAttackState(_dragon));
+                                }
+                            }
+                        }
+                    }
+                }
+                // 시야 내에 없을 경우
+                else
+                {
+                    if(distance <= maxNormalAttackRange && _dragon.GetBurstTimer() <= 0f)
+                    {
+                        return ChangeState(new DragonBurstAttackState(_dragon));
+                    }
+
+                    _dragon.LookPlayer(false, 0.016f);
+                }
+                break;
         }
 
         ChaseTarget(_dragon.GetPlayer().Position);
@@ -295,6 +389,52 @@ public class DragonChaseState : DragonActionState
         Agent.SetDestination(_targetPos);
     }
 }
+
+public class DragonReturnState : DragonActionState
+{
+    public DragonReturnState(IActor enemy) : base(enemy)
+    {
+        Enter();
+    }
+
+
+    public override void Enter()
+    {
+        if (_dragon.GetDragonCurrDiff() >= 3)
+        {
+            PlayAnimation("Run");
+        }
+        else
+        {
+            PlayAnimation("Walk");
+        }
+
+        Agent.SetDestination(_dragon.GetBaseCamp().position);
+    }
+
+    public override void Exit()
+    {
+        
+    }
+
+    public override IActionState Update()
+    {
+        if(true == IsArriveToDest())
+        {
+            return ChangeState(new DragonGazeState(_dragon));
+        }
+
+        float distance = GetPlayerDistance();
+
+        if(distance <= 5f)
+        {
+            return ChangeState(new DragonChaseState(_dragon));
+        }
+
+        return this;
+    }
+}
+
 
 public class DragonBurstAttackState : DragonActionState
 {
@@ -310,8 +450,6 @@ public class DragonBurstAttackState : DragonActionState
     public override void Enter()
     {
         _triggerTime = 0.29f;
-        // 기본공격 타이머 초기화
-        _dragon.ResetNormalTimer();
 
         info = _dataManager.GetEnemyActionInfo(_enemy.GetName(), _actionName);
         Agent.avoidancePriority = 30;
@@ -325,8 +463,8 @@ public class DragonBurstAttackState : DragonActionState
 
     public override void Exit() 
     {
-        _dragon.ResetActorList();
         _dragon.ResetBurstTimer();
+        _dragon.ResetActorList();
     }
 
     public override IActionState Update()
@@ -345,7 +483,7 @@ public class DragonBurstAttackState : DragonActionState
 
         return this;
     }
-
+     
     public override EnemyAction GetActionInfo()
     {
         return info;
@@ -365,9 +503,6 @@ public class DragonNormalAttackState : DragonActionState
 
     public override void Enter()
     {
-        // 기본공격 타이머 초기화
-        _dragon.ResetNormalTimer();
-
         _info = _dataManager.GetEnemyActionInfo(_enemy.GetName(), _actionName);
         Agent.avoidancePriority = 30;
         // 경로를 리셋시켜준다
@@ -410,6 +545,7 @@ public class DragonDashAttackState : DragonActionState
 {
     string _actionName = "DashAttack";
     EnemyAction _info;
+    float _dashAnimSpeed = 1.6f;
 
     public DragonDashAttackState(IActor enemy) : base(enemy)
     {
@@ -427,7 +563,7 @@ public class DragonDashAttackState : DragonActionState
         // 경로를 리셋시켜준다
         Agent.ResetPath();
         // 대쉬공격 일때만 2배
-        _animator.speed *= 1.6f;
+        _animator.speed *= 1.5f;
         PlayAnimation(_actionName);
     }
 
@@ -471,10 +607,8 @@ public class DragonFlameAttackState : DragonActionState
     }
 
     public override void Enter()
-    {
+    { 
         _triggerTime = 0.25f;
-        // 기본공격 타이머 초기화
-        _dragon.ResetNormalTimer();
         _dragon.LookPlayer();
         _info = _dataManager.GetEnemyActionInfo(_enemy.GetName(), _actionName);
 
@@ -486,6 +620,8 @@ public class DragonFlameAttackState : DragonActionState
 
     public override void Exit()
     {
+        _dragon.AddMeteorTime(2f);
+        _dragon.ResetFlameTimer();
         _dragon.ResetActorList();
     }
 
@@ -538,7 +674,7 @@ public class DragonTakeOffState : DragonActionState
     {
         var currAnimTime = GetAnimNormalTime(_actionName);
 
-        float addScale = currAnimTime / 2f + 0.6f;
+        float addScale = currAnimTime / 3.33f + 0.6f;
 
         _dragon.transform.localScale = new Vector3(addScale, addScale, addScale);
 
@@ -564,7 +700,7 @@ public class DragonFlightAttackState : DragonActionState
     float _attackTime = 6f;
     float _totalTimer = 0f;
     float _attackTimer = 0f;
-    int _attackCount = 1;
+    int _attackCount = 2;
     int _count = 0;
 
     public DragonFlightAttackState(IActor enemy) : base(enemy)
@@ -607,7 +743,7 @@ public class DragonFlightAttackState : DragonActionState
                 {
                     _count++;
                     _dragon.ExecuteMeteorAttack(_dragon.GetDragonCurrDiff());
-                    _attackTimer -= 3f;
+                    _attackTimer -= 2f;
                 }
             }
         }
@@ -641,13 +777,14 @@ public class DragonLandState : DragonActionState
         _dragon.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
         _dragon.ResetActorList();
         _dragon.SetInvincible(false);
+        _dragon.ResetMeteorTimer();
     }
 
     public override IActionState Update()
     {
         var currAnimTime = GetAnimNormalTime(_actionName);
 
-        float addScale = (0.5f - currAnimTime / 2f) + 0.6f;
+        float addScale = (0.3f - currAnimTime / 3.33f) + 0.6f;
 
         _dragon.transform.localScale = new Vector3(addScale, addScale, addScale);
 
@@ -700,6 +837,8 @@ public class DragonScreamState : DragonActionState
 
     public override void Enter()
     {
+        Agent.ResetPath();
+        PlayAnimation(_actionName);
         _dragon.SetInvincible(true);
         _triggerTime = 0.3f;
     }
@@ -713,12 +852,13 @@ public class DragonScreamState : DragonActionState
             if(true == OnTrigger(currAnimTime))
             {
                 // 광폭 이펙트 생성
+                _dragon.ExecuteFrenzyEffect();
             }
         }
 
         if (currAnimTime >= 0.99f)
         {
-            return new DragonGazeState(_dragon);
+            return ChangeState(new DragonGazeState(_dragon));
         }
 
         return this;
@@ -739,7 +879,7 @@ public class DragonDeadState : DragonActionState
 
     public override void Enter()
     {
-
+        
     }
 
     public override void Exit()
