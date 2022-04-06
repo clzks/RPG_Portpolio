@@ -157,7 +157,7 @@ public abstract class PlayerAttackState : PlayerActionState
                 if (null != actionButton)
                 {
                     actionName = actionButton.GetActionName();
-                    actionButton.ExecuteButton();
+                    actionButton.ExecuteButton(_player.GetStamina());
                     return true;
                 }
             }
@@ -194,6 +194,8 @@ public class PlayerIdleState : PlayerActionState
             }
         }
 
+        _player.RegenStamina();
+
         if (null != GetDamageInfo())
         {
             return ChangeState(new PlayerDamageState(_player));
@@ -211,12 +213,17 @@ public class PlayerIdleState : PlayerActionState
             }
             else if (string.Equals(name, "Roll"))
             {
-                return ChangeState(new PlayerRollState(_player));
+                if (true == actionButton.ExecuteButton(_player.GetStamina()))
+                {
+                    return ChangeState(new PlayerRollState(_player));
+                }
             }
             else
             {
-                actionButton.ExecuteButton();
-                return ChangeState(new PlayerSkillState(_player, name));
+                if (true == actionButton.ExecuteButton(_player.GetStamina()))
+                {
+                    return ChangeState(new PlayerSkillState(_player, name));
+                }
             }
         }
 
@@ -264,6 +271,8 @@ public class PlayerRunState : PlayerActionState
             }
         }
 
+        _player.RegenStamina();
+
         if (null != GetDamageInfo())
         {
             return ChangeState(new PlayerDamageState(_player));
@@ -281,12 +290,17 @@ public class PlayerRunState : PlayerActionState
             }
             else if(string.Equals(name, "Roll"))
             {
-                return ChangeState(new PlayerRollState(_player));
+                if (true == actionButton.ExecuteButton(_player.GetStamina()))
+                {
+                    return ChangeState(new PlayerRollState(_player));
+                }
             }
             else
             {
-                actionButton.ExecuteButton();
-                return ChangeState(new PlayerSkillState(_player, name));
+                if (true == actionButton.ExecuteButton(_player.GetStamina()))
+                {
+                    return ChangeState(new PlayerSkillState(_player, name));
+                }
             }
         }
 
@@ -420,7 +434,7 @@ public class PlayerDamageState : PlayerActionState
     public override void Enter()
     {
         // 피격시 공격버튼 초기화 시켜줌
-        _actionPad.GetActionButton(0).ExecuteButton();
+        _actionPad.GetActionButton(0).ExecuteButton(0f);
 
         _player.ResetNormalAttackCount();
         _player.SetInBattle(true);
@@ -472,6 +486,7 @@ public class PlayerSkillState : PlayerAttackState
     {
         base.Enter();
         info = _player.GetActionInfo(actionName);
+        _player.AddStamina(-info.Cost);
         if(info.AnimationStartTime > 0f)
         {
             PlayAnimation(info.AnimationStartTime);

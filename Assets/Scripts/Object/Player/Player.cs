@@ -34,6 +34,9 @@ public class Player : MonoBehaviour, IActor
     private List<IBuff> _buffList;
     
     private Dictionary<ItemType, SortedList<int,int>> _inventory { get { return _data.Inventory; } set { _data.Inventory = value; } }
+    /*
+        체력과 기력의 경우에는 매번 Status를 복사해오면 안되기 때문에 OriginStatus로 계산한다. 
+     */
     private Status OriginStatus { get { return _data.Status; } set { _data.Status = value; } }
     private Status _equipedStatus;
     private Status _validStatus;
@@ -84,7 +87,7 @@ public class Player : MonoBehaviour, IActor
     {
         currActionState = currActionState.Update();
 
-        _fieldStatusUI.UpdateStatusPanel(GetHpPercent(), 1);
+        _fieldStatusUI.UpdateStatusPanel(GetHpPercent(), GetStaminaPercent());
     }
 
     
@@ -225,6 +228,11 @@ public class Player : MonoBehaviour, IActor
     public float GetHpPercent()
     {
         return OriginStatus.CurrHp / OriginStatus.MaxHp;
+    }
+
+    public float GetStaminaPercent()
+    {
+        return OriginStatus.Stamina / OriginStatus.MaxStamina;
     }
 
     public NavMeshAgent GetNavMeshAgent()
@@ -694,6 +702,25 @@ public class Player : MonoBehaviour, IActor
             _data.Gold += value;
             return true;
         }
+    }
+    public float GetStamina()
+    {
+        return OriginStatus.Stamina;
+    }
+
+    public void RegenStamina()
+    {
+        OriginStatus.Stamina += OriginStatus.RegenStamina * Time.deltaTime;
+
+        if(OriginStatus.Stamina >= OriginStatus.MaxStamina)
+        {
+            OriginStatus.Stamina = OriginStatus.MaxStamina;
+        }
+    }
+
+    public void AddStamina(float value)
+    {
+        OriginStatus.Stamina += value;
     }
 
     public List<int> GetEquipmentList()

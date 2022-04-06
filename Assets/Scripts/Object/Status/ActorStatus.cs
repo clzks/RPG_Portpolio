@@ -9,7 +9,9 @@ public class Status
     public float MaxHp { get; set; }
     public float Speed { get; set; }
     public float AttackSpeed { get; set; }
+    public float MaxStamina { get; set; }
     public float Stamina { get; set; }
+    public float RegenStamina { get; set; }
     public float Strength { get; set; }
     public float Defence { get; set; }
     public float Attack { get; set; }
@@ -30,7 +32,9 @@ public class Status
         st.CurrHp = st.MaxHp;
         st.Speed = 5f;
         st.AttackSpeed = 1f;
+        st.MaxStamina = 100f;
         st.Stamina = 100f;
+        st.RegenStamina = 1f;
         st.Defence = 0f;
         st.Strength = 1f;
         return st;
@@ -54,6 +58,7 @@ public class Status
         s.PatrolSpeed = status.PatrolSpeed;
         s.Speed = status.Speed;
         s.Stamina = status.Stamina;
+        s.MaxStamina = status.MaxStamina;
         s.Strength = status.Strength;
 
         return s;

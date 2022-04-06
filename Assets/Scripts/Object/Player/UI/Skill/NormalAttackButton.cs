@@ -19,8 +19,8 @@ public class NormalAttackButton : ActionButton
         return _actionName;
     }
 
-    public override void ExecuteButton()
+    public override bool ExecuteButton(float currStamina = 0f)
     {
-     
+        return _isClick;
     }
 }

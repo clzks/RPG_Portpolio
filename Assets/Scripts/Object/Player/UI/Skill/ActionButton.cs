@@ -68,10 +68,12 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public void SetAction(ActionInfo info, Sprite image)
     {
         _info = info;
+        
         if (info.Type == ActionType.Skill)
         {
             _skillImage.sprite = image;
         }
+
         _cooltime = _info.CoolTime;
     }
 
@@ -84,10 +86,29 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         _cooltimePanel.SetCooltime(0);
     }
 
-    public virtual void ExecuteButton()
+    public virtual void SetTimer()
     {
         _isReady = false;
         _timer = _cooltime;
         _isClick = false;
+    }
+
+    public virtual void SetCooltime(float time)
+    {
+        _cooltime = time;
+    }
+
+    public virtual bool ExecuteButton(float cost)
+    {
+        if (cost >= _info.Cost)
+        {
+            SetTimer();
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

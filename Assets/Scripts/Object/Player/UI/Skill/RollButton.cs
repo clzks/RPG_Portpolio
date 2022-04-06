@@ -1,17 +1,13 @@
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class RollButton : ActionButton
 {
     private string _actionName = "Roll";
 
-    public override void Update()
+    private void Awake()
     {
-
-    }
-
-    public override void OnPointerDown(PointerEventData eventData)
-    {
-        _isClick = true;
+        SetCooltime(3f);
     }
 
     public override string GetActionName()
@@ -19,8 +15,25 @@ public class RollButton : ActionButton
         return _actionName;
     }
 
-    public override void ExecuteButton()
+    public override bool ExecuteButton(float cost)
     {
-        _isClick = false;
+        var isClick = _isClick;
+
+        if(true == isClick)
+        {
+            SetTimer();
+        }
+
+        return isClick;
+    }
+
+    public override void OnPointerDown(PointerEventData eventData)
+    {
+        base.OnPointerDown(eventData);
+    }
+
+    public override void Update()
+    {
+        base.Update();
     }
 }
