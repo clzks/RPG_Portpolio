@@ -323,7 +323,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _agent: {fileID: 0}
+  _rootTransform: {fileID: 0}
   animator: {fileID: 386799604}
+  _exp: 0
+  _gold: 0
+  _itemList: 
 --- !u!135 &386799606
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -971,6 +975,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f7dccde7eb120840b745b47dfba220b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _uiCanvas: {fileID: 0}
+  _miniMap: {fileID: 0}
+  _cutBorder: {fileID: 0}
 --- !u!4 &1020817632
 Transform:
   m_ObjectHideFlags: 0
@@ -1216,7 +1223,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _agent: {fileID: 0}
+  _rootTransform: {fileID: 0}
   animator: {fileID: 1318868893}
+  _exp: 0
+  _gold: 0
+  _itemList: 
 --- !u!135 &1318868895
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1422,7 +1433,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _agent: {fileID: 0}
+  _rootTransform: {fileID: 0}
   animator: {fileID: 1490021364}
+  _exp: 0
+  _gold: 0
+  _itemList: 
 --- !u!135 &1490021366
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1600,6 +1615,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1178f0dfce6043e469b5fe858a9ca9aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buttonListIndex: 0
+  _type: 0
+  _skillImage: {fileID: 0}
+  _cooltimePanel: {fileID: 0}
 --- !u!114 &1631872671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1827,7 +1846,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _agent: {fileID: 0}
+  _rootTransform: {fileID: 0}
   animator: {fileID: 2047338723}
+  _exp: 0
+  _gold: 0
+  _itemList: 
 --- !u!135 &2047338725
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3877,8 +3900,12 @@ MonoBehaviour:
   _agent: {fileID: 0}
   _camera: {fileID: 963194229}
   _animController: {fileID: 2066896391788560199}
-  movePad: {fileID: 408858506}
-  attackButton: {fileID: 1631872670}
+  _movePad: {fileID: 0}
+  _actionPad: {fileID: 0}
+  _targetPanel: {fileID: 0}
+  _fieldStatusUI: {fileID: 0}
+  _miniMap: {fileID: 0}
+  _questBoard: {fileID: 0}
   speed: 5
 --- !u!1 &2066896391795805437
 GameObject:

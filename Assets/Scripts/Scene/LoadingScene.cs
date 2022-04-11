@@ -23,6 +23,8 @@ public class LoadingScene : MonoBehaviour
         loadComplete &= await _dataManager.LoadItemList();
         loadComplete &= await _dataManager.LoadEffectList();
         loadComplete &= _dataManager.LoadSkillImageList();
+        loadComplete &= await _dataManager.LoadQuestInfoList();
+
         await _dataManager.LoadPlayerData();
         if (true == loadComplete)
         {

@@ -17,6 +17,7 @@ public class BaseEnemy : MonoBehaviour, IActor
     public Vector3 RootPosition { get { return _rootTransform.position; } }
     public Animator animator;
     protected string _name;
+    protected int _id;
     protected IActionState currActionState;
     protected Transform _baseCamp;
     protected Player _player;
@@ -61,6 +62,7 @@ public class BaseEnemy : MonoBehaviour, IActor
     public virtual void SetEnemy(EnemyInfo info, IActionState actionState)
     {
         _name = info.Name;
+        _id = info.Id;
         _originStatus = new Status();
         _originStatus = Status.CopyStatus(info.Status);
         _originStatus.CurrHp = _originStatus.MaxHp;
@@ -330,7 +332,7 @@ public class BaseEnemy : MonoBehaviour, IActor
 
     public int GetId()
     {
-        return 0;
+        return _id;
     }
 
     public string GetName()

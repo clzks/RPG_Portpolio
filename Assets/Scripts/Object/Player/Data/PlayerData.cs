@@ -13,7 +13,11 @@ public class PlayerData : IData
     public int Exp { get; set; }
     public int SkillPoint { get; set; }
     public Dictionary<ItemType, SortedList<int,int>> Inventory { get; set; }
-
+    public int CurrQuestId { get; set; }
+    public int NextQuestId { get; set; }
+    public int CurrQuestValue { get; set; }
+    //public bool IsStartQuest { get; set; }
+    
     public static PlayerData MakeNewPlayerData()
     {
         PlayerData data = new PlayerData();
@@ -37,6 +41,8 @@ public class PlayerData : IData
         data.Gold = 0;
         data.Exp = 0;
         data.SkillPoint = 0;
+        data.CurrQuestId = 0;
+        data.CurrQuestValue = 0;
         return data;
     }
 

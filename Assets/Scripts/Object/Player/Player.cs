@@ -12,6 +12,7 @@ public class Player : MonoBehaviour, IActor
     private GameManager _gameManager;
     private ObjectPoolManager _objectPool;
     private DataManager _dataManager;
+    private QuestManager _questManager;
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private InGameCamera _camera;
     [SerializeField] private Animator _animController;
@@ -24,6 +25,8 @@ public class Player : MonoBehaviour, IActor
     [SerializeField] private TargetInfoPanel _targetPanel;
     [SerializeField] private PlayerFieldStatusUI _fieldStatusUI;
     [SerializeField] private MiniMap _miniMap;
+    [SerializeField] private QuestBoard _questBoard;
+    [SerializeField] private QuestCursor _questCursor;
 
     [Header("Status")]
     public float speed = 30f;
@@ -32,6 +35,7 @@ public class Player : MonoBehaviour, IActor
     private PlayerData _data { get { return _dataManager.GetPlayerData(); } set { _dataManager.SetPlayerData(value); } }
     private List<IActor> _actorList;
     private List<IBuff> _buffList;
+    private int RequiredExp { get { return _data.Level * _data.Level * 10 + 90; ; } }
     
     private Dictionary<ItemType, SortedList<int,int>> _inventory { get { return _data.Inventory; } set { _data.Inventory = value; } }
     /*
@@ -55,6 +59,7 @@ public class Player : MonoBehaviour, IActor
         _gameManager = GameManager.Get();
         _dataManager = DataManager.Get();
         _objectPool = ObjectPoolManager.Get();
+        _questManager = QuestManager.Get();
         //_camera.SetCameraDistance(transform.position);
         currActionState = new PlayerIdleState(this);
         _actionInfoList = DataManager.Get().GetActionInfoList();
@@ -63,13 +68,15 @@ public class Player : MonoBehaviour, IActor
         _buffList = new List<IBuff>();
         _validStatus = OriginStatus;
         _equipedStatus = new Status();
-        _damageInfo = null;
+        _damageInfo = null; 
         _tick = _gameManager.tick;
         _buffYield = new WaitForSeconds(_tick);
         SetAttackButton();
         SetActionList();
         EquipStatusUpdate();
         StartCoroutine(BuffUpdate());
+        _questBoard.SetAction(() => { OnClickQuestBoard(); });
+        _questManager.InitQuest(_dataManager.GetQuestInfoList());
     }
 
     private void LateUpdate()
@@ -87,7 +94,9 @@ public class Player : MonoBehaviour, IActor
     {
         currActionState = currActionState.Update();
 
-        _fieldStatusUI.UpdateStatusPanel(GetHpPercent(), GetStaminaPercent());
+        _fieldStatusUI.UpdateStatusPanel(GetHpPercent(), GetStaminaPercent(), GetExpPercent());
+        UpdateQuest();
+        CheckLevelUp();
     }
 
     
@@ -154,6 +163,20 @@ public class Player : MonoBehaviour, IActor
             {
                 actor.TakeDamage(hitUnit, ref isKill);
                 _actorList.Add(actor);
+            }
+        }
+
+        if(true == isKill)
+        {
+            var info = GetCurrQuestInfo();
+            int id = actor.GetId();
+
+            if(true == _questManager.IsStart() && QuestType.Kill == info.Type)
+            {
+                if(info.QuestTargetId == id)
+                {
+                    _data.CurrQuestValue += 1;
+                }
             }
         }
 
@@ -690,6 +713,45 @@ public class Player : MonoBehaviour, IActor
         return true;
     }
 
+    public int GetItemCount(int id)
+    {
+        int classify = id / 10000;
+
+        ItemType type = ItemType.Count;
+
+        switch (classify)
+        {
+            case 1:
+                type = ItemType.Weapon;
+                break;
+
+            case 2:
+                type = ItemType.Armor;
+                break;
+
+            case 3:
+                type = ItemType.Accessory;
+                break;
+
+            case 4:
+                type = ItemType.Quest;
+                break;
+
+            case 5:
+                type = ItemType.Consumable;
+                break;
+        }
+
+        if(true == _inventory[type].ContainsKey(id))
+        {
+            return _inventory[type][id];
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
     public bool AddGold(int value)
     {
         if (_data.Gold + value < 0)
@@ -741,6 +803,152 @@ public class Player : MonoBehaviour, IActor
     public void ResetMovePad()
     {
         _movePad.ExecuteResetMovePad();
+    }
+
+    /// <summary>
+    /// 퀘스트 창 클릭
+    /// </summary>
+    public void OnClickQuestBoard()
+    {
+        if(false == _questManager.IsStart())
+        {
+            StartQuest();
+        }
+        else
+        {
+            if(true == IsSatisfyQuest())
+            {
+                ClearQuest();
+            }
+        }
+    }
+
+    private void StartQuest()
+    {
+        _questManager.StartQuest();
+        var questInfo = _questManager.GetQuestInfo(_data.NextQuestId);
+        if (null != questInfo)
+        {
+            _data.CurrQuestId = questInfo.Id;
+            _data.NextQuestId = questInfo.NextQuestId;
+        }
+        _data.CurrQuestValue = 0;
+    }
+
+    public void UpdateQuest()
+    {
+        if(false == _questManager.IsStart())
+        {
+            return;
+        }
+
+        var questInfo = _questManager.GetQuestInfo(_data.CurrQuestId);
+
+        int value = 0;
+
+        if (QuestType.LevelUp == questInfo.Type)
+        {
+            value = _data.Level;
+        }
+        else if (QuestType.Kill == questInfo.Type)
+        {
+            value = _data.CurrQuestValue;
+        }
+        else if (QuestType.Item == questInfo.Type)
+        {
+            value = GetItemCount(questInfo.QuestTargetId);
+        }
+
+        _questBoard.UpdateText(questInfo, value.ToString(), IsSatisfyQuest());
+    }
+
+    private void ClearQuest()
+    {
+        // 퀘스트 보상 확인
+        var reward = GetCurrQuestInfo().Reward;
+
+        if(null != reward)
+        {
+            switch (reward.Type)
+            {
+                case RewardType.Item:
+                    AddItem(reward.TargetId, reward.TargetValue);
+                    break;
+
+                case RewardType.Exp:
+                    AddExp(reward.TargetValue);
+                    break;
+
+                case RewardType.Gold:
+                    AddGold(reward.TargetValue);
+                    break;
+
+                case RewardType.Stat:
+
+                    break;
+
+                case RewardType.Count:
+
+                    break;
+            }
+        }
+
+        // 퀘스트창 초기화
+        _questManager.ClearQuest();
+        _data.CurrQuestValue = 0;
+        _questBoard.UpdateText(null, "", false);
+    }
+
+    private void AddExp(int value)
+    {
+        _data.Exp += value;
+    }
+
+    private void CheckLevelUp()
+    {
+        // 임시로 필요 경험치는 Level * Level * 10 + 90으로 계산
+        var level = _data.Level;
+
+        // 레벨 업 체크
+        if(_data.Exp >= RequiredExp)
+        {
+            LevelUp();
+        }
+    }
+
+    // 레벨 업 할때 발동하는 함수
+    private void LevelUp()
+    {
+        // 번쩍 하는 이펙트가 추가되도 나쁘지 않을 듯
+        _data.Exp -= RequiredExp;
+        _data.Level += 1;
+        OriginStatus.Attack += 2;
+        OriginStatus.MaxHp += 10;
+        OriginStatus.CurrHp = OriginStatus.MaxHp;
+        OriginStatus.MaxStamina += 10;
+        OriginStatus.Stamina = OriginStatus.MaxStamina;
+    }
+
+    private float GetExpPercent()
+    {
+        return (float)_data.Exp / RequiredExp;
+    }
+
+    private bool IsSatisfyQuest()
+    {
+        var currQuest = _questManager.GetQuestInfo(_data.CurrQuestId);
+
+        if(currQuest.QuestValue <= _data.CurrQuestValue)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private QuestInfo GetCurrQuestInfo()
+    {
+        return _questManager.GetQuestInfo(_data.CurrQuestId);
     }
 
     #region SKILL

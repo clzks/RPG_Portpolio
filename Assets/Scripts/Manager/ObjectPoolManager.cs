@@ -406,6 +406,12 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         return _activePoolList[ObjectType.Enemy];
     }
 
+    public BaseEnemy GetEnemy()
+    {
+        // 가장 가까운 적 찾기
+        return null;
+    }
+
     public Sprite GetSprite(string name)
     {
         return _spriteList[name];

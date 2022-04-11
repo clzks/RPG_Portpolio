@@ -61,5 +61,8 @@
     "Accessory": {},
     "Consumable": {},
     "Quest": {}
-  }
+  },
+  "CurrQuestId" : -1,
+  "CurrQuestValue" : 0,
+  "NextQuestId" : 10001
 }

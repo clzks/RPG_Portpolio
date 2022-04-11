@@ -14,7 +14,7 @@ public class DataManager : Singleton<DataManager>
     private Dictionary<int, ItemInfo> _itemInfoList;
     private Dictionary<string, EffectInfo> _effectInfoList;
     private Dictionary<string, Sprite> _skillImageList;
-
+    private Dictionary<int, QuestInfo> _questInfoList;
     private void Awake()
     {
         _actionInfoList = new Dictionary<string, ActionInfo>();
@@ -25,6 +25,7 @@ public class DataManager : Singleton<DataManager>
         _itemInfoList = new Dictionary<int, ItemInfo>();
         _effectInfoList = new Dictionary<string, EffectInfo>();
         _skillImageList = new Dictionary<string, Sprite>();
+        _questInfoList = new Dictionary<int, QuestInfo>();
     }
 
     public async UniTask<bool> LoadPlayerActionList()
@@ -172,10 +173,10 @@ public class DataManager : Singleton<DataManager>
     {
         foreach (var item in _actionInfoList.Values)
         {
-            if(ActionType.Skill == item.Type)
+            if (ActionType.Skill == item.Type)
             {
                 var image = Resources.Load<Sprite>("Png/Skills/" + item.Name);
-                if(null == image)
+                if (null == image)
                 {
                     Debug.Log("스킬 이미지 불러오기 실패");
                     return false;
@@ -188,6 +189,21 @@ public class DataManager : Singleton<DataManager>
         return true;
     }
 
+    public async UniTask<bool> LoadQuestInfoList()
+    {
+        _questInfoList = await JsonConverter<QuestInfo>.GetJsonToDictionaryKeyId();
+
+        if (null != _questInfoList)
+        {
+            Debug.Log("퀘스트 정보 읽기 성공");
+            return true;
+        }
+        else
+        {
+            Debug.Log("퀘스트 정보 읽기 실패");
+            return false;
+        }
+    }
     public void MakeNewPlayerData()
     {
         _playerData = PlayerData.MakeNewPlayerData();
@@ -344,5 +360,10 @@ public class DataManager : Singleton<DataManager>
         }
 
         return _skillImageList[key];
+    }
+
+    public Dictionary<int, QuestInfo> GetQuestInfoList()
+    {
+        return _questInfoList;
     }
 }

@@ -105,6 +105,24 @@ public enum GroundItemType
     Count
 }
 
+public enum QuestType
+{ 
+    Item,
+    Kill,
+    LevelUp,
+    Gold,
+    Count
+}
+
+public enum RewardType
+{ 
+    Item,
+    Exp,
+    Gold,
+    Stat,
+    Count
+}
+
 
 public static class Formula
 {
