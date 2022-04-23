@@ -18,7 +18,12 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
     private List<InventoryIcon> _iconList;
     private InventoryIcon _currSelectInventoryIcon;
     [SerializeField] private InventoryIconInfoPanel _iconInfoPanel;
-
+    public TextValuePanel levelPanel;
+    public TextValuePanel expPanel;
+    public TextValuePanel hpTextPanel;
+    public TextValuePanel staminaTextPanel;
+    public TextValuePanel attackTextPanel;
+    public TextValuePanel defenceTextPanel;
     private void Awake()
     {
         _dataManager = DataManager.Get();
@@ -43,6 +48,17 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
         {
             _iconInfoPanel.gameObject.SetActive(false);
         }
+    }
+
+    private void Update()
+    {
+        var status = _player.GetValidStatus();
+        levelPanel.SetText(_player.GetLevel().ToString());
+        expPanel.SetText(_player.GetExp().ToString() + " / " + _player.GetRequiredExp().ToString());
+        hpTextPanel.SetText(status.CurrHp.ToString() + " / " + status.MaxHp.ToString());
+        staminaTextPanel.SetText(status.Stamina.ToString() + " / " + status.MaxStamina.ToString());
+        attackTextPanel.SetText(status.Attack.ToString());
+        defenceTextPanel.SetText(status.Defence.ToString());
     }
 
     public void SetEquipSlot()

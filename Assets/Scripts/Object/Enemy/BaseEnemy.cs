@@ -335,6 +335,10 @@ public class BaseEnemy : MonoBehaviour, IActor
         return _id;
     }
 
+    public int GetExp()
+    {
+        return _exp;
+    }
     public string GetName()
     {
         return _name;

@@ -8,6 +8,7 @@ public interface IActor : IPoolObject
     void TakeDamage(HitUnitStatus status, ref bool isDead);
     void ResetActorList();
     int GetId();
+    int GetExp();
     float GetAttackValue();
     float GetHpPercent();
     void MoveCharacter(float animTime, float distance, Vector3 dir);

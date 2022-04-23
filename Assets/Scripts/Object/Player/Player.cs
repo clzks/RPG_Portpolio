@@ -36,7 +36,7 @@ public class Player : MonoBehaviour, IActor
     private PlayerData _data { get { return _dataManager.GetPlayerData(); } set { _dataManager.SetPlayerData(value); } }
     private List<IActor> _actorList;
     private List<IBuff> _buffList;
-    private int RequiredExp { get { return _data.Level * _data.Level * 10 + 90; ; } }
+    private int RequiredExp { get { return _data.Level * _data.Level * 5 + 30; ; } }
     
     private Dictionary<ItemType, SortedList<int,int>> _inventory { get { return _data.Inventory; } set { _data.Inventory = value; } }
     /*
@@ -74,7 +74,6 @@ public class Player : MonoBehaviour, IActor
         _buffYield = new WaitForSeconds(_tick);
         SetAttackButton();
         SetActionList();
-        EquipStatusUpdate();
         StartCoroutine(BuffUpdate());
         _questBoard.SetAction(() => { OnClickQuestBoard(); });
         _questManager.InitQuest(_dataManager.GetQuestInfoList());
@@ -97,7 +96,7 @@ public class Player : MonoBehaviour, IActor
     private void Update()
     {
         currActionState = currActionState.Update();
-
+        EquipStatusUpdate();
         _fieldStatusUI.UpdateStatusPanel(GetHpPercent(), GetStaminaPercent(), GetExpPercent());
         UpdateQuest();
         CheckLevelUp();
@@ -174,6 +173,7 @@ public class Player : MonoBehaviour, IActor
         {
             var info = GetCurrQuestInfo();
             int id = actor.GetId();
+            AddExp(actor.GetExp());
 
             if(true == _questManager.IsStart() && QuestType.Kill == info.Type)
             {
@@ -226,6 +226,16 @@ public class Player : MonoBehaviour, IActor
     public int GetId()
     {
         return -1;
+    }
+
+    public int GetExp()
+    {
+        return _data.Exp;
+    }
+
+    public int GetRequiredExp()
+    {
+        return RequiredExp;
     }
 
     public GameObject GetObject()
@@ -1000,6 +1010,11 @@ public class Player : MonoBehaviour, IActor
     private QuestInfo GetCurrQuestInfo()
     {
         return _questManager.GetQuestInfo(_data.CurrQuestId);
+    }
+
+    public int GetLevel()
+    {
+        return _data.Level;
     }
 
     #region SKILL
