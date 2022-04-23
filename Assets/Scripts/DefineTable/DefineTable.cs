@@ -12,6 +12,7 @@ public enum ObjectType
     GroundItem,
     InventoryIcon,
     BuffIcon,
+    RewardIcon,
     Count
 }
 
@@ -111,6 +112,14 @@ public enum QuestType
     Kill,
     LevelUp,
     Gold,
+    Count
+}
+
+public enum QuestProcessType
+{
+    NoneQuest,
+    Progress,
+    SatisFy,
     Count
 }
 

@@ -26,6 +26,7 @@ public class Player : MonoBehaviour, IActor
     [SerializeField] private PlayerFieldStatusUI _fieldStatusUI;
     [SerializeField] private MiniMap _miniMap;
     [SerializeField] private QuestBoard _questBoard;
+    [SerializeField] private DetailedQuestBoard _detailedQuestBoard;
     [SerializeField] private QuestCursor _questCursor;
 
     [Header("Status")]
@@ -77,6 +78,9 @@ public class Player : MonoBehaviour, IActor
         StartCoroutine(BuffUpdate());
         _questBoard.SetAction(() => { OnClickQuestBoard(); });
         _questManager.InitQuest(_dataManager.GetQuestInfoList());
+        _detailedQuestBoard.SetAcceptQuestButton(OnClickAcceptQuestButton);
+        _detailedQuestBoard.SetGetRewardButton(OnClickGetRewardButton);
+        _detailedQuestBoard.ClearRewardIcon(_questManager.GetQuestInfo(_data.NextQuestId));
     }
 
     private void LateUpdate()
@@ -810,17 +814,29 @@ public class Player : MonoBehaviour, IActor
     /// </summary>
     public void OnClickQuestBoard()
     {
-        if(false == _questManager.IsStart())
-        {
-            StartQuest();
-        }
-        else
-        {
-            if(true == IsSatisfyQuest())
-            {
-                ClearQuest();
-            }
-        }
+        _detailedQuestBoard.SetToggleOn();
+
+        //if(false == _questManager.IsStart())
+        //{
+        //    StartQuest();
+        //}
+        //else
+        //{
+        //    if(true == IsSatisfyQuest())
+        //    {
+        //        ClearQuest();
+        //    }
+        //}
+    }
+
+    private void OnClickAcceptQuestButton()
+    {
+        StartQuest();
+    }
+
+    private void OnClickGetRewardButton()
+    {
+        ClearQuest();
     }
 
     private void StartQuest()
@@ -833,68 +849,103 @@ public class Player : MonoBehaviour, IActor
             _data.NextQuestId = questInfo.NextQuestId;
         }
         _data.CurrQuestValue = 0;
+        _detailedQuestBoard.SetDetailedBoard(questInfo);
+    }
+    
+    private string GetSubjectText()
+    {
+        var questInfo = _questManager.GetQuestInfo(_data.CurrQuestId);
+        string text = "";
+
+        if (QuestType.LevelUp == questInfo.Type)
+        {
+            text = questInfo.Subject + "(" + _data.Level + "/" + questInfo.QuestValue + ")";
+        }
+        else if (QuestType.Kill == questInfo.Type)
+        {
+            text = questInfo.Subject + "(" + _data.CurrQuestValue + "/" + questInfo.QuestValue + ")";
+        }
+        else if (QuestType.Item == questInfo.Type)
+        {
+            text = questInfo.Subject;
+        }
+
+        return text;
     }
 
     public void UpdateQuest()
     {
-        if(false == _questManager.IsStart())
-        {
-            return;
-        }
-
         var questInfo = _questManager.GetQuestInfo(_data.CurrQuestId);
 
-        int value = 0;
-
-        if (QuestType.LevelUp == questInfo.Type)
+        if (questInfo != null)
         {
-            value = _data.Level;
+            _questBoard.UpdateText(questInfo, GetSubjectText(), IsSatisfyQuest());
         }
-        else if (QuestType.Kill == questInfo.Type)
+        else
         {
-            value = _data.CurrQuestValue;
-        }
-        else if (QuestType.Item == questInfo.Type)
-        {
-            value = GetItemCount(questInfo.QuestTargetId);
+            questInfo = _questManager.GetQuestInfo(_data.NextQuestId);
         }
 
-        _questBoard.UpdateText(questInfo, value.ToString(), IsSatisfyQuest());
+        if (true == _detailedQuestBoard.IsOn())
+        {
+            if (false == _questManager.IsStart())
+            {
+                _detailedQuestBoard.UpdateButtons(QuestProcessType.NoneQuest);
+                _detailedQuestBoard.SetReadyDetailedBoard(questInfo);
+                return;
+            }
+
+            _detailedQuestBoard.UpdateSubjectText(GetSubjectText());
+            
+            if(true == IsSatisfyQuest())
+            {
+                _detailedQuestBoard.SetClearDetailedBoard(questInfo);
+                _detailedQuestBoard.UpdateButtons(QuestProcessType.SatisFy);
+            }
+            else
+            {
+                _detailedQuestBoard.UpdateButtons(QuestProcessType.Progress);
+            }
+        }
     }
 
     private void ClearQuest()
     {
         // 퀘스트 보상 확인
-        var reward = GetCurrQuestInfo().Reward;
-
-        if(null != reward)
+        var rewards = GetCurrQuestInfo().Rewards;
+         
+        if(null != rewards)
         {
-            switch (reward.Type)
+            foreach (var reward in rewards)
             {
-                case RewardType.Item:
-                    AddItem(reward.TargetId, reward.TargetValue);
-                    break;
+                switch (reward.Type)
+                {
+                    case RewardType.Item:
+                        AddItem(reward.TargetId, reward.TargetValue);
+                        break;
 
-                case RewardType.Exp:
-                    AddExp(reward.TargetValue);
-                    break;
+                    case RewardType.Exp:
+                        AddExp(reward.TargetValue);
+                        break;
 
-                case RewardType.Gold:
-                    AddGold(reward.TargetValue);
-                    break;
+                    case RewardType.Gold:
+                        AddGold(reward.TargetValue);
+                        break;
 
-                case RewardType.Stat:
+                    case RewardType.Stat:
 
-                    break;
+                        break;
 
-                case RewardType.Count:
+                    case RewardType.Count:
 
-                    break;
+                        break;
+                }
             }
         }
 
         // 퀘스트창 초기화
         _questManager.ClearQuest();
+        _detailedQuestBoard.ClearRewardIcon(_questManager.GetQuestInfo(_data.NextQuestId));
         _data.CurrQuestValue = 0;
         _questBoard.UpdateText(null, "", false);
     }
