@@ -26,7 +26,7 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         LoadEnemyPrefab();
         LoadHitUnit();
         LoadMapPrefab();
-        LoadDamageText();
+        LoadTextFloat();
         LoadMaterials();
         LoadGroundItem();
         LoadInventroyIcon();
@@ -314,10 +314,10 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         _materialList.Add("DesertRock_TransParent", trans);
     }
 
-    private void LoadDamageText()
+    private void LoadTextFloat()
     {
-        var text = Resources.Load<GameObject>("Prefabs/DamageText/DamageText");
-        prefabList.Add("DamageText", text);
+        var text = Resources.Load<GameObject>("Prefabs/TextFloat/TextFloat");
+        prefabList.Add("TextFloat", text);
     }
 
     private void LoadGroundItem()

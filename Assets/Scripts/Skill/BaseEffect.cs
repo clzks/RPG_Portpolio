@@ -13,6 +13,7 @@ public class BaseEffect : MonoBehaviour, IPoolObject
     protected ActionInfo _action;
     protected IActor _actor;
     protected bool _isInitRotation = false;
+    [SerializeField]protected ParticleSystem _particleSystem;
     private List<HitUnitInfo> HitUnitList { get { return _action.HitUnitList; } }
     private void Awake()
     {
@@ -145,5 +146,13 @@ public class BaseEffect : MonoBehaviour, IPoolObject
     public void SetInitRotation(bool enabled)
     {
         _isInitRotation = enabled;
+    }
+
+    public void SetPlayBackTime(float time)
+    {
+        if (null != _particleSystem)
+        {
+            _particleSystem.time = time;
+        }
     }
 }

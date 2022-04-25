@@ -81,7 +81,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         SetItems(info);
         SetGold(info);
         _exp = info.Exp;
-
+        _isInvincible = false;
         StartCoroutine(StatusUpdate());
         currActionState = actionState;
     }
@@ -250,7 +250,7 @@ public class BaseEnemy : MonoBehaviour, IActor
         }
 
         // TODO 데미지 이펙트 추가할 곳
-        var damageText = _objectPool.MakeObject(ObjectType.DamageText).GetComponent<DamageText>();
+        var damageText = _objectPool.MakeObject(ObjectType.TextFloat).GetComponent<TextFloat>();
         damageText.SetText(DamageTextType.Enemy, (int)hitUnit.Damage, RootPosition);
         damageText.ExecuteFloat();
         // 넉백 및 경직이 없다는 뜻
@@ -269,29 +269,33 @@ public class BaseEnemy : MonoBehaviour, IActor
         if (_originStatus.CurrHp <= 0)
         {
             isDead = true;
-            if (0 != _itemList.Count)
-            {
-                foreach (var item in _itemList)
-                {
-                    var groundItem = _objectPool.MakeObject(ObjectType.GroundItem).GetComponent<GroundItem>();
-                    groundItem.SetGroundItem(item);
-                    groundItem.transform.position = transform.position;
-                }
-            }
-
-            if(0 != _gold)
-            {
-                var groundItem = _objectPool.MakeObject(ObjectType.GroundItem).GetComponent<GroundItem>();
-                groundItem.SetGroundGold(_gold);
-                groundItem.transform.position = transform.position;
-            }
-
-            ReturnObject();
         }
         else
         {
             isDead = false;
         }
+    }
+
+    public void ExecuteDead()
+    {
+        if (0 != _itemList.Count)
+        {
+            foreach (var item in _itemList)
+            {
+                var groundItem = _objectPool.MakeObject(ObjectType.GroundItem).GetComponent<GroundItem>();
+                groundItem.SetGroundItem(item);
+                groundItem.transform.position = transform.position;
+            }
+        }
+
+        if (0 != _gold)
+        {
+            var groundItem = _objectPool.MakeObject(ObjectType.GroundItem).GetComponent<GroundItem>();
+            groundItem.SetGroundGold(_gold);
+            groundItem.transform.position = transform.position;
+        }
+
+        ReturnObject();
     }
 
     public void AddStareTime(float stareTime)
@@ -379,8 +383,16 @@ public class BaseEnemy : MonoBehaviour, IActor
         return _originStatus.CurrHp / _validStatus.MaxHp;
     }
 
-    
+    public bool IsZeroHp()
+    {
+        if(_originStatus.CurrHp <= 0)
+        {
+            return true;
+        }
 
+        return false;
+    }
+    
     public Status GetValidStatus()
     {
         return _validStatus;

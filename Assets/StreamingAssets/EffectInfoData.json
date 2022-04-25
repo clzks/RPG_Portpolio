@@ -31,6 +31,12 @@
             "IsRotate" : false
         },
         {
+        	"Id" : 10000,
+            "Name": "LevelUp",
+            "Life" : 3,
+            "IsRotate" : false
+        },
+        {
         	"Id" : 30001,
             "Name": "DragonMeteor",
             "Life" : 3,

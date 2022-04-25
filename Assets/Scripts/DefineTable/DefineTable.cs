@@ -8,7 +8,7 @@ public enum ObjectType
     Enemy,
     Effect,
     Map,
-    DamageText,
+    TextFloat,
     GroundItem,
     InventoryIcon,
     BuffIcon,

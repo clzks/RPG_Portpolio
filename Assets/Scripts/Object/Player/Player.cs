@@ -175,7 +175,11 @@ public class Player : MonoBehaviour, IActor
             int id = actor.GetId();
             AddExp(actor.GetExp());
 
-            if(true == _questManager.IsStart() && QuestType.Kill == info.Type)
+            var expText = _objectPool.MakeObject(ObjectType.TextFloat).GetComponent<TextFloat>();
+            expText.SetExpText(actor.GetExp(), Position);
+            expText.ExecuteFloat();
+
+            if (true == _questManager.IsStart() && QuestType.Kill == info.Type)
             {
                 if(info.QuestTargetId == id)
                 {
@@ -364,7 +368,7 @@ public class Player : MonoBehaviour, IActor
             OriginStatus.CurrHp -= hitUnit.Damage;
         }
         // TODO 데미지 이펙트 추가할 곳
-        var damageText = _objectPool.MakeObject(ObjectType.DamageText).GetComponent<DamageText>();
+        var damageText = _objectPool.MakeObject(ObjectType.TextFloat).GetComponent<TextFloat>();
         damageText.SetText(DamageTextType.Player, (int)hitUnit.Damage, Position);
         damageText.ExecuteFloat();
 
@@ -980,7 +984,19 @@ public class Player : MonoBehaviour, IActor
     // 레벨 업 할때 발동하는 함수
     private void LevelUp()
     {
-        // 번쩍 하는 이펙트가 추가되도 나쁘지 않을 듯
+        // 번쩍 하는 이펙트
+        var info = _dataManager.GetEffectInfo("LevelUp");
+        var effect = _objectPool.MakeObject(ObjectType.Effect, "LevelUp").GetComponent<BaseEffect>();
+        effect.transform.position = Position;
+        effect.transform.SetParent(transform);
+        effect.SetEffect("LevelUp");
+        effect.ExecuteEffect(info.Life);
+
+        // 레벨업 텍스트플롯
+        var levelUpText = _objectPool.MakeObject(ObjectType.TextFloat).GetComponent<TextFloat>();
+        levelUpText.SetLevelUpText(Position);
+        levelUpText.ExecuteFloat();
+
         _data.Exp -= RequiredExp;
         _data.Level += 1;
         OriginStatus.Attack += 2;

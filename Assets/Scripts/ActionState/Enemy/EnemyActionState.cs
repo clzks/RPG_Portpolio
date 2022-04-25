@@ -64,7 +64,6 @@ public abstract class EnemyActionState : IActionState
         return _enemy.GetDamageInfo();
     }
 
-
     public float GetAnimNormalTime(string anim)
     {
         var stateInfo = _animator.GetCurrentAnimatorStateInfo(0);
@@ -142,6 +141,11 @@ public class EnemyIdleState : EnemyActionState
 
     public override IActionState Update()
     {
+        if(true == _enemy.IsZeroHp())
+        {
+            return new EnemyDieState(_enemy);
+        }
+
         idleTimer += Time.deltaTime;
         _enemy.AddStareTime(Time.deltaTime);
 
@@ -193,6 +197,11 @@ public class EnemyPatrolState : EnemyActionState
 
     public override IActionState Update()
     {
+        if (true == _enemy.IsZeroHp())
+        {
+            return new EnemyDieState(_enemy);
+        }
+
         patrolTimer += Time.deltaTime;
         _enemy.AddStareTime(Time.deltaTime);
 
@@ -238,6 +247,11 @@ public class EnemyChaseState : EnemyActionState
 
     public override IActionState Update()
     {
+        if (true == _enemy.IsZeroHp())
+        {
+            return new EnemyDieState(_enemy);
+        }
+
         _enemy.AddStareTime(Time.deltaTime);
 
         if (null != GetDamageInfo())
@@ -317,6 +331,11 @@ public class EnemyAttackState : EnemyActionState
     }
     public override IActionState Update()
     {
+        if (true == _enemy.IsZeroHp())
+        {
+            return new EnemyDieState(_enemy);
+        }
+
         var currAnimTime = GetAnimNormalTime(actionName);
 
         if (null != GetDamageInfo())
@@ -365,6 +384,11 @@ public class EnemyStareState : EnemyActionState
     }
     public override IActionState Update()
     {
+        if (true == _enemy.IsZeroHp())
+        {
+            return new EnemyDieState(_enemy);
+        }
+
         _enemy.AddStareTime(Time.deltaTime);
 
         if (null != GetDamageInfo())
@@ -423,6 +447,11 @@ public class EnemyDamageState : EnemyActionState
     }
     public override IActionState Update()
     {
+        if (true == _enemy.IsZeroHp())
+        {
+            return new EnemyDieState(_enemy);
+        }
+
         timer += Time.deltaTime;
         //_enemy.AddStareTime(Time.deltaTime);
 
@@ -460,6 +489,11 @@ public class EnemyStunState : EnemyActionState
     }
     public override IActionState Update()
     {
+        if (true == _enemy.IsZeroHp())
+        {
+            return new EnemyDieState(_enemy);
+        }
+
         _enemy.AddStareTime(Time.deltaTime);
         // 스턴 후에는 chase로 귀환
         return this;
@@ -480,13 +514,23 @@ public class EnemyDieState : EnemyActionState
 
     public override void Enter()
     {
-        // 경로를 리셋시켜준다
+        // 사망 애니메이션 중에 추가 피격을 당하지 않게 에이전트를 꺼주면서 무적처리를 해준다.
         Agent.ResetPath();
+        _enemy.SetInvincible(true);
+        _enemy.SetActiveNavMeshAgent(false);
+        // 경로를 리셋시켜준다
         PlayAnimation("Die");
     }
 
     public override IActionState Update()
     {
+        var currAnimTime = GetAnimNormalTime("Die");
+
+        if(currAnimTime >= 0.99f)
+        {
+            _enemy.ExecuteDead();
+        }
+
         return this;
     }
 
