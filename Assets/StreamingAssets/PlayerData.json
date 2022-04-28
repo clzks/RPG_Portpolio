@@ -37,9 +37,9 @@
     "MaxHp": 100.0,
     "Speed": 6.5,
     "AttackSpeed": 1.0,
-    "MaxStamina" : 100.0,
+    "MaxStamina": 100.0,
     "Stamina": 100.0,
-    "RegenStamina" : 10,
+    "RegenStamina": 10.0,
     "Strength": 1.0,
     "Defence": 0.0,
     "Attack": 10.0,
@@ -62,7 +62,7 @@
     "Consumable": {},
     "Quest": {}
   },
-  "CurrQuestId" : -1,
-  "CurrQuestValue" : 0,
-  "NextQuestId" : 10001
+  "CurrQuestId": -1,
+  "NextQuestId": 10001,
+  "CurrQuestValue": 0
 }

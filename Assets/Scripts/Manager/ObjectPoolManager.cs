@@ -368,10 +368,18 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         _activePoolList = new Dictionary<ObjectType, List<IPoolObject>>();
     }
 
-    public void ReturnAllObject()
+    public void ReturnAllObject(bool isMapChange = false)
     {
         foreach (var item in _activePoolList)
         {
+            if (true == isMapChange)
+            {
+                if (ObjectType.RewardIcon == item.Key || ObjectType.InventoryIcon == item.Key)
+                {
+                    continue;
+                }
+            }
+
             for (int i = item.Value.Count - 1; i > -1; --i)
             {
                 IPoolObject iObj = item.Value[i];

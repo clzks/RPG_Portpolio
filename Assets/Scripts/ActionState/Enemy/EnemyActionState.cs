@@ -526,7 +526,7 @@ public class EnemyDieState : EnemyActionState
     {
         var currAnimTime = GetAnimNormalTime("Die");
 
-        if(currAnimTime >= 0.99f)
+        if(currAnimTime >= 0.9f)
         {
             _enemy.ExecuteDead();
         }
