@@ -13,11 +13,13 @@ public class PlayerData : IData
     public int Exp { get; set; }
     public int SkillPoint { get; set; }
     public Dictionary<ItemType, SortedList<int,int>> Inventory { get; set; }
-    public int CurrQuestId { get; set; }
-    public int NextQuestId { get; set; }
+    public int CurrScenarioId { get; set; }
+    public ScenarioProcessType ScenarioProcessType { get; set; }
     public int CurrQuestValue { get; set; }
     //public bool IsStartQuest { get; set; }
-    
+    public int CurrMapId { get; set; }
+    public Vector3 CurrPos { get; set; }
+    //public TutorialType TutorialProgress { get; set; }
     public static PlayerData MakeNewPlayerData()
     {
         PlayerData data = new PlayerData();
@@ -41,8 +43,12 @@ public class PlayerData : IData
         data.Gold = 0;
         data.Exp = 0;
         data.SkillPoint = 0;
-        data.CurrQuestId = 0;
+        data.CurrScenarioId = 0;
+        data.ScenarioProcessType = ScenarioProcessType.PrevQuest;
         data.CurrQuestValue = 0;
+        data.CurrMapId = -1;
+        data.CurrPos = new Vector3(0, 0, 0);
+        //data.TutorialProgress = TutorialType.MoveTutorial;
         return data;
     }
 

@@ -15,6 +15,8 @@ public class DataManager : Singleton<DataManager>
     private Dictionary<string, EffectInfo> _effectInfoList;
     private Dictionary<string, Sprite> _skillImageList;
     private Dictionary<int, QuestInfo> _questInfoList;
+    private Dictionary<int, ScenarioInfo> _scenarioInfoList;
+    private Dictionary<int, DialogInfo> _dialogInfoList;
     private void Awake()
     {
         _actionInfoList = new Dictionary<string, ActionInfo>();
@@ -26,6 +28,8 @@ public class DataManager : Singleton<DataManager>
         _effectInfoList = new Dictionary<string, EffectInfo>();
         _skillImageList = new Dictionary<string, Sprite>();
         _questInfoList = new Dictionary<int, QuestInfo>();
+        _scenarioInfoList = new Dictionary<int, ScenarioInfo>();
+        _dialogInfoList = new Dictionary<int, DialogInfo>();
     }
 
     public async UniTask<bool> LoadPlayerActionList()
@@ -204,6 +208,39 @@ public class DataManager : Singleton<DataManager>
             return false;
         }
     }
+
+    public async UniTask<bool> LoadScenarioInfoList()
+    {
+        _scenarioInfoList = await JsonConverter<ScenarioInfo>.GetJsonToDictionaryKeyId();
+
+        if (null != _scenarioInfoList)
+        {
+            Debug.Log("시나리오 정보 읽기 성공");
+            return true;
+        }
+        else
+        {
+            Debug.Log("시나리오 정보 읽기 실패");
+            return false;
+        }
+    }
+
+    public async UniTask<bool> LoadDialogInfoList()
+    {
+        _dialogInfoList = await JsonConverter<DialogInfo>.GetJsonToDictionaryKeyId();
+
+        if (null != _dialogInfoList)
+        {
+            Debug.Log("대화 정보 읽기 성공");
+            return true;
+        }
+        else
+        {
+            Debug.Log("대화 정보 읽기 실패");
+            return false;
+        }
+    }
+
     public void MakeNewPlayerData()
     {
         _playerData = PlayerData.MakeNewPlayerData();
@@ -223,7 +260,7 @@ public class DataManager : Singleton<DataManager>
 
     public void SetPlayerSkillList(PlayerData data)
     {
-        data.SkillSlots.Add("ShockWave");
+        data.SkillSlots.Add(string.Empty);
         data.SkillSlots.Add(string.Empty);
         data.SkillSlots.Add(string.Empty);
 
@@ -365,5 +402,25 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<int, QuestInfo> GetQuestInfoList()
     {
         return _questInfoList;
+    }
+
+    public Dictionary<int, ScenarioInfo> GetScenarioinfoList()
+    {
+        return _scenarioInfoList;
+    }
+
+    public ScenarioInfo GetScenarioInfo(int id)
+    {
+        return _scenarioInfoList[id];
+    }
+
+    public Dictionary<int, DialogInfo> GetDialogInfoList()
+    {
+        return _dialogInfoList;
+    }
+
+    public DialogInfo GetDialogInfo(int id)
+    {
+        return _dialogInfoList[id];
     }
 }

@@ -137,4 +137,9 @@ public class BaseMap : MonoBehaviour, IPoolObject
     {
         return new Vector3();
     }
+
+    public List<MapPoint> GetMapPointList()
+    {
+        return _pointList;
+    }
 }

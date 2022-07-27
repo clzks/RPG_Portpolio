@@ -13,36 +13,36 @@
     {
       "name": "Berserk",
       "id": 10010,
-      "level": 1
+      "level": 0
     },
     {
       "name": "Barrier",
       "id": 10020,
-      "level": 1
+      "level": 0
     },
     {
       "name": "SummonSword",
       "id": 10030,
-      "level": 1
+      "level": 0
     }
   ],
   "SkillSlots": [
-    "ShockWave",
-    "SummonSword",
-    "Berserk"
+    "",
+    "",
+    ""
   ],
   "Level": 1,
   "Status": {
-    "CurrHp": 30.0,
+    "CurrHp": 100.0,
     "MaxHp": 100.0,
-    "Speed": 6.5,
+    "Speed": 5.0,
     "AttackSpeed": 1.0,
     "MaxStamina": 100.0,
     "Stamina": 100.0,
-    "RegenStamina": 10.0,
+    "RegenStamina": 1.0,
     "Strength": 1.0,
     "Defence": 0.0,
-    "Attack": 10.0,
+    "Attack": 0.0,
     "Shield": 0.0,
     "ChaseSpeed": 0.0,
     "PatrolSpeed": 0.0,
@@ -62,7 +62,13 @@
     "Consumable": {},
     "Quest": {}
   },
-  "CurrQuestId": -1,
-  "NextQuestId": 10001,
-  "CurrQuestValue": 0
+  "CurrScenarioId": 0,
+  "ScenarioProcessType": 0,
+  "CurrQuestValue": 0,
+  "CurrMapId": -1,
+  "CurrPos": {
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
+  }
 }

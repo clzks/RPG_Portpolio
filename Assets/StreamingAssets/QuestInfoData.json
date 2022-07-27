@@ -2,18 +2,34 @@
     "Description": {
     	"Id" : "정보를 구분짓기 위한 값",
         "Name": "퀘스트 제목",
-        "Type" : "퀘스트 내용, Item, Kill, LevelUp,,",
+        "Type" : "퀘스트 내용, Item, Kill, LevelUp, Arrive, Tutorial",
         "QuestTargetId" : "목표물의 Id (Level의 경우 사용안함)",
         "MapId" : "목표 맵 id값. (맵에 관계 없을 경우 -1)",
-        "QuestValue": "목표 수치",
+        "QuestValue": "목표 수치, Type이 Arrive일 경우 목표 MapPoint의 Id값",
         "Subject" : "퀘스트 창에 표시될 내용",
         "Description" : "임무 받기 전 의뢰인의 설명",
         "ClearDescription" : "임무 달성 후 의뢰인의 설명", 
         "Client" : "의뢰자 이름",
-        "NextQuestId" : "다음 퀘스트 Id값 (임시)",
         "Rewards" : "퀘스트 보상. QuestType, TargetId(안쓸 경우 -1), TargetValue(수치 혹은 갯수)"
     },
     "QuestInfo": [
+        {
+            "Id" : 0,
+            "Name": "튜토리얼_이동",
+            "Type" : "Arrive",
+            "QuestTargetId" : 6,
+            "MapId" : 10010,
+            "QuestValue": 1,
+            "Subject" : "이동 익히기",
+            "Description" : "맵에 빨간 동그라미로 이동하기",
+            "ClearDescription" : "훌륭합니다. 이동하는 법을 익히셨습니다!", 
+            "Client" : "개발자",
+            "Rewards" : [{
+                "Type" : "Exp",
+                "TargetId" : -1,
+                "TargetValue" : 100   
+            }]
+        },
         {
         	"Id" : 10001,
             "Name": "사막을 구해줘 1",
@@ -25,11 +41,10 @@
             "Description" : "임무 받기 전 의뢰인의 설명",
             "ClearDescription" : "임무 달성 후 의뢰인의 설명", 
             "Client" : "마을 촌장",
-            "NextQuestId" : 10002,
             "Rewards" : [{
                 "Type" : "Exp",
                 "TargetId" : -1,
-                "TargetValue" : 100   
+                "TargetValue" : 100
             }]
         },
         {
@@ -43,7 +58,6 @@
             "Description" : "임무 받기 전 의뢰인의 설명",
             "ClearDescription" : "임무 달성 후 의뢰인의 설명", 
             "Client" : "마을 촌장",
-            "NextQuestId" : 10003,
             "Rewards" : [
             {
                 "Type" : "Gold",
@@ -67,7 +81,6 @@
             "Description" : "임무 받기 전 의뢰인의 설명",
             "ClearDescription" : "임무 달성 후 의뢰인의 설명", 
             "Client" : "마을 촌장",
-            "NextQuestId" : -1,
             "Rewards" : [
             {
                 "Type" : "Gold",

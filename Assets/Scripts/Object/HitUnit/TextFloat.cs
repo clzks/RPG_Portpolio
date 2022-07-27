@@ -133,6 +133,20 @@ public class TextFloat : MonoBehaviour, IPoolObject
         originPos = Position;
     }
 
+    public void SetTutorialMoveText(Vector3 pos)
+    {
+        _textMesh.color = new Color(1, 0, 0, 0);
+
+        _textMesh.text = "튜토리얼 중에는 이동이 제한됩니다!";
+        Position = pos - new Vector3(0, 0, 3f);
+        originPos = Position;
+    }
+
+    public void SetTutorialLimitButtonText(Vector3 pos)
+    { 
+
+    }
+
     public void ExecuteFloat()
     {
         StartCoroutine(FloatText());

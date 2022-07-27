@@ -1,0 +1,54 @@
+{
+    "Description": {
+    	"Id" : "정보를 구분짓기 위한 값",
+        "Name": "시나리오 이름?",
+        "ConditionMapId" : "시나리오 조건 맵 Id(없을경우 -1)",
+        "ConditionPointIndex" : "시나리오 시작 조건 포인트 위치(없을경우 -1)",
+        "ReadyDialogInfoId" : "시나리오 진입 대사 Id값(없을경우 -1)",
+        "QuestId" : "퀘스트 Id(없을경우 -1)",
+        "ClearDialogInfoId" : "시나리오 클리어 대사 Id값(없을경우 -1)",
+        "NextScenarioId" : "다음 시나리오 Id값"
+    },
+    "ScenarioInfo": [ 
+        {
+        	"Id" : 0,
+            "Name": "시작_이동조작",
+            "ConditionMapId" : 0,
+        	"ConditionPointIndex" : 1,
+            "ReadyDialogInfoId" : 0,
+            "QuestId" : -1,
+            "ClearDialogInfoId" : -1,
+            "NextScenarioId" : 1
+        },
+        {
+        	"Id" : 1,
+            "Name": "시작_공격_구르기",
+            "ConditionMapId" : 0,
+        	"ConditionPointIndex" : 1,
+            "ReadyDialogInfoId" : 1,
+            "QuestId" : -1,
+            "ClearDialogInfoId" : -1,
+            "NextScenarioId" : 2
+        },
+        {
+        	"Id" : 2,
+            "Name": "시작_옵션_스킬",
+            "ConditionMapId" : 0,
+        	"ConditionPointIndex" : 1,
+            "ReadyDialogInfoId" : 2,
+            "QuestId" : -1,
+            "ClearDialogInfoId" : 3,
+            "NextScenarioId" : 3
+        },
+        {
+        	"Id" : 3,
+            "Name": "튜토리얼_끝",
+            "ConditionMapId" : 0,
+        	"ConditionPointIndex" : 1,
+            "ReadyDialogInfoId" : 4,
+            "QuestId" : -1,
+            "ClearDialogInfoId" : -1,
+            "NextScenarioId" : 10000
+        }
+    ]
+}

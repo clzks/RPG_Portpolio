@@ -32,6 +32,7 @@ public enum MapEventType
     Transition,
     UniqueMonster,
     NormalMonster,
+    QuestDestination,
     Count
 }
 
@@ -112,6 +113,8 @@ public enum QuestType
     Kill,
     LevelUp,
     Gold,
+    Arrive,
+    Tutorial,
     Count
 }
 
@@ -119,7 +122,7 @@ public enum QuestProcessType
 {
     NoneQuest,
     Progress,
-    SatisFy,
+    Satisfy,
     Count
 }
 
@@ -129,6 +132,22 @@ public enum RewardType
     Exp,
     Gold,
     Stat,
+    Count
+}
+
+// 시나리오에는 퀘스트 받기 전과 받은 후 상황밖에 없을 것. 퀘스트 클리어 후에는 바로 다음 시나리오로 넘어가도록 시나리오를 작성할 것
+public enum ScenarioProcessType
+{ 
+    PrevQuest,          // 퀘스트 받기 전
+    ProgressQuest,      // 퀘스트 진행 중
+    Count
+}
+
+public enum DialogType
+{ 
+    PrevDialog,
+    ClearDialog,
+    EventDialog,
     Count
 }
 
@@ -151,8 +170,7 @@ public static class Formula
         randomPoint.y = startPos.y;
         var result = Vector3.zero;
         
-        // 
-        while(count <= 200)
+        while(count <= 100)
         {
             count++;
             result = startPos;
@@ -189,9 +207,9 @@ public static class Formula
         return false;
     }
 
-    public static EquipType ConvertItemTypeToEquipType(ItemType iType)
+    public static EquipType ConvertItemTypeToEquipType(ItemType type)
     {
-        switch (iType)
+        switch (type)
         {
             case ItemType.Weapon:
                 return EquipType.Weapon;

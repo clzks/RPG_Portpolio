@@ -12,9 +12,18 @@ public class MapPoint : MonoBehaviour
     public List<SummonInfo> SummonList;
     [DrawIf("EventType", MapEventType.NormalMonster)] public float SummonMaxRange;
     private BattleScene _scene;
+    private ScenarioManager _scenarioManager;
+    [SerializeField]private SphereCollider _collider;
+    [SerializeField]private SpriteRenderer _renderer;
     private void Awake()
     {
         _scene = GameObject.Find("Scripts").GetComponent<BattleScene>();
+        //_collider = gameObject.GetComponent<SphereCollider>();
+    }
+
+    public void SetActiveRenderer(bool enabled)
+    {
+        _renderer.enabled = enabled;
     }
 
     public void OnDrawGizmos()
@@ -23,6 +32,21 @@ public class MapPoint : MonoBehaviour
         {
             Gizmos.color = Color.gray;
             Gizmos.DrawSphere(transform.position, SummonMaxRange);
+        }
+        else if(EventType == MapEventType.Transition)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(transform.position, _collider.radius);
+        }
+        else if(EventType == MapEventType.SummonPoint)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(transform.position, _collider.radius);
+        }
+        else if(EventType == MapEventType.UniqueMonster)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(transform.position, _collider.radius);
         }
     }
 
@@ -38,6 +62,10 @@ public class MapPoint : MonoBehaviour
             if (MapEventType.Transition == EventType)
             {
                 _scene.EnterNewWorld(TransInfo.mapId, TransInfo.mapPointId);
+            }
+            else if(MapEventType.QuestDestination == EventType)
+            {
+                _scene.PlayerEnterMapPoint(this);
             }
         }
     }

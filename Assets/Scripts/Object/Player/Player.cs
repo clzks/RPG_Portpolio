@@ -12,7 +12,7 @@ public class Player : MonoBehaviour, IActor
     private GameManager _gameManager;
     private ObjectPoolManager _objectPool;
     private DataManager _dataManager;
-    private QuestManager _questManager;
+    private ScenarioManager _scenarioManager;
     [SerializeField] private NavMeshAgent _agent;
     [SerializeField] private InGameCamera _camera;
     [SerializeField] private Animator _animController;
@@ -28,7 +28,10 @@ public class Player : MonoBehaviour, IActor
     [SerializeField] private QuestBoard _questBoard;
     [SerializeField] private DetailedQuestBoard _detailedQuestBoard;
     [SerializeField] private QuestCursor _questCursor;
-
+    [SerializeField] private DialogWindow _dialogWindow;
+    [SerializeField] private TutorialCursor _tutorialCursor;
+    [SerializeField] private List<RectTransform> _tutorialCursorQuestTransformList;
+    //[SerializeField] private 
     [Header("Status")]
     public float speed = 30f;
     public IActionState currActionState;
@@ -55,12 +58,20 @@ public class Player : MonoBehaviour, IActor
     public Vector3 Position { get { return transform.position; } }
     private WaitForSeconds _buffYield;
     private float _tick;
+
+    [Header("Tutorial")]
+    private bool _isTrippleAttack = false;
+    private bool _isRoll = false;
+    public GameObject tutorialPanel;
+    public Text tutorialText;
+    private List<MapPoint> _currMapPointList;
+    //int currScenarioId;   현재 시나리오에 관련된 정보는 PlayerData에 포함되어 있다.
     private void Awake()
     {
         _gameManager = GameManager.Get();
         _dataManager = DataManager.Get();
         _objectPool = ObjectPoolManager.Get();
-        _questManager = QuestManager.Get();
+        _scenarioManager = ScenarioManager.Get();
         //_camera.SetCameraDistance(transform.position);
         currActionState = new PlayerIdleState(this);
         _actionInfoList = DataManager.Get().GetActionInfoList();
@@ -76,10 +87,20 @@ public class Player : MonoBehaviour, IActor
         SetActionList();
         StartCoroutine(BuffUpdate());
         _questBoard.SetAction(() => { OnClickQuestBoard(); });
-        _questManager.InitQuest(_dataManager.GetQuestInfoList());
+        _scenarioManager.InitScenario(_dataManager.GetScenarioinfoList());
+        _scenarioManager.InitQuest(_dataManager.GetQuestInfoList());
         _detailedQuestBoard.SetAcceptQuestButton(OnClickAcceptQuestButton);
         _detailedQuestBoard.SetGetRewardButton(OnClickGetRewardButton);
-        _detailedQuestBoard.ClearRewardIcon(_questManager.GetQuestInfo(_data.NextQuestId));
+        _detailedQuestBoard.ClearRewardIcon(_scenarioManager.GetQuestInfo(_data.CurrScenarioId));
+        _currMapPointList = new List<MapPoint>();
+    }
+
+    private void Start()
+    {
+        if(_data.CurrScenarioId == 0)
+        {
+            TutorialStart();
+        }
     }
 
     private void LateUpdate()
@@ -95,6 +116,7 @@ public class Player : MonoBehaviour, IActor
 
     private void Update()
     {
+        Tutorial();
         currActionState = currActionState.Update();
         EquipStatusUpdate();
         _fieldStatusUI.UpdateStatusPanel(GetHpPercent(), GetStaminaPercent(), GetExpPercent());
@@ -179,7 +201,7 @@ public class Player : MonoBehaviour, IActor
             expText.SetExpText(actor.GetExp(), Position);
             expText.ExecuteFloat();
 
-            if (true == _questManager.IsStart() && QuestType.Kill == info.Type)
+            if (ScenarioProcessType.ProgressQuest == _scenarioManager.GetProcess() && QuestType.Kill == info.Type)
             {
                 if(info.QuestTargetId == id)
                 {
@@ -829,18 +851,6 @@ public class Player : MonoBehaviour, IActor
     public void OnClickQuestBoard()
     {
         _detailedQuestBoard.SetToggleOn();
-
-        //if(false == _questManager.IsStart())
-        //{
-        //    StartQuest();
-        //}
-        //else
-        //{
-        //    if(true == IsSatisfyQuest())
-        //    {
-        //        ClearQuest();
-        //    }
-        //}
     }
 
     private void OnClickAcceptQuestButton()
@@ -855,12 +865,12 @@ public class Player : MonoBehaviour, IActor
 
     private void StartQuest()
     {
-        _questManager.StartQuest();
-        var questInfo = _questManager.GetQuestInfo(_data.NextQuestId);
-        if (null != questInfo)
+        _data.ScenarioProcessType = ScenarioProcessType.ProgressQuest;
+        _scenarioManager.SetScenarioProcess(ScenarioProcessType.ProgressQuest);
+        var questInfo = _scenarioManager.GetQuestInfo(_data.CurrScenarioId);
+        if (null == questInfo)
         {
-            _data.CurrQuestId = questInfo.Id;
-            _data.NextQuestId = questInfo.NextQuestId;
+            Debug.LogError("퀘스트가 존재하지 않지만 StartQuest로 들어옴");
         }
         _data.CurrQuestValue = 0;
         _detailedQuestBoard.SetDetailedBoard(questInfo);
@@ -868,7 +878,7 @@ public class Player : MonoBehaviour, IActor
     
     private string GetSubjectText()
     {
-        var questInfo = _questManager.GetQuestInfo(_data.CurrQuestId);
+        var questInfo = _scenarioManager.GetQuestInfo(_data.CurrScenarioId);
         string text = "";
 
         if (QuestType.LevelUp == questInfo.Type)
@@ -879,7 +889,7 @@ public class Player : MonoBehaviour, IActor
         {
             text = questInfo.Subject + "(" + _data.CurrQuestValue + "/" + questInfo.QuestValue + ")";
         }
-        else if (QuestType.Item == questInfo.Type)
+        else if (QuestType.Item == questInfo.Type || QuestType.Arrive == questInfo.Type || QuestType.Tutorial == questInfo.Type)
         {
             text = questInfo.Subject;
         }
@@ -889,20 +899,25 @@ public class Player : MonoBehaviour, IActor
 
     public void UpdateQuest()
     {
-        var questInfo = _questManager.GetQuestInfo(_data.CurrQuestId);
+        var questInfo = _scenarioManager.GetQuestInfo(_data.CurrScenarioId);
 
-        if (questInfo != null)
+        if (null != questInfo)
         {
+            if(false == _questBoard.gameObject.activeSelf)
+            {
+                _questBoard.gameObject.SetActive(true);
+            }
+
             _questBoard.UpdateText(questInfo, GetSubjectText(), IsSatisfyQuest());
         }
         else
         {
-            questInfo = _questManager.GetQuestInfo(_data.NextQuestId);
+            _questBoard.gameObject.SetActive(false);
         }
 
         if (true == _detailedQuestBoard.IsOn())
         {
-            if (false == _questManager.IsStart())
+            if (ScenarioProcessType.ProgressQuest != _scenarioManager.GetProcess())
             {
                 _detailedQuestBoard.UpdateButtons(QuestProcessType.NoneQuest);
                 _detailedQuestBoard.SetReadyDetailedBoard(questInfo);
@@ -914,7 +929,7 @@ public class Player : MonoBehaviour, IActor
             if(true == IsSatisfyQuest())
             {
                 _detailedQuestBoard.SetClearDetailedBoard(questInfo);
-                _detailedQuestBoard.UpdateButtons(QuestProcessType.SatisFy);
+                _detailedQuestBoard.UpdateButtons(QuestProcessType.Satisfy);
             }
             else
             {
@@ -958,8 +973,10 @@ public class Player : MonoBehaviour, IActor
         }
 
         // 퀘스트창 초기화
-        _questManager.ClearQuest();
-        _detailedQuestBoard.ClearRewardIcon(_questManager.GetQuestInfo(_data.NextQuestId));
+        _data.CurrScenarioId = _scenarioManager.GetNextScenarioId(_data.CurrScenarioId);
+        _data.ScenarioProcessType = ScenarioProcessType.PrevQuest;
+        _scenarioManager.SetScenarioProcess(ScenarioProcessType.PrevQuest);
+        _detailedQuestBoard.ClearRewardIcon(_scenarioManager.GetQuestInfo(_data.CurrScenarioId));
         _data.CurrQuestValue = 0;
         _questBoard.UpdateText(null, "", false);
     }
@@ -972,7 +989,7 @@ public class Player : MonoBehaviour, IActor
     private void CheckLevelUp()
     {
         // 임시로 필요 경험치는 Level * Level * 10 + 90으로 계산
-        var level = _data.Level;
+        //var level = _data.Level;
 
         // 레벨 업 체크
         if(_data.Exp >= RequiredExp)
@@ -1013,7 +1030,7 @@ public class Player : MonoBehaviour, IActor
 
     private bool IsSatisfyQuest()
     {
-        var currQuest = _questManager.GetQuestInfo(_data.CurrQuestId);
+        var currQuest = _scenarioManager.GetQuestInfo(_data.CurrScenarioId);
 
         if(currQuest.QuestValue <= _data.CurrQuestValue)
         {
@@ -1025,7 +1042,7 @@ public class Player : MonoBehaviour, IActor
 
     private QuestInfo GetCurrQuestInfo()
     {
-        return _questManager.GetQuestInfo(_data.CurrQuestId);
+        return _scenarioManager.GetQuestInfo(_data.CurrScenarioId);
     }
 
     public int GetLevel()
@@ -1061,7 +1078,6 @@ public class Player : MonoBehaviour, IActor
             effect.SetParent(transform);
             buff.SetEffect(effect);
         }
-        //buff.TakeActor(this);
     }
 
     public void ExecuteShockWave()
@@ -1100,7 +1116,218 @@ public class Player : MonoBehaviour, IActor
     {
         return _isInvincible;
     }
+
+    public void SetPostionData()
+    {
+        _data.CurrPos = Position;
+    }
+
+    public void SetMapId(int mapId)
+    {
+        _data.CurrMapId = mapId;
+    }
+
+    public int GetMapId()
+    {
+        return _data.CurrMapId;
+    }
+
+    public Vector3 GetSavedPosition()
+    {
+        return _data.CurrPos;
+    }
+
+    public void IsQuestPointArrive(MapPoint mapPoint)
+    {
+        var currQuestInfo = _scenarioManager.GetQuestInfo(_data.CurrScenarioId);
+
+        // 이동 튜토리얼인 경우
+        if(0 == _data.CurrScenarioId)
+        {
+            if(10010 == _data.CurrMapId && 7 == mapPoint.Index)
+            {
+                SetActiveMapPointRenderer(mapPoint.Index, false);
+                ClearMoveTutorial();
+            }
+        }
+
+        if(null == currQuestInfo)
+        {
+            return;
+        }
+
+        if (QuestType.Arrive != currQuestInfo.Type)
+        {
+            return;
+        }
+
+        if (_data.CurrMapId == currQuestInfo.MapId)
+        {
+            if (currQuestInfo.QuestTargetId == mapPoint.Index)
+            {
+                _data.CurrQuestValue = 1;
+            }
+        }
+    }
+
+    public void SetActiveMapPointRenderer(int index, bool enabled)
+    {
+        _currMapPointList[index].SetActiveRenderer(enabled);
+    }
+
+    public void SetMapPointList(List<MapPoint> list)
+    {
+        _currMapPointList.Clear();
+
+        for (int i = 0; i < list.Count; ++i)
+        {
+            _currMapPointList.Add(list[i]);
+        }
+    }
+
+
     #endregion
 
+    #region Tutorials
+    private void Tutorial()
+    {
+        // 튜토리얼 시나리오가 끝나면 패스
+        if(_data.CurrScenarioId >= 10000)
+        {
+            return;
+        }
 
+        Vector3 tutorialPos = new Vector3(12.2f, 0f, 91f);
+
+        // 이동 튜토리얼
+        if(0 == _data.CurrScenarioId)
+        {
+            _camera.SetActiveTutorialPanel(true);
+            _camera.SetActiveActionPadPanel(false);
+            _camera.SetActiveQuestPanel(false);
+            _camera.SetActiveStatusPanel(false);
+            _camera.SetActiveOptionPanel(false);
+        }
+        // 공격 및 구르기 튜토리얼
+        else if(1 == _data.CurrScenarioId)
+        {
+            _camera.SetActiveActionPadPanel(true);
+            _camera.SetActiveQuestPanel(false);
+            _camera.SetActiveStatusPanel(false);
+            _camera.SetActiveOptionPanel(false);
+        }
+        // 옵션 및 스킬 튜토리얼
+        else if(2 == _data.CurrScenarioId)
+        {
+            _camera.SetActiveActionPadPanel(true);
+            _camera.SetActiveQuestPanel(false);
+            _camera.SetActiveStatusPanel(false);
+            _camera.SetActiveOptionPanel(true);
+        }
+        else if(3 == _data.CurrScenarioId)
+        {
+            _camera.SetActiveTutorialPanel(false);
+            _camera.SetActiveActionPadPanel(true);
+            _camera.SetActiveQuestPanel(true);
+            _camera.SetActiveStatusPanel(true);
+            _camera.SetActiveOptionPanel(true);
+
+            _data.CurrScenarioId = 10010;
+        }
+
+        if ((Position - tutorialPos).magnitude >= 12f)
+        {
+            transform.position = tutorialPos;
+
+            // 튜토리얼 텍스트플롯
+            var MoveLimitText = _objectPool.MakeObject(ObjectType.TextFloat).GetComponent<TextFloat>();
+            MoveLimitText.SetTutorialMoveText(Position);
+            MoveLimitText.ExecuteFloat();
+        }
+    }
+
+    public void TutorialStart()
+    {
+        var dialogInfo = _dataManager.GetDialogInfo(_scenarioManager.GetDialogId(_data.CurrScenarioId, DialogType.PrevDialog));
+        // 튜토리얼 대화 출력
+        _dialogWindow.SetDialogInfo(dialogInfo);
+        _dialogWindow.gameObject.SetActive(true);
+        _tutorialCursor.gameObject.SetActive(true);
+        _tutorialCursor.SetCursor(_tutorialCursorQuestTransformList[0].position + new Vector3(0, 200, 0));
+        SetActiveMapPointRenderer(7, true);
+    }
+
+    public void ClearMoveTutorial()
+    {
+        _data.CurrScenarioId = 1;
+        var dialogInfo = _dataManager.GetDialogInfo(_scenarioManager.GetDialogId(_data.CurrScenarioId, DialogType.PrevDialog));
+        // 튜토리얼 대화 출력
+        _dialogWindow.SetDialogInfo(dialogInfo);
+        _dialogWindow.gameObject.SetActive(true);
+        // 대화 출력 공격 및 구르기 튜토리얼을 위한 대화창
+        tutorialText.text = "3연 공격 및 구르기를 성공하세요";
+        _tutorialCursor.SetCursor(_tutorialCursorQuestTransformList[1].position + new Vector3(0, 200, 0));
+    }
+
+    public void OnTrippleAttack()
+    {
+        if(_data.CurrScenarioId > 1)
+        {
+            return;
+        }
+
+        _isTrippleAttack = true;
+        _tutorialCursor.SetCursor(_tutorialCursorQuestTransformList[2].position + new Vector3(0, 200, 0));
+
+        if (true == _isRoll)
+        {
+            ClearAttackTutorial();
+        }
+    }
+
+    public void OnRoll()
+    {
+        if (_data.CurrScenarioId > 1)
+        {
+            return;
+        }
+
+        _isRoll = true;
+
+        if(true == _isTrippleAttack)
+        {
+            ClearAttackTutorial();
+        }
+    }
+
+    private void ClearAttackTutorial()
+    {
+        _data.CurrScenarioId = 2;
+        var dialogInfo = _dataManager.GetDialogInfo(_scenarioManager.GetDialogId(_data.CurrScenarioId, DialogType.PrevDialog));
+        // 튜토리얼 대화 출력
+        _dialogWindow.SetDialogInfo(dialogInfo);
+        _dialogWindow.gameObject.SetActive(true);
+        // 옵션 및 스킬 튜토리얼을 위한 대화창
+        tutorialText.text = "옵션 버튼을 클릭해 스킬을 장착한 후 스킬을 시전하세요";
+        _tutorialCursor.SetCursor(_tutorialCursorQuestTransformList[3].position - new Vector3(0, 200, 0), true);
+    }
+
+    public void OnSkill()
+    {
+        if (_data.CurrScenarioId != 2)
+        {
+            return;
+        }
+
+        var dialogInfo = _dataManager.GetDialogInfo(_scenarioManager.GetDialogId(_data.CurrScenarioId, DialogType.ClearDialog));
+        // 튜토리얼 대화 출력
+        _dialogWindow.SetDialogInfo(dialogInfo);
+        _dialogWindow.gameObject.SetActive(true);
+
+        _data.CurrScenarioId = 3;
+        _tutorialCursor.gameObject.SetActive(false);
+
+        // 정상적인 시나리오 시작
+    }
+    #endregion
 }

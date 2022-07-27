@@ -414,6 +414,10 @@ public class PlayerNormalAttackState : PlayerAttackState
 
     public override void Exit()
     {
+        if(3 <= _player.GetCurrNormalAttackCount())
+        {
+            _player.OnTrippleAttack();
+        }
         base.Exit();
     }
 }
@@ -517,6 +521,7 @@ public class PlayerSkillState : PlayerAttackState
 
     public override void Exit()
     {
+        _player.OnSkill();
         _player.SetInvincible(false);
     }
 }
@@ -559,6 +564,7 @@ public class PlayerRollState : PlayerActionState
 
     public override void Exit()
     {
+        _player.OnRoll();
         _player.SetInvincible(false);
     }
 }

@@ -1,0 +1,88 @@
+{
+    "Description": {
+    	"Id" : "정보를 구분짓기 위한 값",
+        "Name": "이펙트 오브젝트 이름(스킬명과 동일하게)",
+        "DialogList" : "대사 리스트. Dialog : NarratorImageId(int), NarratorName(string), Narration(대사, string)"
+    },
+    "DialogInfo": [
+        {
+        	"Id" : 0,
+            "Name": "첫대화",
+            "DialogList" : [
+            	{
+            		"NarratorImageId" : 0,
+            		"NarratorName" : "GM",
+            		"Narration" : "게임에 입장하신 것을 환영합니다."
+            	},
+            	{
+            		"NarratorImageId" : 0,
+            		"NarratorName" : "GM",
+            		"Narration" : "가상패드를 조작해 캐릭터를 이동해주세요."
+            	}
+            ]
+        },
+        {
+        	"Id" : 1,
+            "Name": "공격및 구르기 튜토리얼",
+            "DialogList" : [
+            	{
+            		"NarratorImageId" : 0,
+            		"NarratorName" : "GM",
+            		"Narration" : "잘 하셨습니다! 이제 화면 오른쪽 하단에 새로운 버튼들이 활성화 되었습니다."
+            	},
+            	{
+            		"NarratorImageId" : 0,
+            		"NarratorName" : "GM",
+            		"Narration" : "중앙의 공격버튼을 누르면 캐릭터가 공격을 시작하고, 연속으로 누르면 최대 3번의 콤보 공격을 합니다."
+            	},
+            	{
+            		"NarratorImageId" : 0,
+            		"NarratorName" : "GM",
+            		"Narration" : "공격버튼 오른쪽 아래의 버튼은 구르기 버튼입니다. 구르기를 사용해 적의 공격을 회피할 수 있습니다."
+            	},
+            	{
+            		"NarratorImageId" : 0,
+            		"NarratorName" : "GM",
+            		"Narration" : "3연 공격과 구르기를 수행해 주십시오."
+            	}
+            ]
+        },
+        {
+        	"Id" : 2,
+            "Name": "스킬 튜토리얼",
+            "DialogList" : [
+            	{
+            		"NarratorImageId" : 0,
+            		"NarratorName" : "GM",
+            		"Narration" : "대단합니다! 이제 화면 오른쪽 상단에 새로운 버튼들이 활성화 되었습니다."
+            	},
+            	{
+            		"NarratorImageId" : 0,
+            		"NarratorName" : "GM",
+            		"Narration" : "옵션 버튼을 클릭하면 게임에 관련된 여러 버튼들이 등장합니다."
+            	},
+            	{
+            		"NarratorImageId" : 0,
+            		"NarratorName" : "GM",
+            		"Narration" : "스킬 버튼을 눌러서 스킬을 드래그해 장착한 후에 스킬을 사용해주십시오."
+            	}
+            ]
+        },
+        {
+        	"Id" : 3,
+            "Name": "튜토리얼 끝",
+            "DialogList" : [
+            	{
+            		"NarratorImageId" : 0,
+            		"NarratorName" : "GM",
+            		"Narration" : "수고하셨습니다. 스킬 버튼 이외에도 캐릭터의 스테이터스나 게임의 설정을 조정할 수 있는 버튼들이 있습니다."
+            	},
+            	{
+            		"NarratorImageId" : 0,
+            		"NarratorName" : "GM",
+            		"Narration" : "튜토리얼은 여기까지 입니다. 앞으로의 여정에 도움이 되었기를 바랍니다."
+            	}
+            ]
+        }
+    ]
+}

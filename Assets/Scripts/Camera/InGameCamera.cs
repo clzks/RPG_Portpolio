@@ -12,6 +12,13 @@ public class InGameCamera : MonoBehaviour
     private float _limitU = 70f;
     private float _limitB = -6f;
     [SerializeField]private GameObject _uiCanvas;
+    [SerializeField] private GameObject _movePadPanel;
+    [SerializeField] private GameObject _actionPadPanel;
+    [SerializeField] private GameObject _fieldStatusPanel;
+    [SerializeField] private GameObject _questBoardPanel;
+    [SerializeField] private GameObject _optionPanel;
+    [SerializeField] private GameObject _tutorialPanel;
+
     [SerializeField]private GameObject _miniMap;
     [SerializeField] private SpriteRenderer _cutBorder;
 
@@ -49,6 +56,52 @@ public class InGameCamera : MonoBehaviour
         _uiCanvas.SetActive(enabled);
     }
 
+    public void SetActiveMovePadPanel(bool enabled)
+    {
+        if (enabled != _movePadPanel.activeSelf)
+        {
+            _movePadPanel.SetActive(enabled);
+        }
+    }
+
+    public void SetActiveActionPadPanel(bool enabled)
+    {
+        if (enabled != _actionPadPanel.activeSelf)
+        {
+            _actionPadPanel.SetActive(enabled);
+        }
+    }
+
+    public void SetActiveStatusPanel(bool enabled)
+    {
+        if (enabled != _fieldStatusPanel.activeSelf)
+        {
+            _fieldStatusPanel.SetActive(enabled);
+        }
+    }
+    public void SetActiveQuestPanel(bool enabled)
+    {
+        if (enabled != _questBoardPanel.activeSelf)
+        {
+            _questBoardPanel.SetActive(enabled);
+        }
+    }
+
+    public void SetActiveOptionPanel(bool enabled)
+    {
+        if (enabled != _optionPanel.activeSelf)
+        {
+            _optionPanel.SetActive(enabled);
+        }
+    }
+
+    public void SetActiveTutorialPanel(bool enalbed)
+    {
+        if(enalbed != _tutorialPanel.activeSelf)
+        {
+            _tutorialPanel.SetActive(enalbed);
+        }
+    }
     public IEnumerator TurnOn(float time)
     {
         float timer = 0f;
