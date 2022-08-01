@@ -19,4 +19,5 @@ public interface IActor : IPoolObject
     float GetShield();
     void ResetShield();
     bool IsInvincible();
+    void UpdateHitTimer();
 }

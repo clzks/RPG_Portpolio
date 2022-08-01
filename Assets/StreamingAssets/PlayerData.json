@@ -31,18 +31,18 @@
     "",
     ""
   ],
-  "Level": 1,
+  "Level": 3,
   "Status": {
-    "CurrHp": 100.0,
-    "MaxHp": 100.0,
+    "CurrHp": 120.0,
+    "MaxHp": 120.0,
     "Speed": 5.0,
     "AttackSpeed": 1.0,
-    "MaxStamina": 100.0,
-    "Stamina": 100.0,
+    "MaxStamina": 120.0,
+    "Stamina": 120.0,
     "RegenStamina": 1.0,
     "Strength": 1.0,
     "Defence": 0.0,
-    "Attack": 0.0,
+    "Attack": 4.0,
     "Shield": 0.0,
     "ChaseSpeed": 0.0,
     "PatrolSpeed": 0.0,
@@ -53,22 +53,28 @@
     "PatrolCycle": 0.0
   },
   "Gold": 0,
-  "Exp": 0,
+  "Exp": 15,
   "SkillPoint": 0,
   "Inventory": {
-    "Weapon": {},
-    "Armor": {},
-    "Accessory": {},
+    "Weapon": {
+      "10000": 1
+    },
+    "Armor": {
+      "20000": 1
+    },
+    "Accessory": {
+      "30000": 1
+    },
     "Consumable": {},
     "Quest": {}
   },
-  "CurrScenarioId": 0,
+  "CurrScenarioId": 10010,
   "ScenarioProcessType": 0,
   "CurrQuestValue": 0,
-  "CurrMapId": -1,
+  "CurrMapId": 10010,
   "CurrPos": {
-    "x": 0.0,
-    "y": 0.0,
-    "z": 0.0
+    "x": 11.8083134,
+    "y": 0.0832333341,
+    "z": 87.95748
   }
 }

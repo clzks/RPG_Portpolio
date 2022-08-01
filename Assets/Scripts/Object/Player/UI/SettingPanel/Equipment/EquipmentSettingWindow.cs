@@ -56,7 +56,7 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
         levelPanel.SetText(_player.GetLevel().ToString());
         expPanel.SetText(_player.GetExp().ToString() + " / " + _player.GetRequiredExp().ToString());
         hpTextPanel.SetText(status.CurrHp.ToString() + " / " + status.MaxHp.ToString());
-        staminaTextPanel.SetText(status.Stamina.ToString() + " / " + status.MaxStamina.ToString());
+        staminaTextPanel.SetText(((int)status.Stamina).ToString() + " / " + status.MaxStamina.ToString());
         attackTextPanel.SetText(status.Attack.ToString());
         defenceTextPanel.SetText(status.Defence.ToString());
     }
@@ -105,6 +105,8 @@ public class EquipmentSettingWindow : MonoBehaviour, IPointerClickHandler
     {
         if (currClickTabType != type)
         {
+            _iconInfoPanel.gameObject.SetActive(false);
+
             currClickTabType = type;
 
             UpdateInventoryIcon();

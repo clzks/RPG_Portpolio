@@ -45,10 +45,50 @@
             "Name": "튜토리얼_끝",
             "ConditionMapId" : 0,
         	"ConditionPointIndex" : 1,
-            "ReadyDialogInfoId" : 4,
+            "ReadyDialogInfoId" : -1,
             "QuestId" : -1,
             "ClearDialogInfoId" : -1,
             "NextScenarioId" : 10000
+        },
+        {
+        	"Id" : 10000,
+            "Name": "튜토리얼_보상받기",
+            "ConditionMapId" : -1,
+        	"ConditionPointIndex" : -1,
+            "ReadyDialogInfoId" : -1,
+            "QuestId" : 10000,
+            "ClearDialogInfoId" : -1,
+            "NextScenarioId" : 10010
+        },
+        {
+        	"Id" : 10010,
+            "Name": "모험의 시작 1",
+            "ConditionMapId" : -1,
+        	"ConditionPointIndex" : -1,
+            "ReadyDialogInfoId" : 10010,
+            "QuestId" : 10010,
+            "ClearDialogInfoId" : 10011,
+            "NextScenarioId" : 10020
+        },
+        {
+        	"Id" : 10020,
+            "Name": "모험의 시작 2",
+            "ConditionMapId" : -1,
+        	"ConditionPointIndex" : -1,
+            "ReadyDialogInfoId" : 10020,
+            "QuestId" : 10020,
+            "ClearDialogInfoId" : 10021,
+            "NextScenarioId" : 10030
+        },
+        {
+        	"Id" : 10030,
+            "Name": "모험의 시작 3",
+            "ConditionMapId" : -1,
+        	"ConditionPointIndex" : -1,
+            "ReadyDialogInfoId" : 10030,
+            "QuestId" : 10030,
+            "ClearDialogInfoId" : 10031,
+            "NextScenarioId" : -1
         }
     ]
 }

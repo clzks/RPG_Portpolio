@@ -37,9 +37,9 @@
             	"PatrolCycle" : 3
         	},
         	"DropItemList" : [
-        			10000, 10001, 20000, 20001, 30000, 40000, 40100, 50000
+        			50000
         	],
-        	"DropItemPercentage" : 0.1,
+        	"DropItemPercentage" : 0.5,
         	"MinGold" : 20,
         	"MaxGold" : 40,
         	"DropGoldPercentage" : 0.3,
@@ -75,11 +75,11 @@
             "Name": "Dragon",
             "Status" :
             {
-            	"MaxHp" : 250,
+            	"MaxHp" : 450,
             	"ChaseSpeed" : 5,
             	"PatrolSpeed" : 0,
-            	"Attack" : 10,
-            	"Defence" : 0,
+            	"Attack" : 12,
+            	"Defence" : 2,
             	"AttackRange" : 0,
             	"AttackTerm" : 0,
             	"DetectionDistance" : 100,

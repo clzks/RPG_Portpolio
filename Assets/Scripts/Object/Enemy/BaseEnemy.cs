@@ -14,6 +14,7 @@ public class BaseEnemy : MonoBehaviour, IActor
     public Vector3 Position { get { return transform.position; } }
     [SerializeField]private NavMeshAgent _agent;
     [SerializeField] private Transform _rootTransform;
+    [SerializeField] private SkinnedMeshRenderer _renderer;
     public Vector3 RootPosition { get { return _rootTransform.position; } }
     public Animator animator;
     protected string _name;
@@ -35,7 +36,8 @@ public class BaseEnemy : MonoBehaviour, IActor
     protected Status _originStatus;
     protected Status _validStatus;
     protected bool _isInvincible = false;
-
+    private float _hitTimer;        // 피격시 피격효과 타이머
+    private float _hitTime = 0.1f;  // 피격효과 시간
     [Header("Drop")]
     [SerializeField] protected int _exp;
     [SerializeField] protected int _gold;
@@ -139,6 +141,7 @@ public class BaseEnemy : MonoBehaviour, IActor
     protected virtual void Update()
     {
         currActionState = currActionState.Update();
+        UpdateHitTimer();
     }
 
     public virtual void PlayAnimation(string anim, bool isCrossFade = true)
@@ -253,6 +256,14 @@ public class BaseEnemy : MonoBehaviour, IActor
         var damageText = _objectPool.MakeObject(ObjectType.TextFloat).GetComponent<TextFloat>();
         damageText.SetText(DamageTextType.Enemy, (int)hitUnit.Damage, RootPosition);
         damageText.ExecuteFloat();
+
+        // 피격시 하얗게 변하는 효과
+        if (null != _renderer)
+        {
+            _renderer.material.SetInt("isHit", 1);
+            _hitTimer = _hitTime;
+        }
+
         // 넉백 및 경직이 없다는 뜻
         if (0f >= hitUnit.Strength)
         {
@@ -273,6 +284,17 @@ public class BaseEnemy : MonoBehaviour, IActor
         else
         {
             isDead = false;
+        }
+    }
+
+    public void UpdateHitTimer()
+    {
+        _hitTimer -= Time.deltaTime;
+
+        if (_hitTimer <= 0f)
+        {
+            _hitTimer = 0f;
+            _renderer.material.SetInt("isHit", 0);
         }
     }
 
@@ -528,4 +550,6 @@ public class BaseEnemy : MonoBehaviour, IActor
     {
         return _rootTransform;
     }
+
+   
 }

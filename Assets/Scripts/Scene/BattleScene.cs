@@ -32,9 +32,15 @@ public class BattleScene : MonoBehaviour
 
     private void Update()
     {
+        // 보스로 바로 가는 치트키
         if(Input.GetKeyDown(KeyCode.Alpha0))
         {
             EnterNewWorld(10020, 4);
+        }
+        // 튜토리얼 생략 치트키
+        else if(Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            _player.SkipTutorial();
         }
     }
 
@@ -68,8 +74,6 @@ public class BattleScene : MonoBehaviour
             _currMap.SetMap(_dataManager.GetMapInfo(worldId));
             _currMap.SetPlayer(_player);
             _currMap.Init();
-            _player.SetActiveNavMeshAgent(true);
-            _player.SetMapId(worldId);
             // 게임을 불러온 경우
             if (-1 == SummonIndex)
             {
@@ -80,6 +84,8 @@ public class BattleScene : MonoBehaviour
             {
                 _player.transform.position = _currMap.GetPointPosition(SummonIndex);
             }
+            _player.SetActiveNavMeshAgent(true);
+            _player.SetMapId(worldId);
         }
 
         _player.SetMapPointList(_currMap.GetMapPointList());

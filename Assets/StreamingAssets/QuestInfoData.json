@@ -14,32 +14,48 @@
     },
     "QuestInfo": [
         {
-            "Id" : 0,
-            "Name": "튜토리얼_이동",
-            "Type" : "Arrive",
-            "QuestTargetId" : 6,
-            "MapId" : 10010,
-            "QuestValue": 1,
-            "Subject" : "이동 익히기",
-            "Description" : "맵에 빨간 동그라미로 이동하기",
-            "ClearDescription" : "훌륭합니다. 이동하는 법을 익히셨습니다!", 
-            "Client" : "개발자",
+            "Id" : 10000,
+            "Name": "튜토리얼_완료",
+            "Type" : "Event",
+            "QuestTargetId" : -1,
+            "MapId" : -1,
+            "QuestValue": -1,
+            "Subject" : "튜토리얼 보상 받기",
+            "Description" : "튜토리알",
+            "ClearDescription" : "튜토리얼 완료 기념으로 보상을 드립니다", 
+            "Client" : "GM",
             "Rewards" : [{
+                "Type" : "Item",
+                "TargetId" : 10000,
+                "TargetValue" : 1   
+            },
+            {
+                "Type" : "Item",
+                "TargetId" : 20000,
+                "TargetValue" : 1   
+            },
+            {
+                "Type" : "Item",
+                "TargetId" : 30000,
+                "TargetValue" : 1   
+            },
+            {
                 "Type" : "Exp",
                 "TargetId" : -1,
                 "TargetValue" : 100   
-            }]
+            }
+        ]
         },
         {
-        	"Id" : 10001,
-            "Name": "사막을 구해줘 1",
+        	"Id" : 10010,
+            "Name": "모험의 시작 1",
             "Type" : "Kill",
             "QuestTargetId" : 10010,
-            "MapId" : 10010,
+            "MapId" : -1,
             "QuestValue": 5,
             "Subject" : "가시거북이 처치하기",
-            "Description" : "임무 받기 전 의뢰인의 설명",
-            "ClearDescription" : "임무 달성 후 의뢰인의 설명", 
+            "Description" : "마을 근방에 가시거북이들이 골칫덩어리라네. 자네가 이놈들을 좀 처리해줄 수 있겠나.",
+            "ClearDescription" : "수고했네. 덕분에 사람들이 안심하고 생활할 수 있게됐어.", 
             "Client" : "마을 촌장",
             "Rewards" : [{
                 "Type" : "Exp",
@@ -48,15 +64,15 @@
             }]
         },
         {
-            "Id" : 10002,
+            "Id" : 10020,
             "Name": "사막을 구해줘 2",
-            "Type" : "Kill",
-            "QuestTargetId" : 10010,
-            "MapId" : 10010,
+            "Type" : "Item",
+            "QuestTargetId" : 50000,
+            "MapId" : -1,
             "QuestValue": 8,
-            "Subject" : "가시거북이 처치하기",
-            "Description" : "임무 받기 전 의뢰인의 설명",
-            "ClearDescription" : "임무 달성 후 의뢰인의 설명", 
+            "Subject" : "가시거북이 등껍질 획득",
+            "Description" : "자네의 노력에도 사람들의 불안함이 남아있는듯 해. 사람들이 안심할 수 있게 증표로 등껍질을 모아주겠나.",
+            "ClearDescription" : "정말 수고했네. 이정도면 놈들도 도망가겠지.", 
             "Client" : "마을 촌장",
             "Rewards" : [
             {
@@ -71,15 +87,15 @@
             }]
         },
         {
-            "Id" : 10003,
+            "Id" : 10030,
             "Name": "사막을 구해줘 3",
             "Type" : "Kill",
-            "QuestTargetId" : 10010,
-            "MapId" : 10010,
-            "QuestValue": 8,
-            "Subject" : "가시거북이 처치하기",
-            "Description" : "임무 받기 전 의뢰인의 설명",
-            "ClearDescription" : "임무 달성 후 의뢰인의 설명", 
+            "QuestTargetId" : 30010,
+            "MapId" : 10020,
+            "QuestValue": 1,
+            "Subject" : "용 처치하기",
+            "Description" : "자네를 증명할 수 있게 고대의 용을 한마리 잡아오게.",
+            "ClearDescription" : "정말 놀랍구만, 용까지 잡아낼 줄이야. 보답으로 마을의 보물인 롱소드를 주겠네", 
             "Client" : "마을 촌장",
             "Rewards" : [
             {
@@ -94,7 +110,7 @@
             },
             {
                 "Type" : "Item",
-                "TargetId" : 30000,
+                "TargetId" : 10001,
                 "TargetValue" : 1 
             }]
         }

@@ -83,7 +83,7 @@ public class Dragon : BaseEnemy
 
     protected override void Update()
     {
-        base.Update();
+        currActionState = currActionState.Update();
     }
     public void ExecuteDragonEvent()
     {

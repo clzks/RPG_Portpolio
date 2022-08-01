@@ -122,9 +122,9 @@
         {
         	"Id" : 50000,
             "Name": "Shell",
-            "DisplayName" : "등껍질",
+            "DisplayName" : "가시거북 등껍질",
             "ImageName" : "Apple",
-            "Description" : "터틀쉘에 몸에 있는 등껍질. 어딘가에 쓰일지도", 
+            "Description" : "가시거북 몸에 있는 등껍질. 어딘가에 쓰일지도", 
             "Type" : "Quest",
             "Class": "Normal",
             "PurchasePrice" : 100,

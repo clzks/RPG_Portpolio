@@ -794,7 +794,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _agent: {fileID: 1645444629989098321}
   _rootTransform: {fileID: 1640531675023503719}
-  _collider: {fileID: 1645444629989098335}
+  _renderer: {fileID: 1671456618192779373}
   animator: {fileID: 1695228941462301711}
   _exp: 0
   _gold: 0

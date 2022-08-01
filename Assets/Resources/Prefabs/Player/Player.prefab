@@ -1048,10 +1048,21 @@ MonoBehaviour:
   _agent: {fileID: 8668181761616152023}
   _camera: {fileID: 0}
   _animController: {fileID: 8668181761608906640}
+  _meshRenderer: {fileID: 8668181761612974420}
   _movePad: {fileID: 0}
-  _attackButton: {fileID: 0}
+  _actionPad: {fileID: 0}
   _targetPanel: {fileID: 0}
+  _fieldStatusUI: {fileID: 0}
+  _miniMap: {fileID: 0}
+  _questBoard: {fileID: 0}
+  _detailedQuestBoard: {fileID: 0}
+  _questCursor: {fileID: 0}
+  _dialogWindow: {fileID: 0}
+  _tutorialCursor: {fileID: 0}
+  _tutorialCursorQuestTransformList: []
   speed: 5
+  tutorialPanel: {fileID: 0}
+  tutorialText: {fileID: 0}
 --- !u!135 &8668181761616151593
 SphereCollider:
   m_ObjectHideFlags: 0

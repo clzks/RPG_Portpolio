@@ -73,9 +73,26 @@ public class DetailedQuestBoard : MonoBehaviour
 
     public void SetClearDetailedBoard(QuestInfo info)
     {
-        // 퀘스트를 완수하고 보상만 남은 경우
-        _description.text = info.ClearDescription;
-        SetActiveGetRewardButton(true);
+        if (null != info)
+        {
+            // 퀘스트를 완수하고 보상만 남은 경우
+            _description.text = info.ClearDescription;
+            SetActiveGetRewardButton(true);
+        }
+        else
+        {
+            UpdateButtons(QuestProcessType.NoneQuest);
+            _client.text = "";
+            _description.text = "현재 퀘스트가 존재하지 않습니다.";
+            _subject.text = "";
+        }
+    }
+
+    public void SetEmptyDetailedBoard()
+    {
+        _client.text = "";
+        _description.text = "현재 퀘스트가 존재하지 않습니다.";
+        _subject.text = "";
     }
 
     public void UpdateSubjectText(string subjectText)
@@ -160,6 +177,18 @@ public class DetailedQuestBoard : MonoBehaviour
         switch (type)
         {
             case QuestProcessType.NoneQuest:
+                if (false == _acceptQuestButton.gameObject.activeSelf)
+                {
+                    _acceptQuestButton.gameObject.SetActive(false);
+                }
+
+                if (true == _getRewardButton.gameObject.activeSelf)
+                {
+                    _getRewardButton.gameObject.SetActive(false);
+                }
+                break;
+
+            case QuestProcessType.ReadyToQuest:
                 if (false == _acceptQuestButton.gameObject.activeSelf)
                 {
                     _acceptQuestButton.gameObject.SetActive(true);

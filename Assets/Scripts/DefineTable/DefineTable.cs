@@ -115,12 +115,14 @@ public enum QuestType
     Gold,
     Arrive,
     Tutorial,
+    Event,
     Count
 }
 
 public enum QuestProcessType
 {
     NoneQuest,
+    ReadyToQuest,
     Progress,
     Satisfy,
     Count
