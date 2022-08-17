@@ -49,7 +49,7 @@
             "ImageName" : "Armor",
             "Description" : "기본적인 천옷. 약하다", 
             "Values" : {
-            	"Defence" : 3,
+            	"Defence" : 1,
             	"MaxHp" : 10
             },
             "Type" : "Armor",
@@ -64,7 +64,7 @@
             "ImageName" : "Armor",
             "Description" : "기본적인 가죽옷. 천갑옷에 비해 튼튼하다", 
             "Values" : {
-            	"Defence" : 4,
+            	"Defence" : 2,
             	"MaxHp" : 15,
             	"AttackSpeed" : 0.1
             },

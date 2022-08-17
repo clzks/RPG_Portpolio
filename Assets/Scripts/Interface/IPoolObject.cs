@@ -7,4 +7,5 @@ public interface IPoolObject
     string GetName();
     ObjectType GetObjectType();
     void ReturnObject();
+    void DonDestroy();
 }

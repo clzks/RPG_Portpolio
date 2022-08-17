@@ -34,26 +34,30 @@ public class MiniMap : MonoBehaviour
         meshRenderer.material.SetVectorArray("_EnemyPosArray", enemyPosArray);
     }
 
+    public void SetMiniMap(Texture texture)
+    {
+        meshRenderer.material.mainTexture = texture;
+    }
 
-   public void CheckScreenWidth()
-   {
-       RaycastHit rayHit;
-       Vector3 cameraDir = _camera.transform.localRotation * Vector3.forward;
-   
-       if (Physics.Raycast(_camera.ViewportToWorldPoint(new Vector3(0,0,0)), cameraDir, out rayHit))
-       {
-           var rayHitPos = rayHit.transform.position;
-   
-           var leftBottom = _camera.ViewportToWorldPoint(new Vector3(0, 0, 0));
-           var topRight = _camera.ViewportToWorldPoint(new Vector3(1, 1, 0));
-   
-           float screenWidth = topRight.x - leftBottom.x;
-           float screenHeight = topRight.z - leftBottom.z;
-   
-           Debug.Log(screenWidth + " : 가로크기");
-           Debug.Log(screenHeight + " : 세로크기");
-       }
-   }
+    public void CheckScreenWidth()
+    {
+        RaycastHit rayHit;
+        Vector3 cameraDir = _camera.transform.localRotation * Vector3.forward;
+    
+        if (Physics.Raycast(_camera.ViewportToWorldPoint(new Vector3(0,0,0)), cameraDir, out rayHit))
+        {
+            var rayHitPos = rayHit.transform.position;
+    
+            var leftBottom = _camera.ViewportToWorldPoint(new Vector3(0, 0, 0));
+            var topRight = _camera.ViewportToWorldPoint(new Vector3(1, 1, 0));
+    
+            float screenWidth = topRight.x - leftBottom.x;
+            float screenHeight = topRight.z - leftBottom.z;
+    
+            Debug.Log(screenWidth + " : 가로크기");
+            Debug.Log(screenHeight + " : 세로크기");
+        }
+    }
 
     public void CheckDifferent()
     {

@@ -27,7 +27,17 @@ public class BattleScene : MonoBehaviour
 
     private void Start()
     {
-        EnterNewWorld(_player.GetMapId(), -1);
+        GameType gameType = _gameManager.GetGameType();
+
+        switch (gameType)
+        {
+            case GameType.NewGame:
+                EnterNewWorld(-1, -1);
+                break;
+            case GameType.LoadGame:
+                EnterNewWorld(_player.GetMapId(), -1);
+                break;
+        }
     }
 
     private void Update()
@@ -54,13 +64,16 @@ public class BattleScene : MonoBehaviour
             _currMap.ReturnObject();
         }
 
+
         // 게임을 처음 실행했을 경우
-        if(-1 == worldId)
+        if (-1 == worldId)
         {
             worldId = 10010;
+            var MapInfo = _dataManager.GetMapInfo(worldId);
             SummonIndex = 0;
             _currMap = _objectPool.MakeObject(ObjectType.Map, worldId).GetComponent<BaseMap>();
-            _currMap.SetMap(_dataManager.GetMapInfo(worldId));
+            _currMap.SetMap(MapInfo);
+            _miniMap.SetMiniMap(_objectPool.GetMiniMapTexture(MapInfo.MiniMapId));
             _currMap.SetPlayer(_player);
             _currMap.Init();
             _player.transform.position = _currMap.GetPointPosition(SummonIndex);
@@ -71,7 +84,9 @@ public class BattleScene : MonoBehaviour
         else
         {
             _currMap = _objectPool.MakeObject(ObjectType.Map, worldId).GetComponent<BaseMap>();
-            _currMap.SetMap(_dataManager.GetMapInfo(worldId));
+            var MapInfo = _dataManager.GetMapInfo(worldId);
+            _currMap.SetMap(MapInfo);
+            _miniMap.SetMiniMap(_objectPool.GetMiniMapTexture(MapInfo.MiniMapId));
             _currMap.SetPlayer(_player);
             _currMap.Init();
             // 게임을 불러온 경우

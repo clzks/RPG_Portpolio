@@ -28,7 +28,7 @@
   ],
   "SkillSlots": [
     "",
-    "",
+    "ShockWave",
     ""
   ],
   "Level": 3,
@@ -69,12 +69,12 @@
     "Quest": {}
   },
   "CurrScenarioId": 10010,
-  "ScenarioProcessType": 0,
+  "ScenarioProcessType": 1,
   "CurrQuestValue": 0,
-  "CurrMapId": 10010,
+  "CurrMapId": 10020,
   "CurrPos": {
-    "x": 11.8083134,
+    "x": 18.1,
     "y": 0.0832333341,
-    "z": 87.95748
+    "z": 34.3
   }
 }

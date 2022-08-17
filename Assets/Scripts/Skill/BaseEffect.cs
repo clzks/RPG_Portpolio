@@ -19,6 +19,7 @@ public class BaseEffect : MonoBehaviour, IPoolObject
     {
         _dataManager = DataManager.Get();
         _objectPool = ObjectPoolManager.Get();
+        DonDestroy();
     }
 
     public void ExecuteEffect(float life)
@@ -154,5 +155,10 @@ public class BaseEffect : MonoBehaviour, IPoolObject
         {
             _particleSystem.time = time;
         }
+    }
+
+    public void DonDestroy()
+    {
+        DontDestroyOnLoad(gameObject);
     }
 }

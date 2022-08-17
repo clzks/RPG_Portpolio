@@ -20,4 +20,5 @@ public interface IActor : IPoolObject
     void ResetShield();
     bool IsInvincible();
     void UpdateHitTimer();
+    bool IsZeroHp();
 }

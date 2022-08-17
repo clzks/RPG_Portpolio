@@ -19,6 +19,7 @@ public class InventoryIcon : MonoBehaviour, IPoolObject, IPointerClickHandler
     private void Awake()
     {
         _obejctPool = ObjectPoolManager.Get();
+        DonDestroy();
     }
 
     public void SetImage(Sprite image)
@@ -102,5 +103,10 @@ public class InventoryIcon : MonoBehaviour, IPoolObject, IPointerClickHandler
     protected void OnPointerClickAction()
     {
         _clickEvent.Invoke();
+    }
+
+    public void DonDestroy()
+    {
+        DontDestroyOnLoad(gameObject);
     }
 }

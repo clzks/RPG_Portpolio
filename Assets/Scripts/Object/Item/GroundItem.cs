@@ -18,6 +18,7 @@ public class GroundItem : MonoBehaviour, IPoolObject
     {
         _dataManager = DataManager.Get();
         _objectPool = ObjectPoolManager.Get();
+        DonDestroy();
     }
 
     private void OnEnable()
@@ -103,5 +104,10 @@ public class GroundItem : MonoBehaviour, IPoolObject
     {
         _textMesh.text = "";
         _objectPool.ReturnObject(this);
+    }
+
+    public void DonDestroy()
+    {
+        DontDestroyOnLoad(gameObject);
     }
 }

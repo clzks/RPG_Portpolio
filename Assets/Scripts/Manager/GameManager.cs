@@ -7,6 +7,7 @@ public class GameManager : Singleton<GameManager>
     public float tick = 0.032f;
     private bool _isPause = false;
     private bool _onePunchMode = false;
+    private GameType _gameType = GameType.Count;
 
     private void Update()
     {
@@ -36,4 +37,13 @@ public class GameManager : Singleton<GameManager>
         return _onePunchMode;
     }
 
+    public void SetGameType(GameType gameType)
+    {
+        _gameType = gameType;
+    }
+
+    public GameType GetGameType()
+    {
+        return _gameType;
+    }
 }

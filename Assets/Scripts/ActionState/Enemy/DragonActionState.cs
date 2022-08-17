@@ -19,13 +19,13 @@ public abstract class DragonActionState : EnemyActionState
     protected float _triggerTime = -1f;
     
     protected float _animSpeed = 1f;
-
+    
     public DragonActionState(IActor enemy) : base (enemy)
     {
         _dataManager = DataManager.Get();
         _dragon = (Dragon)enemy;
         _animator = _enemy.animator;
-
+        Debug.Log(GetType().Name);
         SetDragonSpeed();
     }
 
@@ -147,11 +147,11 @@ public class DragonGazeState : DragonActionState
                 break;
 
             case 2:
-                changeTime = 1f;
+                changeTime = 0.5f;
                 break;
 
             case 3:
-                changeTime = 0f;
+                changeTime = 0.1f;
                 break;
 
             default:
@@ -197,7 +197,7 @@ public class DragonChaseState : DragonActionState
     {
         if (_dragon.GetDragonCurrDiff() >= 3)
         {
-            PlayAnimation("Run");
+             PlayAnimation("Run");
         }
         else
         {
@@ -660,6 +660,8 @@ public class DragonTakeOffState : DragonActionState
 
     public override void Enter()
     {
+        // 경로를 리셋시켜준다
+        Agent.ResetPath();
         PlayAnimation(_actionName);
         _dragon.SetInvincible(true);
         _dragon.ExecuteDustEffect();

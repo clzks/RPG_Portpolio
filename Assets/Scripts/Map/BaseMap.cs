@@ -18,6 +18,7 @@ public class BaseMap : MonoBehaviour, IPoolObject
     {
         _objectPool = ObjectPoolManager.Get();
         _dataManager = DataManager.Get();
+        DonDestroy();
     }
 
     public string GetName()
@@ -141,5 +142,10 @@ public class BaseMap : MonoBehaviour, IPoolObject
     public List<MapPoint> GetMapPointList()
     {
         return _pointList;
+    }
+
+    public void DonDestroy()
+    {
+        DontDestroyOnLoad(gameObject);
     }
 }

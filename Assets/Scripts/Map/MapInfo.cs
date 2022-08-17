@@ -6,7 +6,7 @@ public class MapInfo : IData
 {
     public string Name { get; set; }
     public int Id { get; set; }
-
+    public int MiniMapId { get; set; }
     public int GetId()
     {
         return Id;

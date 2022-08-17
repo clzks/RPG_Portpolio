@@ -167,8 +167,6 @@ public abstract class PlayerAttackState : PlayerActionState
     }
 }
 
-
-
 public class PlayerIdleState : PlayerActionState
 {
     public PlayerIdleState(Player player, string action = "Idle") : base(player, action)
@@ -184,6 +182,11 @@ public class PlayerIdleState : PlayerActionState
     }
     public override IActionState Update()
     {
+        if (true == _player.IsZeroHp())
+        {
+            return ChangeState(new PlayerDieState(_player));
+        }
+
         if (true == _player.GetInBattle())
         {
             _inBattleTimer += Time.deltaTime;
@@ -261,6 +264,11 @@ public class PlayerRunState : PlayerActionState
     }
     public override IActionState Update()
     {
+        if (true == _player.IsZeroHp())
+        {
+            return ChangeState(new PlayerDieState(_player));
+        }
+
         if (true == _player.GetInBattle())
         {
             _inBattleTimer += Time.deltaTime;
@@ -374,6 +382,11 @@ public class PlayerNormalAttackState : PlayerAttackState
 
     public override IActionState Update()
     {
+        if(true == _player.IsZeroHp())
+        {
+            return ChangeState(new PlayerDieState(_player));
+        }
+
         currAnimTime = GetAnimNormalTime(actionName);
 
         if (null != GetDamageInfo())
@@ -458,6 +471,11 @@ public class PlayerDamageState : PlayerActionState
     }
     public override IActionState Update()
     {
+        if (true == _player.IsZeroHp())
+        {
+            return ChangeState(new PlayerDieState(_player));
+        }
+
         timer += Time.deltaTime;
 
         if(true == isStun)
@@ -504,6 +522,11 @@ public class PlayerSkillState : PlayerAttackState
 
     public override IActionState Update()
     {
+        if (true == _player.IsZeroHp())
+        {
+            return ChangeState(new PlayerDieState(_player));
+        }
+
         currAnimTime = GetAnimNormalTime(actionName);
 
         if (null == _player.GetActionInfo(actionName))
@@ -586,6 +609,11 @@ public class PlayerStunState : PlayerActionState
     }
     public override IActionState Update()
     {
+        if (true == _player.IsZeroHp())
+        {
+            return ChangeState(new PlayerDieState(_player));
+        }
+
         timer += Time.deltaTime;
 
         if(timer >= stunTime)
@@ -611,8 +639,11 @@ public class PlayerDieState : PlayerActionState
 
     public override void Enter()
     {
+        SetAvoidancePriority(40);
+        _player.SetInvincible(true);
         _player.ResetNormalAttackCount();
         PlayAnimation("Die");
+        _player.ExecuteDeath();
     }
     public override IActionState Update()
     {

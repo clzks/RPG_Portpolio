@@ -13,6 +13,12 @@ public class EquipmentIcon : InventoryIcon
     [SerializeField] private EquipInfoPanel _panel;
     //[SerializeField] private Button _unwearItemButton;
 
+    private void Awake()
+    {
+        // EquipmentIcon은 InvetoryIcon을 상속하지만, 오브젝트풀링이 필요 없음
+        // Awake를 상속받지 않기위해 빈 Awake 사용
+    }
+
     private void OnEnable()
     {
         //ActiveUnwearButton(false);

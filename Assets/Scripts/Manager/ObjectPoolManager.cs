@@ -12,12 +12,14 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     private Dictionary<string, Material> _materialList;
     private Dictionary<string, Sprite> _spriteList;
     private Dictionary<string, GameObject> _skillEffectList;
+    private Dictionary<int, Texture> _minimapTextureList;
     private void Awake()
     {
         prefabList = new Dictionary<string, GameObject>();
         _materialList = new Dictionary<string, Material>();
         _spriteList = new Dictionary<string, Sprite>();
         _skillEffectList = new Dictionary<string, GameObject>();
+        _minimapTextureList = new Dictionary<int, Texture>();
         _dataManager = DataManager.Get();
     }
 
@@ -361,6 +363,13 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         var obj = Resources.Load<GameObject>("Prefabs/UI/RewardIcon");
         prefabList.Add("RewardIcon", obj);
     }
+
+    public void LoadMinimapTexture(int id)
+    {
+        var obj = Resources.Load<Texture>("Png/MiniMaps/" + id.ToString());
+        _minimapTextureList.Add(id, obj);
+    }
+
     #endregion
     public void InitPool()
     {
@@ -422,5 +431,10 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
     public Sprite GetSprite(string name)
     {
         return _spriteList[name];
+    }
+
+    public Texture GetMiniMapTexture(int id)
+    {
+        return _minimapTextureList[id];
     }
 }

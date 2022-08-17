@@ -153,6 +153,12 @@ public enum DialogType
     Count
 }
 
+public enum GameType
+{ 
+    NewGame,
+    LoadGame,
+    Count
+}
 
 public static class Formula
 {

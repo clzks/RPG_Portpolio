@@ -8,6 +8,8 @@ public class Dragon : BaseEnemy
     protected float _burstTimer = 4f;
     protected float _meteorTimer = 15f;
     protected float _flameTimer = 5f;
+    //protected float _normalAttackTimer = 0.2f;
+
     [SerializeField] private Transform _dragonMouth;
   
     private List<Vector3> _metoerSpotList = new List<Vector3>();
@@ -92,6 +94,8 @@ public class Dragon : BaseEnemy
     
     public int GetDragonProDiff()
     {
+        return 3;
+
         float per = GetHpPercent();
 
         if(per >= 0.7f)

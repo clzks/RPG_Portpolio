@@ -25,6 +25,7 @@ public class TextFloat : MonoBehaviour, IPoolObject
         _waitForBreak = new WaitForSeconds(stopTime);
         _objectPool = ObjectPoolManager.Get();
         _textMesh = GetComponent<TextMeshPro>();
+        DonDestroy();
     }
     
     private IEnumerator FloatText()
@@ -150,5 +151,10 @@ public class TextFloat : MonoBehaviour, IPoolObject
     public void ExecuteFloat()
     {
         StartCoroutine(FloatText());
+    }
+
+    public void DonDestroy()
+    {
+        DontDestroyOnLoad(gameObject);
     }
 }

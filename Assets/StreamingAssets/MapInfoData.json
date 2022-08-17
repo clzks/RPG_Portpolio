@@ -2,15 +2,18 @@
     "Description": {
     	"Id" : "정보를 구분짓기 위한 값",
         "Name": "애니메이터상의 스테이트 이름",
+        "MiniMapId" : "미니맵 Id"
     },
     "MapInfo": [
         {
         	"Id" : 10010,
             "Name": "FirstWorld",
+            "MiniMapId" : 10010
         },
         {
         	"Id" : 10020,
             "Name": "SecondWorld",
+            "MiniMapId" : 10020
         }
     ]
 }

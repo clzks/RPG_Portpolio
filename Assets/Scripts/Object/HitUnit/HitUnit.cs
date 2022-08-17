@@ -18,6 +18,11 @@ public class HitUnit : MonoBehaviour, IPoolObject
     private HitUnitStatus status;
     private HitUnitInfo _info;
     private float _timer = 0f;
+
+    private void Awake()
+    {
+        DonDestroy();
+    }
     private void OnEnable()
     {
         //if (_disableCancellation != null)
@@ -155,6 +160,11 @@ public class HitUnit : MonoBehaviour, IPoolObject
     public Vector3 GetPosition()
     {
         return Position;
+    }
+
+    public void DonDestroy()
+    {
+        DontDestroyOnLoad(gameObject);
     }
 }
 

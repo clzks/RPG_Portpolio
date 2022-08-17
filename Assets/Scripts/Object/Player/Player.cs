@@ -31,6 +31,7 @@ public class Player : MonoBehaviour, IActor
     [SerializeField] private DialogWindow _dialogWindow;
     [SerializeField] private TutorialCursor _tutorialCursor;
     [SerializeField] private List<RectTransform> _tutorialCursorQuestTransformList;
+    [SerializeField] private DeathPanel _deathPanel;
     //[SerializeField] private 
     [Header("Status")]
     public float speed = 30f;
@@ -305,6 +306,16 @@ public class Player : MonoBehaviour, IActor
         return _agent;
     }
 
+    public bool IsZeroHp()
+    {
+        if (OriginStatus.CurrHp <= 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public bool GetInBattle()
     {
         return _isInBattle;
@@ -382,18 +393,21 @@ public class Player : MonoBehaviour, IActor
 
     public void TakeDamage(HitUnitStatus hitUnit, ref bool isDead)
     {
+        float damage = hitUnit.Damage;
+        damage -= GetValidStatus().Defence;
+
         //Debug.Log("플레이어에게 데미지 " + hitUnit.Damage + "만큼입힘");
         if (GetShield() > 0f)
         {
-            OriginStatus.Shield -= hitUnit.Damage;
+            OriginStatus.Shield -= damage;
         }
         else
         {
-            OriginStatus.CurrHp -= hitUnit.Damage;
+            OriginStatus.CurrHp -= damage;
         }
         // TODO 데미지 이펙트 추가할 곳
         var damageText = _objectPool.MakeObject(ObjectType.TextFloat).GetComponent<TextFloat>();
-        damageText.SetText(DamageTextType.Player, (int)hitUnit.Damage, Position);
+        damageText.SetText(DamageTextType.Player, (int)damage, Position);
         damageText.ExecuteFloat();
 
         // 피격시 하얗게 변하는 효과
@@ -1236,6 +1250,15 @@ public class Player : MonoBehaviour, IActor
         }
     }
 
+    public void ExecuteDeath()
+    {
+        _deathPanel.gameObject.SetActive(true);
+     
+    }
+    public void DonDestroy()
+    {
+        
+    }
 
     #endregion
 

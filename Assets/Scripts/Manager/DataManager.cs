@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Linq;
 public class DataManager : Singleton<DataManager>
 {
+    private ObjectPoolManager _objectPool;
     private PlayerData _playerData;
     private Dictionary<string, ActionInfo> _actionInfoList;
     private Dictionary<string, Dictionary<string,EnemyAction>> _enemyActionList;
@@ -17,8 +18,11 @@ public class DataManager : Singleton<DataManager>
     private Dictionary<int, QuestInfo> _questInfoList;
     private Dictionary<int, ScenarioInfo> _scenarioInfoList;
     private Dictionary<int, DialogInfo> _dialogInfoList;
+
+
     private void Awake()
     {
+        _objectPool = ObjectPoolManager.Get();
         _actionInfoList = new Dictionary<string, ActionInfo>();
         _enemyActionList = new Dictionary<string, Dictionary<string, EnemyAction>>();
         _enemyInfoList = new Dictionary<int, EnemyInfo>();
@@ -97,6 +101,11 @@ public class DataManager : Singleton<DataManager>
 
         if (null != _mapInfoList)
         {
+            foreach (var item in _mapInfoList)
+            {
+                _objectPool.LoadMinimapTexture(item.Key);
+            }
+
             Debug.Log("맵 정보 읽기 성공");
             return true;
         }

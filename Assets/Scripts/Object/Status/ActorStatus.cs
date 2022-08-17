@@ -53,6 +53,7 @@ public class Status
         s.CurrHp = status.CurrHp;
         s.MaxHp = status.MaxHp;
         s.Attack = status.Attack;
+        s.Defence = status.Defence;
         s.DetectionDistance = status.DetectionDistance;
         s.PatrolCycle = status.PatrolCycle;
         s.PatrolSpeed = status.PatrolSpeed;

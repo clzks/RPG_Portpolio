@@ -60,7 +60,10 @@ public class BaseEnemy : MonoBehaviour, IActor
         _actorList = new List<IActor>();
         _buffList = new List<IBuff>();
     }
-
+    private void Awake()
+    {
+        DonDestroy();
+    }
     public virtual void SetEnemy(EnemyInfo info, IActionState actionState)
     {
         _name = info.Name;
@@ -551,5 +554,8 @@ public class BaseEnemy : MonoBehaviour, IActor
         return _rootTransform;
     }
 
-   
+    public void DonDestroy()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
 }

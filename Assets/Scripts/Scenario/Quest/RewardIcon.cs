@@ -13,6 +13,7 @@ public class RewardIcon : MonoBehaviour, IPoolObject
     private void Awake()
     {
         _objectPool = ObjectPoolManager.Get();
+        DonDestroy();
     }
 
     public string GetName()
@@ -45,5 +46,10 @@ public class RewardIcon : MonoBehaviour, IPoolObject
         rewardImage.sprite = sp;
         count.text = "x " + countText;
         descript.text = description;
+    }
+
+    public void DonDestroy()
+    {
+        DontDestroyOnLoad(gameObject);
     }
 }

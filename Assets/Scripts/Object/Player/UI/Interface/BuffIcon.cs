@@ -10,6 +10,7 @@ public class BuffIcon : MonoBehaviour, IPoolObject
     private void Awake()
     {
         _objectPool = ObjectPoolManager.Get();
+        DonDestroy();
     }
 
     public string GetName()
@@ -45,5 +46,10 @@ public class BuffIcon : MonoBehaviour, IPoolObject
     public void SetFillAmount(float percent)
     {
         _screen.fillAmount = percent;
+    }
+
+    public void DonDestroy()
+    {
+        DontDestroyOnLoad(gameObject);
     }
 }
