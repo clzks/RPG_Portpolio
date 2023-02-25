@@ -18,7 +18,11 @@ public class PlayerData : IData
     public int CurrQuestValue { get; set; }
     //public bool IsStartQuest { get; set; }
     public int CurrMapId { get; set; }
-    public Vector3 CurrPos { get; set; }
+    //public Vector3 CurrPos { get; set; }
+    public float CurrPos_X { get; set; }
+    public float CurrPos_Y { get; set; }
+    public float CurrPos_Z { get; set; }
+
     //public TutorialType TutorialProgress { get; set; }
     public static PlayerData MakeNewPlayerData()
     {
@@ -47,7 +51,10 @@ public class PlayerData : IData
         data.ScenarioProcessType = ScenarioProcessType.PrevQuest;
         data.CurrQuestValue = 0;
         data.CurrMapId = -1;
-        data.CurrPos = new Vector3(0, 0, 0);
+        //data.CurrPos = new Vector3(0, 0, 0);
+        data.CurrPos_X = 0f;
+        data.CurrPos_Y = 0f;
+        data.CurrPos_Z = 0f;
         //data.TutorialProgress = TutorialType.MoveTutorial;
         return data;
     }
@@ -60,5 +67,17 @@ public class PlayerData : IData
     public string GetName()
     {
         return string.Empty;
+    }
+
+    public void SetPosition(Vector3 pos)
+    {
+        CurrPos_X = pos.x;
+        CurrPos_Y = pos.y;
+        CurrPos_Z = pos.z;
+    }
+
+    public Vector3 GetPosition()
+    {
+        return new Vector3(CurrPos_X, CurrPos_Y, CurrPos_Z);
     }
 }

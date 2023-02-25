@@ -1215,7 +1215,7 @@ public class Player : MonoBehaviour, IActor
 
     public void SetPostionData()
     {
-        _data.CurrPos = Position;
+        _data.SetPosition(Position);
     }
 
     public void SetMapId(int mapId)
@@ -1230,7 +1230,7 @@ public class Player : MonoBehaviour, IActor
 
     public Vector3 GetSavedPosition()
     {
-        return _data.CurrPos;
+        return _data.GetPosition();
     }
 
     public void IsQuestPointArrive(MapPoint mapPoint)

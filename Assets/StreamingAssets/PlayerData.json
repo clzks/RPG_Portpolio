@@ -66,9 +66,7 @@
   "ScenarioProcessType": 0,
   "CurrQuestValue": 0,
   "CurrMapId": -1,
-  "CurrPos": {
-    "x": 0.0,
-    "y": 0.0,
-    "z": 0.0
-  }
+  "CurrPos_X": 0.0,
+  "CurrPos_Y": 0.0,
+  "CurrPos_Z": 0.0
 }
