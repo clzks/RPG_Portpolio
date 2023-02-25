@@ -116,6 +116,14 @@ public class TextFloat : MonoBehaviour, IPoolObject
         originPos = Position;
     }
 
+    public void SetText(string descript, Vector3 pos)
+    {
+        _textMesh.color = new Color(0, 0, 0, 0);
+        _textMesh.text = descript;
+        Position = pos - new Vector3(0, 0, 3f);
+        originPos = Position;
+    }
+
     public void SetExpText(int value, Vector3 pos)
     {
         _textMesh.color = new Color(1, 0, 1, 0);

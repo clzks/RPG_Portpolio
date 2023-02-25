@@ -86,11 +86,11 @@ public abstract class DragonActionState : EnemyActionState
                 break;
 
             case 2:
-                _dragon.GetNavMeshAgent().speed = 8f;
+                _dragon.GetNavMeshAgent().speed = 7.5f;
                 break;
 
             case 3:
-                _dragon.GetNavMeshAgent().speed = 10f;
+                _dragon.GetNavMeshAgent().speed = 9f;
                 break;
         }
 
@@ -151,7 +151,7 @@ public class DragonGazeState : DragonActionState
                 break;
 
             case 3:
-                changeTime = 0.1f;
+                changeTime = 0.25f;
                 break;
 
             default:
@@ -213,11 +213,11 @@ public class DragonChaseState : DragonActionState
                 break;
 
             case 2:
-                _animator.speed = 1.2f;
+                _animator.speed = 1.15f;
                 break;
 
             case 3:
-                _animator.speed = 1.4f;
+                _animator.speed = 1.3f;
                 break;
         }
     }

@@ -47,6 +47,6 @@ public class MainScene : MonoBehaviour
 
     public void OnClickExit()
     {
-
+        Application.Quit();
     }
 }

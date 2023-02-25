@@ -8,12 +8,12 @@ public class LoadingScene : MonoBehaviour
 {
     private GameManager _gameManager;
     private DataManager _dataManager;
-    private ObjectPoolManager _poolManager;
+    private ObjectPoolManager _objectPool;
     private async UniTask Awake()
     {
         _gameManager = GameManager.Get();
         _dataManager = DataManager.Get();
-        _poolManager = ObjectPoolManager.Get();
+        _objectPool = ObjectPoolManager.Get();
 
         var loadComplete = await _dataManager.LoadPlayerActionList();
         loadComplete &= await _dataManager.LoadEnemyActionList();
@@ -29,9 +29,9 @@ public class LoadingScene : MonoBehaviour
 
         if (true == loadComplete)
         {
-            _poolManager.InitPool();
-            _poolManager.LoadPrefabs();
-            _poolManager.LoadSprite();
+            _objectPool.InitPool();
+            _objectPool.LoadPrefabs();
+            _objectPool.LoadSprite();
             SceneManager.LoadScene("MainScene");
         }
         else

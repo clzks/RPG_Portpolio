@@ -106,11 +106,6 @@ public class BattleScene : MonoBehaviour
         _player.SetMapPointList(_currMap.GetMapPointList());
     }
 
-    public void OnClickSave()
-    {
-        _player.SetPostionData();               
-        DataManager.Get().SavePlayerData();     
-    }
 
     public void OnClickEquipmentButton()
     {

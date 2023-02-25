@@ -60,6 +60,7 @@ public class Player : MonoBehaviour, IActor
     public Vector3 Position { get { return transform.position; } }
     private WaitForSeconds _buffYield;
     private float _tick;
+    private SaveType _saveType = SaveType.Possible;
 
     [Header("Tutorial")]
     private bool _isTrippleAttack = false;
@@ -894,6 +895,36 @@ public class Player : MonoBehaviour, IActor
         ClearQuest();
     }
 
+    public void OnClickSave()
+    {
+        if (SaveType.Possible == _saveType)
+        {
+            if (true == _isInBattle)
+            {
+                var saveInfoText = _objectPool.MakeObject(ObjectType.TextFloat).GetComponent<TextFloat>();
+                saveInfoText.SetText("전투중에는 저장할 수 없습니다", Position);
+                saveInfoText.ExecuteFloat();
+            }
+            else
+            {
+                SetPostionData();
+                _dataManager.SavePlayerData();
+            }
+        }
+        else if(SaveType.InTutorial == _saveType)
+        {
+            var saveInfoText = _objectPool.MakeObject(ObjectType.TextFloat).GetComponent<TextFloat>();
+            saveInfoText.SetText("튜토리얼 중에는 저장할 수 없습니다", Position);
+            saveInfoText.ExecuteFloat();
+        }
+        else if (SaveType.InBoss == _saveType)
+        {
+            var saveInfoText = _objectPool.MakeObject(ObjectType.TextFloat).GetComponent<TextFloat>();
+            saveInfoText.SetText("보스전 중에는 저장할 수 없습니다", Position);
+            saveInfoText.ExecuteFloat();
+        }
+    }
+
     private void StartQuest()
     {
         _data.ScenarioProcessType = ScenarioProcessType.ProgressQuest;
@@ -1276,6 +1307,7 @@ public class Player : MonoBehaviour, IActor
         // 이동 튜토리얼
         if(0 == _data.CurrScenarioId)
         {
+            _saveType = SaveType.InTutorial;
             _camera.SetActiveTutorialPanel(true);
             _camera.SetActiveActionPadPanel(false);
             _camera.SetActiveQuestPanel(false);
@@ -1307,6 +1339,7 @@ public class Player : MonoBehaviour, IActor
             _camera.SetActiveOptionPanel(true);
 
             // 정상적인 시나리오 시작
+            _saveType = SaveType.Possible;
             _data.CurrScenarioId = 10000;
             StartQuest();
 

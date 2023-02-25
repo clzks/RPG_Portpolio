@@ -28,21 +28,21 @@
   ],
   "SkillSlots": [
     "",
-    "ShockWave",
+    "",
     ""
   ],
-  "Level": 3,
+  "Level": 1,
   "Status": {
-    "CurrHp": 120.0,
-    "MaxHp": 120.0,
+    "CurrHp": 100.0,
+    "MaxHp": 100.0,
     "Speed": 5.0,
     "AttackSpeed": 1.0,
-    "MaxStamina": 120.0,
-    "Stamina": 120.0,
+    "MaxStamina": 100.0,
+    "Stamina": 100.0,
     "RegenStamina": 1.0,
     "Strength": 1.0,
     "Defence": 0.0,
-    "Attack": 4.0,
+    "Attack": 0.0,
     "Shield": 0.0,
     "ChaseSpeed": 0.0,
     "PatrolSpeed": 0.0,
@@ -53,28 +53,22 @@
     "PatrolCycle": 0.0
   },
   "Gold": 0,
-  "Exp": 15,
+  "Exp": 0,
   "SkillPoint": 0,
   "Inventory": {
-    "Weapon": {
-      "10000": 1
-    },
-    "Armor": {
-      "20000": 1
-    },
-    "Accessory": {
-      "30000": 1
-    },
+    "Weapon": {},
+    "Armor": {},
+    "Accessory": {},
     "Consumable": {},
     "Quest": {}
   },
-  "CurrScenarioId": 10010,
-  "ScenarioProcessType": 1,
+  "CurrScenarioId": 0,
+  "ScenarioProcessType": 0,
   "CurrQuestValue": 0,
-  "CurrMapId": 10020,
+  "CurrMapId": -1,
   "CurrPos": {
-    "x": 18.1,
-    "y": 0.0832333341,
-    "z": 34.3
+    "x": 0.0,
+    "y": 0.0,
+    "z": 0.0
   }
 }

@@ -16,7 +16,6 @@ public enum ObjectType
     Count
 }
 
-
 public enum SceneType
 {
     Loading,
@@ -157,6 +156,15 @@ public enum GameType
 { 
     NewGame,
     LoadGame,
+    Count
+}
+
+public enum SaveType
+{ 
+    Possible,
+    InBattle,
+    InTutorial,
+    InBoss,
     Count
 }
 

@@ -334,15 +334,15 @@ public class Dragon : BaseEnemy
 
         if (2 == _difficulty)
         {
-            _flameTimer -= Time.deltaTime;
-            _meteorTimer -= Time.deltaTime;
+            _flameTimer -= Time.deltaTime * 2f;
+            _meteorTimer -= Time.deltaTime * 2f;
         }
         else if(3 == _difficulty)
         {
-            _burstTimer -= Time.deltaTime;
-            _flameTimer -= Time.deltaTime;
-            _dashTimer -= Time.deltaTime;
-            _meteorTimer -= Time.deltaTime;
+            _burstTimer -= Time.deltaTime * 4f;
+            _flameTimer -= Time.deltaTime * 4f;
+            _dashTimer -= Time.deltaTime * 4f;
+            _meteorTimer -= Time.deltaTime * 4f;
         }
     }
 
