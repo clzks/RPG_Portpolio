@@ -1367,6 +1367,7 @@ public class Player : MonoBehaviour, IActor
         _tutorialCursor.gameObject.SetActive(false);
         // 정상적인 시나리오 시작
         _data.CurrScenarioId = 10000;
+        _saveType = SaveType.Possible;
         StartQuest();
     }
 

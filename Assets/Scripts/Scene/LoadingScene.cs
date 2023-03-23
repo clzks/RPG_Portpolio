@@ -26,7 +26,8 @@ public class LoadingScene : MonoBehaviour
         loadComplete &= await _dataManager.LoadQuestInfoList();
         loadComplete &= await _dataManager.LoadScenarioInfoList();
         loadComplete &= await _dataManager.LoadDialogInfoList();
-
+        loadComplete &= await _dataManager.LoadOriginPlayerData();
+        await _dataManager.LoadPlayerData();
         if (true == loadComplete)
         {
             _objectPool.InitPool();

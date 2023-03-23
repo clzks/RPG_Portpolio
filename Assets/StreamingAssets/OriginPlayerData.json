@@ -13,17 +13,17 @@
     {
       "name": "Berserk",
       "id": 10010,
-      "level": 0
+      "level": 1
     },
     {
       "name": "Barrier",
       "id": 10020,
-      "level": 0
+      "level": 1
     },
     {
       "name": "SummonSword",
       "id": 10030,
-      "level": 0
+      "level": 1
     }
   ],
   "SkillSlots": [
@@ -39,7 +39,7 @@
     "AttackSpeed": 1.0,
     "MaxStamina": 100.0,
     "Stamina": 100.0,
-    "RegenStamina": 1.0,
+    "RegenStamina": 3.0,
     "Strength": 1.0,
     "Defence": 0.0,
     "Attack": 0.0,
@@ -65,8 +65,8 @@
   "CurrScenarioId": 0,
   "ScenarioProcessType": 0,
   "CurrQuestValue": 0,
-  "CurrMapId": -1,
-  "CurrPos_X": 0.0,
+  "CurrMapId": 10010,
+  "CurrPos_X": 12.19,
   "CurrPos_Y": 0.0,
-  "CurrPos_Z": 0.0
+  "CurrPos_Z": 90.93
 }

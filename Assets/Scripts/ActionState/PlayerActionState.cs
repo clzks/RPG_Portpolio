@@ -517,6 +517,7 @@ public class PlayerSkillState : PlayerAttackState
         {
             PlayAnimation();
         }
+        _player.SetInBattle(true);
         _player.SetInvincible(true);
     }
 

@@ -7,6 +7,7 @@ public class DataManager : Singleton<DataManager>
 {
     private ObjectPoolManager _objectPool;
     private PlayerData _playerData;
+    private PlayerData _originPlayerData;
     private Dictionary<string, ActionInfo> _actionInfoList;
     private Dictionary<string, Dictionary<string,EnemyAction>> _enemyActionList;
     private Dictionary<int, EnemyInfo> _enemyInfoList;
@@ -38,7 +39,7 @@ public class DataManager : Singleton<DataManager>
 
     public async UniTask<bool> LoadPlayerActionList()
     {
-        _actionInfoList = await JsonConverter<ActionInfo>.GetJsonToDictionaryKeyName();
+        _actionInfoList = await JsonConverter<ActionInfo>.GetJsonToDictionaryKeyName(this);
         if(null != _actionInfoList)
         {
             Debug.Log("플레이어 액션리스트 읽기 성공");
@@ -54,7 +55,7 @@ public class DataManager : Singleton<DataManager>
     public async UniTask<bool> LoadEnemyActionList()
     {
         Dictionary<int, EnemyAction> enemyActions = new Dictionary<int, EnemyAction>();
-        enemyActions = await JsonConverter<EnemyAction>.GetJsonToDictionaryKeyId();
+        enemyActions = await JsonConverter<EnemyAction>.GetJsonToDictionaryKeyId(this);
 
         foreach (var item in enemyActions.Values)
         {
@@ -81,7 +82,7 @@ public class DataManager : Singleton<DataManager>
     
     public async UniTask<bool> LoadEnemyInfoList()
     {
-        _enemyInfoList = await JsonConverter<EnemyInfo>.GetJsonToDictionaryKeyId();
+        _enemyInfoList = await JsonConverter<EnemyInfo>.GetJsonToDictionaryKeyId(this);
 
         if (null != _actionInfoList)
         {
@@ -97,7 +98,7 @@ public class DataManager : Singleton<DataManager>
 
     public async UniTask<bool> LoadMapInfoList()
     {
-        _mapInfoList = await JsonConverter<MapInfo>.GetJsonToDictionaryKeyId();
+        _mapInfoList = await JsonConverter<MapInfo>.GetJsonToDictionaryKeyId(this);
 
         if (null != _mapInfoList)
         {
@@ -118,7 +119,7 @@ public class DataManager : Singleton<DataManager>
 
     public async UniTask<bool> LoadBuffInfoList()
     {
-        _buffInfoList = await JsonConverter<BuffInfo>.GetJsonToDictionaryKeyId();
+        _buffInfoList = await JsonConverter<BuffInfo>.GetJsonToDictionaryKeyId(this);
 
         if(null != _buffInfoList)
         {
@@ -132,27 +133,44 @@ public class DataManager : Singleton<DataManager>
         }
     }
 
-    public async UniTask<bool> LoadPlayerData()
+    public async UniTask LoadPlayerData()
     {
-        _playerData = await JsonConverter<PlayerData>.LoadJson();
+        _playerData = await JsonConverter<PlayerData>.LoadJson(this);
 
         // 불러오는 작업 후
         if (null == _playerData)
         {
-            Debug.Log("플레이어 정보 없음. 플레이어 정보 새로 생성");
-            MakeNewPlayerData();
-            return false;
+            Debug.Log("플레이어 정보 없음");
+            //MakeNewPlayerData();
+            //return false;
         }
         else
         {
             Debug.Log("플레이어 정보 읽기 성공");
+            //return true;
+        }
+    }
+
+    public async UniTask<bool> LoadOriginPlayerData()
+    {
+        _originPlayerData = await JsonConverter<PlayerData>.LoadJson(this, "OriginPlayerData.json");
+
+        // 불러오는 작업 후
+        if (null == _originPlayerData)
+        {
+            Debug.LogError("초기 플레이어 정보 읽기 실패");
+            return false;
+        }
+        else
+        {
+            Debug.Log("초기 플레이어 정보 읽기 성공");
             return true;
         }
     }
 
     public async UniTask<bool> LoadItemList()
     {
-        _itemInfoList = await JsonConverter<ItemInfo>.GetJsonToDictionaryKeyId();
+        _itemInfoList = await JsonConverter<ItemInfo>.GetJsonToDictionaryKeyId(this);
 
         if (null != _itemInfoList)
         {
@@ -168,7 +186,7 @@ public class DataManager : Singleton<DataManager>
 
     public async UniTask<bool> LoadEffectList()
     {
-        _effectInfoList = await JsonConverter<EffectInfo>.GetJsonToDictionaryKeyName();
+        _effectInfoList = await JsonConverter<EffectInfo>.GetJsonToDictionaryKeyName(this);
 
         if(null != _effectInfoList)
         {
@@ -204,7 +222,7 @@ public class DataManager : Singleton<DataManager>
 
     public async UniTask<bool> LoadQuestInfoList()
     {
-        _questInfoList = await JsonConverter<QuestInfo>.GetJsonToDictionaryKeyId();
+        _questInfoList = await JsonConverter<QuestInfo>.GetJsonToDictionaryKeyId(this);
 
         if (null != _questInfoList)
         {
@@ -220,7 +238,7 @@ public class DataManager : Singleton<DataManager>
 
     public async UniTask<bool> LoadScenarioInfoList()
     {
-        _scenarioInfoList = await JsonConverter<ScenarioInfo>.GetJsonToDictionaryKeyId();
+        _scenarioInfoList = await JsonConverter<ScenarioInfo>.GetJsonToDictionaryKeyId(this);
 
         if (null != _scenarioInfoList)
         {
@@ -236,7 +254,7 @@ public class DataManager : Singleton<DataManager>
 
     public async UniTask<bool> LoadDialogInfoList()
     {
-        _dialogInfoList = await JsonConverter<DialogInfo>.GetJsonToDictionaryKeyId();
+        _dialogInfoList = await JsonConverter<DialogInfo>.GetJsonToDictionaryKeyId(this);
 
         if (null != _dialogInfoList)
         {
@@ -252,9 +270,10 @@ public class DataManager : Singleton<DataManager>
 
     public void MakeNewPlayerData()
     {
-        _playerData = PlayerData.MakeNewPlayerData();
-        SetPlayerSkillList(_playerData);
-        SavePlayerData();
+        //_playerData = PlayerData.MakeNewPlayerData();
+        _playerData = _originPlayerData;
+        //SetPlayerSkillList(_playerData);
+        //SavePlayerData();
     }
 
     public void SavePlayerData()
@@ -269,17 +288,17 @@ public class DataManager : Singleton<DataManager>
 
     public void SetPlayerSkillList(PlayerData data)
     {
-        data.SkillSlots.Add(string.Empty);
-        data.SkillSlots.Add(string.Empty);
-        data.SkillSlots.Add(string.Empty);
+        //data.SkillSlots.Add(string.Empty);
+        //data.SkillSlots.Add(string.Empty);
+        //data.SkillSlots.Add(string.Empty);
 
-        foreach (var info in _actionInfoList.Values)
-        {
-            if(info.Type == ActionType.Skill)
-            {
-                data.SkillList.Add(info.ConvertSkillInfo());
-            }
-        }
+        //foreach (var info in _actionInfoList.Values)
+        //{
+        //    if(info.Type == ActionType.Skill)
+        //    {
+        //        data.SkillList.Add(info.ConvertSkillInfo());
+        //    }
+        //}
 
         data.SkillList = data.SkillList.OrderBy(x => x.id).ToList();
     }

@@ -16,12 +16,12 @@ public class MainScene : MonoBehaviour
     {
         _gameManager = GameManager.Get();
         _dataManager = DataManager.Get();
-        await _dataManager.LoadPlayerData();
+        
     }
 
     private void Start()
     {
-        if(-1 == _dataManager.GetPlayerData().CurrMapId)
+        if(null == _dataManager.GetPlayerData())
         {
             loadGameButton.interactable = false;
         }
