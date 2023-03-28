@@ -135,7 +135,7 @@ public class DataManager : Singleton<DataManager>
 
     public async UniTask LoadPlayerData()
     {
-        _playerData = await JsonConverter<PlayerData>.LoadJson(this);
+        _playerData = await JsonConverter<PlayerData>.LoadJsonFromPersistent(this);
 
         // 불러오는 작업 후
         if (null == _playerData)
@@ -153,7 +153,7 @@ public class DataManager : Singleton<DataManager>
 
     public async UniTask<bool> LoadOriginPlayerData()
     {
-        _originPlayerData = await JsonConverter<PlayerData>.LoadJson(this, "OriginPlayerData.json");
+        _originPlayerData = await JsonConverter<PlayerData>.LoadJsonFromStreamingAssets(this, "OriginPlayerData.json");
 
         // 불러오는 작업 후
         if (null == _originPlayerData)

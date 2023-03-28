@@ -133,8 +133,14 @@ public static class JsonConverter<T> where T : class, IData
     {
         _text = "";
 
+        //FileInfo info = new FileInfo(url);
+        //if (false == info.Exists)
+        //{
+        //    Debug.LogWarning(url + " is Not Exist");
+        //}
+
         UnityWebRequest www = UnityWebRequest.Get($"{url}");
-        www.timeout = 1;
+        www.timeout = 5;
 
         while (!www.isDone)
         {
@@ -188,11 +194,7 @@ public static class JsonConverter<T> where T : class, IData
 
     public static void WriteJson(T data)
     {
-#if UNITY_EDITOR
-        var filePath = Path.Combine(Application.streamingAssetsPath, typeof(T).Name + ".json");
-#elif UNITY_ANDROID
-        var filePath = Path.Combine("jar:file://" + Application.dataPath + "!/assets/", typeof(T).Name + "Data.json");
-#endif 
+        var filePath = Path.Combine(Application.persistentDataPath, typeof(T).Name + ".json");
 
         string json = JsonConvert.SerializeObject(data, Formatting.Indented);
         File.WriteAllText(filePath, json);
@@ -202,7 +204,7 @@ public static class JsonConverter<T> where T : class, IData
     /// 해당 클래스 이름 + .json 파일을 불러온다
     /// </summary>
     /// <returns></returns>
-    public static async UniTask<T> LoadJson(MonoBehaviour instance)
+    public static async UniTask<T> LoadJsonFromStreamingAssets(MonoBehaviour instance)
     {
         string text = string.Empty;
 
@@ -222,7 +224,7 @@ public static class JsonConverter<T> where T : class, IData
         return value;
     }
 
-    public static async UniTask<T> LoadJson(MonoBehaviour instance, string fileName)
+    public static async UniTask<T> LoadJsonFromStreamingAssets(MonoBehaviour instance, string fileName)
     {
         string text = string.Empty;
 
@@ -231,6 +233,23 @@ public static class JsonConverter<T> where T : class, IData
 #elif UNITY_ANDROID
         var filePath = Path.Combine("jar:file://" + Application.dataPath + "!/assets/", fileName);
 #endif 
+
+        text = await LoadJsonString(instance, filePath);
+
+        if (text.Equals(string.Empty))
+        {
+            return null;
+        }
+
+        T value = JObject.Parse(text).ToObject<T>();
+        return value;
+    }
+
+    public static async UniTask<T> LoadJsonFromPersistent(MonoBehaviour instance)
+    {
+        string text = string.Empty;
+
+        var filePath = Path.Combine("file://" + Application.persistentDataPath, typeof(T).Name + ".json");
 
         text = await LoadJsonString(instance, filePath);
 
