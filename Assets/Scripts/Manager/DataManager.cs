@@ -8,6 +8,8 @@ public class DataManager : Singleton<DataManager>
     private ObjectPoolManager _objectPool;
     private PlayerData _playerData;
     private PlayerData _originPlayerData;
+    private GameSettingData _gameSettingData;
+    private GameSettingData _originGameSettingData;
     private Dictionary<string, ActionInfo> _actionInfoList;
     private Dictionary<string, Dictionary<string,EnemyAction>> _enemyActionList;
     private Dictionary<int, EnemyInfo> _enemyInfoList;
@@ -168,6 +170,41 @@ public class DataManager : Singleton<DataManager>
         }
     }
 
+    public async UniTask LoadGameSettingData()
+    {
+        _gameSettingData = await JsonConverter<GameSettingData>.LoadJsonFromPersistent(this);
+
+        // 불러오는 작업 후
+        if (null == _gameSettingData)
+        {
+            Debug.Log("게임설정 정보 없음");
+            _gameSettingData = _originGameSettingData;
+            //return false;
+        }
+        else
+        {
+            Debug.Log("게임설정  정보 읽기 성공");
+            //return true;
+        }
+    }
+
+    public async UniTask<bool> LoadOriginGameSettingData()
+    {
+        _originGameSettingData = await JsonConverter<GameSettingData>.LoadJsonFromStreamingAssets(this, "OriginGameSettingData.json");
+
+        // 불러오는 작업 후
+        if (null == _originGameSettingData)
+        {
+            Debug.LogError("초기 게임설정 정보 읽기 실패");
+            return false;
+        }
+        else
+        {
+            Debug.Log("초기 게임설정 정보 읽기 성공");
+            return true;
+        }
+    }
+
     public async UniTask<bool> LoadItemList()
     {
         _itemInfoList = await JsonConverter<ItemInfo>.GetJsonToDictionaryKeyId(this);
@@ -270,15 +307,22 @@ public class DataManager : Singleton<DataManager>
 
     public void MakeNewPlayerData()
     {
-        //_playerData = PlayerData.MakeNewPlayerData();
         _playerData = _originPlayerData;
-        //SetPlayerSkillList(_playerData);
-        //SavePlayerData();
+    }
+
+    public void MakeNewGameSettingData()
+    {
+        _gameSettingData = _originGameSettingData;
     }
 
     public void SavePlayerData()
     {
         JsonConverter<PlayerData>.WriteJson(_playerData);
+    }
+
+    public void SaveGameSettingData()
+    {
+        JsonConverter<GameSettingData>.WriteJson(_gameSettingData);
     }
 
     public Dictionary<string, ActionInfo> GetActionInfoList()
@@ -351,6 +395,21 @@ public class DataManager : Singleton<DataManager>
     public void SetPlayerData(PlayerData data)
     {
         _playerData = data;
+    }
+
+    public GameSettingData GetGameSettingData()
+    {
+        return _gameSettingData;
+    }
+
+    public void SetGameSettingData(GameSettingData data)
+    {
+        _gameSettingData = data;
+    }
+
+    public void SetGameSettingData(GameSettingType type, bool isOn)
+    {
+        _gameSettingData.SetData(type, isOn);
     }
 
     public void SetPlayerSkillSlot(int i, string action)

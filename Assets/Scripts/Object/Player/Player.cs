@@ -40,6 +40,7 @@ public class Player : MonoBehaviour, IActor
     private PlayerData _data { get { return _dataManager.GetPlayerData(); } set { _dataManager.SetPlayerData(value); } }
     private List<IActor> _actorList;
     private List<IBuff> _buffList;
+    private GameSettingData _settingData { get { return _dataManager.GetGameSettingData(); } set { _dataManager.SetGameSettingData(value); } }
     private int RequiredExp { get { return _data.Level * _data.Level * 5 + 30; ; } }
     
     private Dictionary<ItemType, SortedList<int,int>> _inventory { get { return _data.Inventory; } set { _data.Inventory = value; } }

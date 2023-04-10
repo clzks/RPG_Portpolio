@@ -11,9 +11,9 @@ public class BattleScene : MonoBehaviour
     private BaseMap _currMap = null;
     private Player _player;
     public MiniMap _miniMap;
-    [SerializeField] private GameObject _equipmentWindowPopUp;
+    [SerializeField] private EquipmentSettingWindow _equipmentWindowPopUp;
     [SerializeField] private SkillSettingWindow _skillWindowPopUp;
-    [SerializeField] private GameObject SettingWindowPopUp;
+    [SerializeField] private GameSettingWindow _settingWindowPopUp;
 
     private void Awake()
     {
@@ -23,6 +23,7 @@ public class BattleScene : MonoBehaviour
         _objectPool = ObjectPoolManager.Get();
         _player = GameObject.Find("Player").GetComponent<Player>();
         _skillWindowPopUp.Init(_dataManager.GetPlayerData());
+        _settingWindowPopUp.Init();
     }
 
     private void Start()
@@ -109,7 +110,7 @@ public class BattleScene : MonoBehaviour
 
     public void OnClickEquipmentButton()
     {
-        _equipmentWindowPopUp.SetActive(true);
+        _equipmentWindowPopUp.gameObject.SetActive(true);
     }
 
     public void onClickSkillSettingButton()
@@ -124,7 +125,7 @@ public class BattleScene : MonoBehaviour
 
     public void OnClickSettingButton()
     {
-
+        _settingWindowPopUp.gameObject.SetActive(true);
     }
 
     public void PlayerEnterMapPoint(MapPoint mapPoint)
