@@ -93,6 +93,16 @@ public abstract class PlayerActionState : IActionState
         }
     }
 
+    protected bool GetGameSetting(GameSettingType type)
+    {
+        return _player.GetGameSetting(type);
+    }
+
+    protected BaseEnemy GetNearestEnemy()
+    {
+        return _player.GetNearestEnemy();
+    }
+
     #region sealed methods
     public sealed override bool Equals(object obj)
     {
@@ -127,6 +137,19 @@ public abstract class PlayerAttackState : PlayerActionState
         currAnimTime = 0;
         SetAvoidancePriority(40);
         _player.SetInBattle(true);
+
+        if (true == GetGameSetting(GameSettingType.Homing))
+        {
+            var enemy = GetNearestEnemy();
+
+            if (null != enemy)
+            {
+                Vector3 v = enemy.GetPosition() - _player.GetPosition();
+                Vector2 dir = new Vector2(v.x, v.z);
+
+                _player.SetForward(dir);
+            }
+        }
     }
 
     public override void Exit()

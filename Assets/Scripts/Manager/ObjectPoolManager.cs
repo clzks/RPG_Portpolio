@@ -422,9 +422,17 @@ public class ObjectPoolManager : Singleton<ObjectPoolManager>
         return _activePoolList[ObjectType.Enemy];
     }
 
-    public BaseEnemy GetEnemy()
+    // 가장 가까운 적 찾기
+    public BaseEnemy GetNearestEnemy(Vector3 playerPos)
     {
-        // 가장 가까운 적 찾기
+        var list = _activePoolList[ObjectType.Enemy].FindAll(x => (x.GetObject().transform.position - playerPos).magnitude <= 2.5f).OrderBy(x => (x.GetObject().transform.position - playerPos).magnitude).ToList();
+
+        if(list.Count > 0)
+        {
+            return (BaseEnemy)list[0];
+        }
+
+        
         return null;
     }
 

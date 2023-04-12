@@ -218,6 +218,11 @@ public class Player : MonoBehaviour, IActor
         _targetPanel.SetTargetInfo(actor, isKill);
     }
     #region GET SET
+    public bool GetGameSetting(GameSettingType type)
+    {
+        return _dataManager.GetGameSetting(type);
+    }
+
     public Vector3 GetPosition()
     {
         return Position;
@@ -347,6 +352,12 @@ public class Player : MonoBehaviour, IActor
     {
         return OriginStatus.Shield;
     }
+
+    public BaseEnemy GetNearestEnemy()
+    {
+        return _objectPool.GetNearestEnemy(Position);
+    }
+
     #endregion
     public void SetAttackButton()
     {

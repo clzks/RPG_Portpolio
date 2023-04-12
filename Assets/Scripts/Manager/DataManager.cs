@@ -402,6 +402,21 @@ public class DataManager : Singleton<DataManager>
         return _gameSettingData;
     }
 
+    public bool GetGameSetting(GameSettingType type)
+    {
+        switch (type)
+        {
+            case GameSettingType.Homing:
+                return _gameSettingData.IsHoming;
+            case GameSettingType.SkillDirection:
+                return _gameSettingData.IsSkillDirection;
+            case GameSettingType.FixStick:
+                return _gameSettingData.IsFixStick;
+        }
+
+        return false;
+    }
+
     public void SetGameSettingData(GameSettingData data)
     {
         _gameSettingData = data;
