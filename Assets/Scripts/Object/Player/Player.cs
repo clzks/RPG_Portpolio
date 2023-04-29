@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.AI;
 using System.Linq;
+using static UnityEditor.Experimental.GraphView.GraphView;
 #if UNITY_EDITOR
 using UnityEngine.SceneManagement;
 #endif
@@ -129,6 +130,17 @@ public class Player : MonoBehaviour, IActor
         UpdateHitTimer();
     }
 
+    public void UpdateGameSetting()
+    {
+        if(true == _settingData.IsFixStick)
+        {
+            _movePad.isActive = true;
+        }
+        else
+        {
+            _movePad.isActive = false;
+        }
+    }
     
     public void PlayAnimation(string anim)
     {

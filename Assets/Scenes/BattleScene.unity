@@ -3196,8 +3196,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -720, y: -360}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &411964301
 GameObject:
@@ -4659,11 +4659,11 @@ RectTransform:
   - {fileID: 1837173735}
   - {fileID: 1400104867}
   m_Father: {fileID: 408858505}
-  m_RootOrder: 1
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 720, y: 360}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &586149428
@@ -8218,8 +8218,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -700, y: -30}
-  m_SizeDelta: {x: 390, y: 320}
+  m_AnchoredPosition: {x: -725, y: 0}
+  m_SizeDelta: {x: 320, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &956318646
 MonoBehaviour:
@@ -13489,6 +13489,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76337c0b3b3095d489c6de8bf58a5003, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 7270083254653290712}
   _exitButton: {fileID: 2018626718}
   _homingToggle: {fileID: 342876685}
   _skillDirToggle: {fileID: 740591349}
@@ -13928,7 +13929,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1631868353}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -13936,12 +13937,12 @@ RectTransform:
   - {fileID: 1523244833}
   - {fileID: 1051713366}
   m_Father: {fileID: 408858505}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: -720, y: -320}
+  m_SizeDelta: {x: 400, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1631868355
 MonoBehaviour:
@@ -13958,6 +13959,9 @@ MonoBehaviour:
   background: {fileID: 1523244833}
   stick: {fileID: 1051713366}
   moveRadius: 150
+  bgImage: {fileID: 1523244834}
+  stickImage: {fileID: 1051713367}
+  isActive: 0
 --- !u!1 &1631872668
 GameObject:
   m_ObjectHideFlags: 0

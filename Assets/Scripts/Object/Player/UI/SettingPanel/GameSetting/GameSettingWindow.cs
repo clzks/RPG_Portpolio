@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GameSettingWindow : MonoBehaviour
 {
+    [SerializeField] private Player _player;
     [SerializeField] private Button _exitButton;
     private DataManager _dataManager;
     [SerializeField] Toggle _homingToggle;
@@ -28,6 +29,7 @@ public class GameSettingWindow : MonoBehaviour
     {
         _dataManager.SetGameSettingData(type, toggle.isOn);
         _dataManager.SaveGameSettingData();
+        _player.UpdateGameSetting();
     }
 
     public void OnClickExitButton()

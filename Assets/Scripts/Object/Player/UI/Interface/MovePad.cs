@@ -12,6 +12,10 @@ public class MovePad : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragH
     private bool _isDrag;
     private Vector3 _stickDir;
 
+    public Image bgImage;
+    public Image stickImage;
+    public bool isActive;
+
     private void Awake()
     {
         stickOriginPos = stick.position;
@@ -30,6 +34,12 @@ public class MovePad : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragH
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if(false == isActive)
+        {
+            // 패드의 위치를 포인터 위치로 바꾸고 드래그 시작
+
+        }
+
         _isDrag = true;
     }
 
@@ -95,5 +105,27 @@ public class MovePad : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragH
     {
         stick.position = stickOriginPos;
         _isDrag = false;
+    }
+
+    public void SetMovePad(bool isFix)
+    {
+        if(true == isFix)
+        {
+            bgImage.color = new Color(1, 1, 1, 1);
+            stickImage.color = new Color(1, 1, 1, 1);
+        }
+        else
+        {
+            if (false == isActive)
+            {
+                bgImage.color = new Color(1, 1, 1, 0.2f);
+                stickImage.color = new Color(1, 1, 1, 0.2f);
+            }
+            else
+            {
+                bgImage.color = new Color(1, 1, 1, 1);
+                stickImage.color = new Color(1, 1, 1, 1);
+            }
+        }
     }
 }
