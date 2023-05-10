@@ -3,22 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
+
 public class MovePad : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragHandler
 {
     public RectTransform background;
     public RectTransform stick;
     public float moveRadius;
-    private Vector3 stickOriginPos;
+    private Vector3 stickOriginAnchor;
+    private Vector3 stickCurrAnchor;
+    private Vector3 stickEventPos;
     private bool _isDrag;
+    private bool _isFix;
     private Vector3 _stickDir;
 
     public Image bgImage;
     public Image stickImage;
-    public bool isActive;
 
     private void Awake()
     {
-        stickOriginPos = stick.position;
+        stickOriginAnchor = stick.position;
+        stickCurrAnchor = stickOriginAnchor;
     }
 
     private void Update()
@@ -26,21 +32,30 @@ public class MovePad : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragH
 #if UNITY_EDITOR
         OnKeyboardControl();
 #endif
-        if ((stick.position - stickOriginPos).magnitude >= moveRadius)
+        if ((stickEventPos - stickCurrAnchor).magnitude >= moveRadius)
         {
-            stick.position = stickOriginPos + _stickDir * moveRadius;
+            stick.position = stickCurrAnchor + _stickDir * moveRadius;
+        }
+        else
+        {
+            stick.position = stickEventPos;
         }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        if(false == isActive)
+        if(false == _isFix)
         {
             // 패드의 위치를 포인터 위치로 바꾸고 드래그 시작
-
+            stickCurrAnchor = eventData.position;
+            background.position = eventData.position;
         }
-
+        else
+        {
+            stickCurrAnchor = stickOriginAnchor;
+        }
         _isDrag = true;
+        SetMovePad();
     }
 
     public void OnKeyboardControl()
@@ -66,29 +81,30 @@ public class MovePad : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragH
         if (false == Input.anyKey)
         {
             _isDrag = false;
-            stick.position = stickOriginPos;
+            stickEventPos = stickOriginAnchor;
         }
         else
         {
-            if(stick.position == stickOriginPos)
+            if(stickEventPos == stickOriginAnchor)
             {
                 return;
             }
-            _stickDir = (stick.position - stickOriginPos).normalized;
+            _stickDir = (stickEventPos - stickOriginAnchor).normalized;
             _isDrag = true;
         }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        stick.position = eventData.position;
-
-        _stickDir = (stick.position - stickOriginPos).normalized;
+        stickEventPos = eventData.position;
+    
+        _stickDir = (stickEventPos - stickCurrAnchor).normalized;
     }
-
+    
     public void OnEndDrag(PointerEventData eventData)
     {
         ExecuteResetMovePad();
+        SetMovePad();
     }
 
     public Vector3 GetStickDirection()
@@ -101,22 +117,29 @@ public class MovePad : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragH
         return _isDrag;
     }
 
+    public void SetFix(bool isFix)
+    {
+        _isFix = isFix;
+    }
+
     public void ExecuteResetMovePad()
     {
-        stick.position = stickOriginPos;
+        stick.position = stickOriginAnchor;
+        background.position = stickOriginAnchor;
+        stickCurrAnchor = stickOriginAnchor;
         _isDrag = false;
     }
 
-    public void SetMovePad(bool isFix)
+    public void SetMovePad()
     {
-        if(true == isFix)
+        if(true == _isFix)
         {
             bgImage.color = new Color(1, 1, 1, 1);
             stickImage.color = new Color(1, 1, 1, 1);
         }
         else
         {
-            if (false == isActive)
+            if (false == _isDrag)
             {
                 bgImage.color = new Color(1, 1, 1, 0.2f);
                 stickImage.color = new Color(1, 1, 1, 0.2f);

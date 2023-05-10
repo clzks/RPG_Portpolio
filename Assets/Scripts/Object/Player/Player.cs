@@ -106,6 +106,8 @@ public class Player : MonoBehaviour, IActor
         {
             TutorialStart();
         }
+
+        UpdateGameSetting();
     }
 
     private void LateUpdate()
@@ -132,14 +134,8 @@ public class Player : MonoBehaviour, IActor
 
     public void UpdateGameSetting()
     {
-        if(true == _settingData.IsFixStick)
-        {
-            _movePad.isActive = true;
-        }
-        else
-        {
-            _movePad.isActive = false;
-        }
+        _movePad.SetFix(_settingData.IsFixStick);
+        _movePad.SetMovePad();
     }
     
     public void PlayAnimation(string anim)
@@ -894,11 +890,6 @@ public class Player : MonoBehaviour, IActor
     public void SetFollowCamera(bool enabled)
     {
         _followCamera = enabled;
-    }
-
-    public void ResetMovePad()
-    {
-        _movePad.ExecuteResetMovePad();
     }
 
     /// <summary>
