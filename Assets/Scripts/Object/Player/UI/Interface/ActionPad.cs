@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
+
 public class ActionPad : MonoBehaviour
 {
     private DataManager _dataManager;
@@ -57,6 +59,14 @@ public class ActionPad : MonoBehaviour
         else
         {
             return null;
+        }
+    }
+
+    public void SetDragMode(bool isDragedSkill)
+    {
+        for(int i = 1; i < 4; ++i)
+        {
+            actionButtonList[i].isDragMode = isDragedSkill;
         }
     }
 }

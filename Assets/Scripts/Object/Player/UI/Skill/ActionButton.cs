@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IBeginDragHandler, IDragHandler
 {
     [SerializeField] private int buttonListIndex;
     protected bool _isClick = false;
@@ -16,8 +16,12 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     //[SerializeField] private string _actionName;
     [SerializeField] private Image _skillImage;
     [SerializeField] private SkillCooltimePanel _cooltimePanel;
+    public bool isDragMode;
     public virtual void OnPointerDown(PointerEventData eventData)
     {
+        if (true == _info.IsDragedSkill && true == isDragMode)
+            return;
+
         // 쿨타임이나 소모값 등을 계산해야한다 
         if (true == _isReady)
         {
@@ -28,8 +32,39 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
         }
     }
+
+    // 드래그 모드의 스킬인경우
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (true == _info.IsDragedSkill && true == isDragMode)
+        {
+            // 드래그 이미지 생성
+        }
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (true == _info.IsDragedSkill && true == isDragMode)
+        {
+            // 드래그 방향에 따라 이미지 회전 및 늘리기
+        }
+    }
+
+    //public void OnEndDrag(PointerEventData eventData)
+    //{
+    //    if (true == _info.IsDragedSkill && true == isDragMode)
+    //    {
+    //
+    //    }
+    //}
+
     public void OnPointerUp(PointerEventData eventData)
     {
+        if (true == _info.IsDragedSkill && true == isDragMode)
+        {
+
+        }
+        
         _isClick = false;
     }
 
@@ -111,4 +146,6 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
             return false;
         }
     }
+
+   
 }

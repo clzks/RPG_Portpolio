@@ -28,6 +28,7 @@ public class ActionInfo : IData
     public List<HitUnitInfo> HitUnitList { get; set; }
     public bool DuplicatedHit { get; set; }
     public bool IsCustomPositon { get; set; }
+    public bool IsDragedSkill { get; set; }
     public int GetId()
     {
         return Id;

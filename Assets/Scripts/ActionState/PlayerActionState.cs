@@ -248,6 +248,11 @@ public class PlayerIdleState : PlayerActionState
             {
                 if (true == actionButton.ExecuteButton(_player.GetStamina()))
                 {
+                    if (true == GetGameSetting(GameSettingType.SkillDirection))
+                    {
+                       // 드래그로 설정 할 시 드래그 방향으로 플레이어 방향 설정
+                    }
+
                     return ChangeState(new PlayerSkillState(_player, name));
                 }
             }
@@ -330,6 +335,11 @@ public class PlayerRunState : PlayerActionState
             {
                 if (true == actionButton.ExecuteButton(_player.GetStamina()))
                 {
+                    if (true == GetGameSetting(GameSettingType.SkillDirection))
+                    {
+                        // 드래그로 설정 할 시 드래그 방향으로 플레이어 방향 설정
+                    }
+
                     return ChangeState(new PlayerSkillState(_player, name));
                 }
             }
@@ -429,6 +439,11 @@ public class PlayerNormalAttackState : PlayerAttackState
             }
             else
             {
+                if (true == GetGameSetting(GameSettingType.SkillDirection))
+                {
+                    // 드래그로 설정 할 시 드래그 방향으로 플레이어 방향 설정
+                }
+
                 return ChangeState(new PlayerSkillState(_player, name));
             }
         }

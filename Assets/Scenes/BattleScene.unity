@@ -5773,8 +5773,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uC2A4\uD0AC \uBC84\uD2BC \uD074\uB9AD \uC2DC \uBC29\uD5A5 \uC120\uD0DD
-    \uAE30\uB2A5 \uD65C\uC131\uD654 "
+  m_Text: "\uC2A4\uD0AC \uBC29\uD5A5 \uC870\uC815(\uB4DC\uB798\uADF8)"
 --- !u!222 &703373003
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9123,7 +9122,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 453f2582ad0d83246bae1f5d3e854d94, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9fde03320fb509b46bc661a67e3b6468, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -13078,7 +13077,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1376fa2bc010fda498a0d7ebd39c15d8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b1351f6f625b1b64eaf6c445e7f53eec, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -13961,7 +13960,6 @@ MonoBehaviour:
   moveRadius: 150
   bgImage: {fileID: 1523244834}
   stickImage: {fileID: 1051713367}
-  isActive: 0
 --- !u!1 &1631872668
 GameObject:
   m_ObjectHideFlags: 0

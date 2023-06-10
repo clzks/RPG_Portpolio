@@ -134,6 +134,7 @@ public class Player : MonoBehaviour, IActor
 
     public void UpdateGameSetting()
     {
+        _actionPad.SetDragMode(_settingData.IsSkillDirection);
         _movePad.SetFix(_settingData.IsFixStick);
         _movePad.SetMovePad();
     }
