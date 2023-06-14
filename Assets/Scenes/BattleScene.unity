@@ -3191,6 +3191,7 @@ RectTransform:
   m_Children:
   - {fileID: 1631868354}
   - {fileID: 586149427}
+  - {fileID: 698780908}
   m_Father: {fileID: 1656231679}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4203,6 +4204,8 @@ MonoBehaviour:
   _type: 1
   _skillImage: {fileID: 1432355567}
   _cooltimePanel: {fileID: 0}
+  _dragSkillImage: {fileID: 0}
+  isDragModeSetting: 0
 --- !u!114 &531803158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5594,6 +5597,82 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 695099936}
   m_CullTransparentMesh: 1
+--- !u!1 &698780907
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 698780908}
+  - component: {fileID: 698780910}
+  - component: {fileID: 698780909}
+  m_Layer: 5
+  m_Name: Drag_skill_img
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &698780908
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698780907}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 408858505}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -50}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0}
+--- !u!114 &698780909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698780907}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 8436a3b006927ac4fa5fbe9ffdd4918e, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &698780910
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698780907}
+  m_CullTransparentMesh: 1
 --- !u!1 &702200040
 GameObject:
   m_ObjectHideFlags: 0
@@ -5664,6 +5743,8 @@ MonoBehaviour:
   _type: 1
   _skillImage: {fileID: 267548967}
   _cooltimePanel: {fileID: 0}
+  _dragSkillImage: {fileID: 0}
+  isDragModeSetting: 0
 --- !u!114 &702200044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7541,6 +7622,8 @@ MonoBehaviour:
   _type: 1
   _skillImage: {fileID: 1188789639}
   _cooltimePanel: {fileID: 0}
+  _dragSkillImage: {fileID: 0}
+  isDragModeSetting: 0
 --- !u!114 &897329533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8656,6 +8739,8 @@ MonoBehaviour:
   _type: 1
   _skillImage: {fileID: 1298720803}
   _cooltimePanel: {fileID: 575615732}
+  _dragSkillImage: {fileID: 698780909}
+  isDragModeSetting: 0
 --- !u!114 &983390681
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11991,6 +12076,8 @@ MonoBehaviour:
   _type: 1
   _skillImage: {fileID: 278075342}
   _cooltimePanel: {fileID: 712269992}
+  _dragSkillImage: {fileID: 698780909}
+  isDragModeSetting: 0
 --- !u!114 &1388422065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12178,6 +12265,8 @@ MonoBehaviour:
   _type: 2
   _skillImage: {fileID: 0}
   _cooltimePanel: {fileID: 871100050}
+  _dragSkillImage: {fileID: 0}
+  isDragModeSetting: 0
 --- !u!114 &1400104869
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13383,6 +13472,8 @@ MonoBehaviour:
   _type: 1
   _skillImage: {fileID: 2109580616}
   _cooltimePanel: {fileID: 1777806807}
+  _dragSkillImage: {fileID: 698780909}
+  isDragModeSetting: 0
 --- !u!114 &1569536242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14015,6 +14106,8 @@ MonoBehaviour:
   _type: 0
   _skillImage: {fileID: 0}
   _cooltimePanel: {fileID: 0}
+  _dragSkillImage: {fileID: 0}
+  isDragModeSetting: 0
 --- !u!114 &1631872671
 MonoBehaviour:
   m_ObjectHideFlags: 0
