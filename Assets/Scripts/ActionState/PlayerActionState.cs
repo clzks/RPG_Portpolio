@@ -180,6 +180,15 @@ public abstract class PlayerAttackState : PlayerActionState
                 if (null != actionButton)
                 {
                     actionName = actionButton.GetActionName();
+                    var isDragedSkill = actionButton.IsDragedSkill();
+
+                    if (true == GetGameSetting(GameSettingType.SkillDirection) && isDragedSkill)
+                    {
+                        // 드래그로 설정 할 시 드래그 방향으로 플레이어 방향 설정
+                        var dir = actionButton.GetDragDirection();
+                        _player.SetForward(dir);
+                    }
+
                     actionButton.ExecuteButton(_player.GetStamina());
                     return true;
                 }
@@ -250,7 +259,9 @@ public class PlayerIdleState : PlayerActionState
                 {
                     if (true == GetGameSetting(GameSettingType.SkillDirection))
                     {
-                       // 드래그로 설정 할 시 드래그 방향으로 플레이어 방향 설정
+                        // 드래그로 설정 할 시 드래그 방향으로 플레이어 방향 설정
+                        var dir = actionButton.GetDragDirection();
+                        _player.SetForward(dir);
                     }
 
                     return ChangeState(new PlayerSkillState(_player, name));
@@ -441,11 +452,6 @@ public class PlayerNormalAttackState : PlayerAttackState
             }
             else
             {
-                if (true == GetGameSetting(GameSettingType.SkillDirection))
-                {
-                    // 드래그로 설정 할 시 드래그 방향으로 플레이어 방향 설정
-                }
-
                 return ChangeState(new PlayerSkillState(_player, name));
             }
         }

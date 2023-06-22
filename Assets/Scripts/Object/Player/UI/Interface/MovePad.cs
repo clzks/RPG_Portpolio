@@ -62,21 +62,33 @@ public class MovePad : MonoBehaviour, IDragHandler, IEndDragHandler, IBeginDragH
     {
         if (Input.GetKey(KeyCode.W))
         {
-            stick.position += new Vector3(0, moveRadius, 0);
+            //stick.position += new Vector3(0, moveRadius, 0);
+            stickEventPos = stickOriginAnchor + new Vector3(0, moveRadius, 0);
         }
         else if (Input.GetKey(KeyCode.S))
         {
-            stick.position += new Vector3(0, -moveRadius, 0);
+            stickEventPos = stickOriginAnchor + new Vector3(0, -moveRadius, 0);
         }
 
         if (Input.GetKey(KeyCode.A))
         {
-            stick.position += new Vector3(-moveRadius, 0, 0);
+            stickEventPos = stickEventPos + new Vector3(-moveRadius, 0, 0);
+
+            if (stickEventPos.x <= stickOriginAnchor.x - moveRadius)
+            {
+                stickEventPos.x = stickOriginAnchor.x - moveRadius;
+            }
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            stick.position += new Vector3(moveRadius, 0, 0);
+            stickEventPos = stickEventPos + new Vector3(moveRadius, 0, 0);
+
+            if (stickEventPos.x >= stickOriginAnchor.x + moveRadius)
+            {
+                stickEventPos.x = stickOriginAnchor.x + moveRadius;
+            }
         }
+
         
         if (false == Input.anyKey)
         {

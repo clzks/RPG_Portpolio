@@ -34,7 +34,7 @@ public class ActionPad : MonoBehaviour
         Sprite sprite = null;
         if(0 == index || 4 == index)
         {
-        
+            actionButtonList[index].SetAction(info, sprite);
         }
         else
         {

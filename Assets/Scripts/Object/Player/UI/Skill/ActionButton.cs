@@ -41,6 +41,11 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     // 드래그 모드의 스킬인경우
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (false == _isReady)
+        {
+            return;
+        }
+
         if (true == _info.IsDragedSkill && true == isDragModeSetting)
         {
             // 드래그 이미지 생성
@@ -52,6 +57,11 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (false == _isReady)
+        {
+            return;
+        }
+
         if (true == _info.IsDragedSkill && true == isDragModeSetting)
         {
             _dragCurrPos = eventData.position;
@@ -67,8 +77,6 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
             }
             _dragSkillImage.rectTransform.sizeDelta = new Vector2(160, length);
             _dragSkillImage.transform.up = new Vector3(_dragDir.x, _dragDir.y, 0);
-            //eventData.pressPosition
-            // 드래그 방향에 따라 이미지 회전 및 늘리기
         }
     }
 
@@ -84,6 +92,11 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     {
         if (true == _info.IsDragedSkill && true == isDragModeSetting)
         {
+            if (false == _isReady)
+            {
+                return;
+            }
+
             _dragSkillImage.enabled = false;
             _isClick = true;
         }
@@ -175,5 +188,15 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public Vector3 GetDragDirection()
     {
         return _dragDir;
+    }
+
+    public ActionType GetActionType()
+    {
+        return _type;
+    }
+
+    public bool IsDragedSkill()
+    {
+        return _info.IsDragedSkill;
     }
 }
