@@ -90,7 +90,7 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     //    }
     //}
 
-    public void OnPointerUp(PointerEventData eventData)
+    public virtual void OnPointerUp(PointerEventData eventData)
     {
         if (true == _info.IsDragedSkill && true == isDragModeSetting)
         {

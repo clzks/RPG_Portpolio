@@ -29,7 +29,12 @@ public class RollButton : ActionButton
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        base.OnPointerDown(eventData);
+        _isClick = true;
+    }
+
+    public override void OnPointerUp(PointerEventData eventData)
+    {
+        _isClick = false;
     }
 
     public override void Update()
