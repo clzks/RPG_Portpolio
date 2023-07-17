@@ -37,6 +37,16 @@ public class RollButton : ActionButton
         _isClick = false;
     }
 
+    public override void OnBeginDrag(PointerEventData eventData)
+    {
+        // 구르기 버튼은 드래그 무의미
+    }
+
+    public override void OnDrag(PointerEventData eventData)
+    {
+        // 구르기 버튼은 드래그 무의미
+    }
+
     public override void Update()
     {
         base.Update();

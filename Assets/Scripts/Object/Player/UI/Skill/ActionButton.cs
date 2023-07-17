@@ -41,7 +41,7 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     }
 
     // 드래그 모드의 스킬인경우
-    public void OnBeginDrag(PointerEventData eventData)
+    public virtual void OnBeginDrag(PointerEventData eventData)
     {
         if (false == _isReady)
         {
@@ -57,7 +57,7 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         }
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public virtual void OnDrag(PointerEventData eventData)
     {
         if (false == _isReady)
         {
