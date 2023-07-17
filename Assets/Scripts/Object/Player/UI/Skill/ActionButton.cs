@@ -25,7 +25,9 @@ public class ActionButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
     public virtual void OnPointerDown(PointerEventData eventData)
     {
         if (true == _info.IsDragedSkill && true == isDragModeSetting)
+        {
             return;
+        }
 
         // 쿨타임이나 소모값 등을 계산해야한다 
         if (true == _isReady)

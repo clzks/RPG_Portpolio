@@ -72,7 +72,7 @@
             ],
             "DuplicatedHit": false,
             "IsCustomPositon": false,
-            "IsDragedSkill" :  false
+            "IsDragedSkill": false
         },
         {
             "Id": 1,
@@ -164,6 +164,24 @@
                     "Layer": 8
                 }
             ],
+            "DuplicatedHit": false,
+            "IsCustomPositon": false,
+            "IsDragedSkill": false
+        },
+        {
+            "Id": 3,
+            "Name": "Roll",
+            "CharacterName": "SwordPlayer",
+            "StartLevelValue": 1,
+            "MaxLevel": 1,
+            "Cost": 0,
+            "Exp": 0,
+            "LevelPerExp": 0,
+            "Type": "Roll",
+            "ComboAvailableTime": 0,
+            "MoveStartTime": 0,
+            "MoveTime": 0,
+            "MoveDistance": 0,
             "DuplicatedHit": false,
             "IsCustomPositon": false,
             "IsDragedSkill": false
